@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#10100f">
+  <title>Midnight Detective — The Last Call</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Playfair+Display:wght@500;600;700&family=Source+Sans+3:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="rain" aria-hidden="true"></div>
+  <div class="app-shell">
+    <header class="topbar">
+      <a class="brand" href="#" aria-label="Midnight Detective home">
+        <span class="brand-mark">M<span>·</span></span>
+        <span class="brand-name">MIDNIGHT <b>DETECTIVE</b></span>
+      </a>
+      <div class="top-meta"><span class="live-dot"></span><span id="header-case">CASE FILE 0047</span><i></i><span>CHICAGO, ILL.</span></div>
+      <button class="sound-toggle" id="new-case" title="Start a new randomized case"><span>↻</span> NEW CASE</button>
+    </header>
+
+    <main id="game" class="game-frame" aria-live="polite"></main>
+
+    <footer class="footer"><span>RAIN NEVER CLEANS THE STREETS.</span><span>© 1947 · CITY POLICE DEPT.</span></footer>
+  </div>
+  <script src="game.js"></script>
+</body>
+</html>
