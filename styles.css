@@ -527,14 +527,12 @@ p,h1,h2,h3{margin:0}
     radial-gradient(ellipse at 50% 46%,transparent 52%,rgba(0,0,0,.52) 100%);
 }
 .room-svg{display:block;width:100%;height:100%;filter:saturate(.95) contrast(1.02) brightness(1.1)}
+.scene-canvas{position:absolute;inset:0;z-index:0}
+.scene-canvas .room-svg{width:100%;height:100%}
 .hotspot{
-  position:absolute;width:46px;height:46px;margin:-23px 0 0 -23px;z-index:6;
+  position:absolute;left:50%;top:50%;width:46px;height:46px;margin:-23px 0 0 -23px;z-index:6;
   display:block;border-radius:50%;
 }
-.hotspot[data-object="desk"]{left:28%;top:19%}
-.hotspot[data-object="window"]{left:76%;top:7%}
-.hotspot[data-object="coat"]{left:20%;top:76%}
-.hotspot[data-object="safe"]{left:81%;top:81%}
 .hotspot .ring{
   position:absolute;inset:8px;border:1px solid rgba(226,194,134,.68);border-radius:50%;
   box-shadow:0 0 18px rgba(201,161,94,.18),inset 0 0 10px rgba(0,0,0,.4);
@@ -973,6 +971,7 @@ p,h1,h2,h3{margin:0}
 }
 @media (max-height:700px){
   .board-notes{display:none}
+  .clue-txt{-webkit-line-clamp:3}
   .scene-brief{display:none}
   .accuse-case{display:none}
 }
@@ -987,7 +986,7 @@ p,h1,h2,h3{margin:0}
   .screen-office.is-answered .office-head h1{font-size:28px}
   .scene-progress .tap-hint{display:none}
   .scene-art{width:min(100%,430px,calc((100cqh - 150px) * .8))}
-  .clue-txt{-webkit-line-clamp:2;font-size:7.7px}
+  .clue-txt{-webkit-line-clamp:3;font-size:7.7px}
   .clue-row{padding:3px 20px 3px 6px;min-height:38px}
   .clue-row.locked{min-height:33px}
   .section-head{font-size:6px}
