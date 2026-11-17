@@ -100,21 +100,103 @@ const ALIBIS = [
 const LOCATIONS = [
   {
     name: 'The Marlowe Hotel', room: 'Room 814', address: 'The Marlowe Hotel, Room 814',
-    place: 'hotel', feel: 'Rain hisses on the fire escape. The suite smells of gin and cold cigar smoke.'
+    scene: 'marlowe', plate: ['ROOM', '814'], feel: 'Rain hisses on the fire escape. The suite smells of gin and cold cigar smoke.'
   },
   {
-    name: 'The Starlight Lounge', room: 'Back office', address: 'The Starlight Lounge, rear office',
-    place: 'club', feel: 'Velvet walls, a dead neon moon, and a carpet that has seen better nights.'
+    name: 'The Starlight Lounge', room: 'Rear office', address: 'The Starlight Lounge, rear office',
+    scene: 'starlight', plate: ['OFFICE', 'REAR'], feel: 'Velvet walls, a dead neon moon, and a carpet that has seen better nights.'
   },
   {
     name: 'Pier 9', room: "Harbormaster's office", address: "Pier 9, harbormaster's office",
-    place: 'dock', feel: 'The river slaps the pilings. Somewhere a foghorn answers.'
+    scene: 'pier9', plate: ['PIER', '9'], feel: 'The river slaps the pilings. Somewhere a foghorn answers.'
   },
   {
     name: 'The Alcazar Arms', room: 'Room 302', address: 'The Alcazar Arms, Room 302',
-    place: 'hotel', feel: 'One bulb burns in the hall. The rest of the floor is a rumor.'
+    scene: 'alcazar', plate: ['ROOM', '302'], feel: 'One bulb burns in the hall. The rest of the floor is a rumor.'
+  },
+  {
+    name: 'The Blue Dahlia Diner', room: 'Booth 3', address: 'The Blue Dahlia Diner, Booth 3',
+    scene: 'diner', plate: ['BOOTH', '3'], feel: 'Coffee has gone cold in every cup. The jukebox keeps playing to nobody.'
+  },
+  {
+    name: 'The Orpheum Theatre', room: 'Dressing Room 2', address: 'The Orpheum Theatre, dressing room 2',
+    scene: 'orpheum', plate: ['DRESSING', '2'], feel: 'Greasepaint and dust. A single bulb burns over the mirror.'
+  },
+  {
+    name: 'Halcyon Warehouse', room: 'Bay 7', address: 'Halcyon Warehouse, Bay 7',
+    scene: 'warehouse', plate: ['BAY', '7'], feel: 'The loading door hangs half-open. Rain ticks on a thousand crates.'
+  },
+  {
+    name: 'The Midnight Limited', room: 'Sleeper Car 4', address: 'The Midnight Limited, sleeper car 4',
+    scene: 'train', plate: ['CAR', '4'], feel: 'The train sways at a dead stop. Outside, the platform lights drown in rain.'
+  },
+  {
+    name: 'Radio KNOX', room: 'Studio B', address: 'Radio KNOX, Studio B',
+    scene: 'radio', plate: ['STUDIO', 'B'], feel: 'A dead microphone hums. The ON AIR sign still burns red.'
+  },
+  {
+    name: 'The Golden Calf Pawnshop', room: 'Shop 12', address: 'The Golden Calf Pawnshop, Shop 12',
+    scene: 'pawnshop', plate: ['SHOP', '12'], feel: "Every shelf holds somebody else's luck. The counter glass is fogged with prints."
+  },
+  {
+    name: 'The Sable Boathouse', room: 'Slip 3', address: 'The Sable Boathouse, Slip 3',
+    scene: 'boathouse', plate: ['SLIP', '3'], feel: 'Black water licks the pilings. A loose rope knocks against the dock.'
+  },
+  {
+    name: 'The Vieux Carré', room: 'Casino Room 6', address: 'The Vieux Carré, casino room 6',
+    scene: 'casino', plate: ['ROOM', '6'], feel: 'Brass glitters under cigarette smoke. The wheel has stopped on a losing number.'
+  },
+  {
+    name: 'The Chapel of St. Jude', room: 'Vestry', address: 'The Chapel of St. Jude, vestry',
+    scene: 'chapel', plate: ['VESTRY', 'ST. JUDE'], feel: 'Candle smoke and old stone. Somewhere a door creaks on its hinges.'
+  },
+  {
+    name: 'Ninth Street Garage', room: 'Unit 5', address: 'Ninth Street Garage, Unit 5',
+    scene: 'garage', plate: ['UNIT', '5'], feel: 'Oil, cold iron, and rain through a broken pane. A radio plays next door.'
+  },
+  {
+    name: 'The Cactus Flower Greenhouse', room: 'House 2', address: 'The Cactus Flower Greenhouse, House 2',
+    scene: 'greenhouse', plate: ['HOUSE', '2'], feel: 'Wet leaves and warm earth. The glass roof ticks under the rain.'
+  },
+  {
+    name: 'Fairview Mortuary', room: 'Room 4', address: 'Fairview Mortuary, Room 4',
+    scene: 'mortuary', plate: ['ROOM', '4'], feel: 'Lysol cannot cover the smell of cold steel. The drains are still wet.'
+  },
+  {
+    name: 'The Commodore Suite', room: 'Suite 1802', address: 'The Commodore Suite, Suite 1802',
+    scene: 'commodore', plate: ['SUITE', '1802'], feel: 'The city glitters forty floors below. The ice in the bucket has not melted.'
+  },
+  {
+    name: 'Rialto Alley', room: 'Alley 7', address: 'Rialto Alley, Alley 7',
+    scene: 'rialto', plate: ['ALLEY', '7'], feel: 'A neon sign bleeds pink across the wet bricks. The rain never lands clean.'
+  },
+  {
+    name: 'The Hall of Antiquities', room: 'Gallery 3', address: 'The Hall of Antiquities, Gallery 3',
+    scene: 'gallery', plate: ['GALLERY', '3'], feel: 'Marble, dust, and the hush of things too old to touch. A rope barrier hangs loose.'
+  },
+  {
+    name: 'The Blue Note Barbershop', room: 'Chair 2', address: 'The Blue Note Barbershop, Chair 2',
+    scene: 'barbershop', plate: ['CHAIR', '2'], feel: 'Shaving soap and bay rum. The pole outside turns without a sound.'
+  },
+  {
+    name: 'The Steam Laundry', room: 'Basement', address: 'The Steam Laundry, basement',
+    scene: 'laundry', plate: ['BASEMENT', 'STEAM'], feel: 'Steam clings to the ceiling. A drum turns somewhere in the dark.'
+  },
+  {
+    name: 'The Ironworks Gym', room: 'Back room', address: 'The Ironworks Gym, back room',
+    scene: 'gym', plate: ['IRONWORKS', 'GYM'], feel: 'Sweat, liniment, and chalk dust. A heavy bag hangs perfectly still.'
+  },
+  {
+    name: 'The Carnegie Library', room: 'Wing 2', address: 'The Carnegie Library, Wing 2',
+    scene: 'library', plate: ['WING', '2'], feel: 'Dust floats in the reading lamps. Every book seems to be listening.'
+  },
+  {
+    name: 'The Palace Cinema', room: 'Projection Booth', address: 'The Palace Cinema, projection booth',
+    scene: 'cinema', plate: ['PROJECTION', 'BOOTH'], feel: 'Celluloid and hot dust. The projector is still running on an empty reel.'
   }
 ];
+
+let previousLocation = null;
 
 const TIPS = [
   "Body's at {address}. Door was locked from the inside.",
@@ -123,11 +205,14 @@ const TIPS = [
   'Body at {address}. Your kind of weather—and your kind of mess.'
 ];
 
+const cap = (s) => (s ? s.charAt(0).toUpperCase() + s.slice(1) : s);
+const stationOf = (loc, key) => getStationMeta(loc, key);
+
 const GUN_OPENERS = {
-  desk: 'Under the desk: {trace}.',
-  window: 'Snagged on the window latch: {trace}.',
-  coat: "In the coat's lining: {trace}.",
-  safe: "Inside the safe's dial: {trace}."
+  desk: '{place}: {trace}.',
+  window: '{place}: {trace}.',
+  coat: '{place}: {trace}.',
+  safe: '{place}: {trace}.'
 };
 
 const GUN_CLOSERS = [
@@ -137,29 +222,25 @@ const GUN_CLOSERS = [
   'Only {killer} could have left it.'
 ];
 
-const RED_PLACES = {
-  desk: 'Under the desk',
-  window: 'On the sill',
-  coat: 'In the coat',
-  safe: 'Inside the safe'
-};
-
 const WEAPON_LINES = {
-  desk: 'The {weapon} lies in the desk drawer, wiped clean. The killer knew where it was kept.',
-  window: 'The {weapon} rests on the sill, wiped clean. Whoever came through that window came prepared.',
-  coat: 'The {weapon} is rolled in the coat, wiped clean. This was planned, not a crime of passion.',
-  safe: 'The {weapon} is stashed in the safe, wiped clean. The killer knew the combination.'
+  desk: 'The {weapon} lies {place}, wiped clean. The killer knew where it was kept.',
+  window: 'The {weapon} rests {place}, wiped clean. Whoever came that way came prepared.',
+  coat: 'The {weapon} is rolled up {place}, wiped clean. This was planned, not passion.',
+  safe: 'The {weapon} is stashed {place}, wiped clean. The killer knew the combination.'
 };
 
 const ALIBI_LINES = {
-  desk: "A betting slip in the desk puts {name} here at 1:35. That's not the story {name} told.",
-  window: "A cab receipt on the sill is timed 1:35 and made out to {name}. The alibi doesn't hold.",
-  coat: "A pawn ticket in the coat is stamped 1:35 and carries {name}'s initials. The alibi doesn't hold.",
-  safe: "The safe's timer jammed at 1:35—the exact minute {name} claims to have been elsewhere."
+  desk: 'A betting slip found {place} puts {name} here at 1:35. That is not the story {name} told.',
+  window: 'A cab receipt {place} is timed 1:35 and made out to {name}. The alibi does not hold.',
+  coat: "A pawn ticket {place} is stamped 1:35 and carries {name}'s initials. The alibi does not hold.",
+  safe: 'A betting slip {place} is stamped 1:35—the exact minute {name} claims to have been elsewhere.'
 };
 
 function makeCase() {
-  const location = pick(LOCATIONS);
+  const options = previousLocation ? LOCATIONS.filter((l) => l.name !== previousLocation) : LOCATIONS;
+  const location = pick(options);
+  previousLocation = location.name;
+  const placeFor = (key) => stationOf(location, key).place;
   const victim = pick(VICTIMS);
   const weapon = pick(WEAPONS);
   const chosen = take(SUSPECT_POOL, 3);
@@ -189,28 +270,34 @@ function makeCase() {
   clues[gunObject] = {
     object: gunObject,
     type: 'gun',
-    text: GUN_OPENERS[gunObject].replace('{trace}', killer.trace) + ' ' + gunCloser
+    text: GUN_OPENERS[gunObject]
+      .replaceAll('{place}', cap(placeFor(gunObject)))
+      .replace('{trace}', killer.trace) + ' ' + gunCloser
   };
 
   const redObject = shuffledObjects[1];
   clues[redObject] = {
     object: redObject,
     type: 'red',
-    text: `${RED_PLACES[redObject]}: ${redSuspect.trace}. It carries ${redSuspect.name}'s signature—maybe too neatly.`
+    text: `${cap(placeFor(redObject))}: ${redSuspect.trace}. It carries ${redSuspect.name}'s signature—maybe too neatly.`
   };
 
   const weaponObject = shuffledObjects[2];
   clues[weaponObject] = {
     object: weaponObject,
     type: 'weapon',
-    text: WEAPON_LINES[weaponObject].replace('{weapon}', weapon)
+    text: WEAPON_LINES[weaponObject]
+      .replaceAll('{place}', placeFor(weaponObject))
+      .replace('{weapon}', weapon)
   };
 
   const alibiObject = shuffledObjects[3];
   clues[alibiObject] = {
     object: alibiObject,
     type: 'alibi',
-    text: ALIBI_LINES[alibiObject].replaceAll('{name}', alibiSuspect.name)
+    text: ALIBI_LINES[alibiObject]
+      .replaceAll('{place}', placeFor(alibiObject))
+      .replaceAll('{name}', alibiSuspect.name)
   };
 
   const tip = pick(TIPS)
@@ -799,26 +886,36 @@ function setCaseChrome() {
   $('#boardWeapon').textContent = `a ${c.weapon}`;
   $('#accuseVictim').textContent = c.victim.name;
   $('#accuseScene').textContent = c.location.name;
-  $('#sceneArt').dataset.place = c.location.place;
 }
 
 function renderCase() {
+  const c = state.caseData;
   setCaseChrome();
+  $('#sceneCanvas').innerHTML = renderScene(c.location);
   $$('.hotspot').forEach((btn) => {
-    btn.classList.remove('found');
-    btn.querySelector('.tag').textContent = OBJECTS[btn.dataset.object].short;
+    const key = btn.dataset.object;
+    const pt = getStationPoint(c.location, key);
+    const meta = stationOf(c.location, key);
+    btn.style.left = `${pt.x}%`;
+    btn.style.top = `${pt.y}%`;
+    btn.dataset.side = pt.y > 56 ? 'top' : 'bottom';
+    btn.querySelector('.tag').textContent = meta.label;
+    btn.setAttribute('aria-label', `Inspect ${meta.name}`);
   });
   $('#clueProgress').textContent = '0 OF 4 CLUES LOGGED';
+  renderSceneState();
   renderBoard();
 }
 
 function renderSceneState() {
+  const c = state.caseData;
   $$('.hotspot').forEach((btn) => {
     const key = btn.dataset.object;
     const found = state.found.has(key);
+    const meta = stationOf(c.location, key);
     btn.classList.toggle('found', found);
-    btn.querySelector('.tag').textContent = found ? `${OBJECTS[key].short} ✓` : OBJECTS[key].short;
-    btn.setAttribute('aria-label', `${found ? 'Review' : 'Inspect'} ${OBJECTS[key].name.toLowerCase()}`);
+    btn.querySelector('.tag').textContent = found ? `${meta.label} ✓` : meta.label;
+    btn.setAttribute('aria-label', `${found ? 'Review' : 'Inspect'} ${meta.name}`);
   });
   $('#clueProgress').textContent = `${state.found.size} OF 4 CLUES LOGGED`;
 }
@@ -827,17 +924,18 @@ function renderZoom() {
   const c = state.caseData;
   const key = state.currentObject || 'desk';
   const obj = OBJECTS[key];
+  const meta = stationOf(c.location, key);
   const clue = c.clues[key];
   $('#zoomCanvas').innerHTML = CLOSEUPS[key];
   $('#zoomArt').dataset.object = key;
-  $('#zoomExhibit').textContent = `EXHIBIT ${obj.exhibit} · ${obj.short}`;
+  $('#zoomExhibit').textContent = `EXHIBIT ${obj.exhibit} · ${meta.label}`;
   $('#zoomPlate').textContent = `PLATE ${obj.plate}`;
   $('#zoomClueNo').textContent = `CLUE ${OBJECT_ORDER.indexOf(key) + 1} / 04`;
-  $('#zoomObject').textContent = obj.short;
+  $('#zoomObject').textContent = meta.label;
   $('#clueText').textContent = clue.text;
   $('#clueSheet').classList.toggle('is-gun', clue.type === 'gun');
   $('#zoomFound').textContent = `${state.found.size} / 4`;
-  $('#zoomArt').setAttribute('aria-label', `Close-up of ${obj.name.toLowerCase()}`);
+  $('#zoomArt').setAttribute('aria-label', `Close-up of ${meta.name}`);
 }
 
 function renderBoard() {
@@ -847,13 +945,14 @@ function renderBoard() {
   const tilts = [-0.45, 0.3, -0.18, 0.5];
   const clueHTML = OBJECT_ORDER.map((key, i) => {
     const obj = OBJECTS[key];
+    const meta = stationOf(c.location, key);
     const clue = c.clues[key];
     const found = state.found.has(key);
     if (!found) {
       return `<div class="clue-row locked" style="--i:${i};--tilt:${tilts[i]}deg">
         <span class="num">0${i + 1}</span>
         <div class="clue-body">
-          <div class="clue-meta-mini"><b>${obj.short}</b><span>SEALED</span></div>
+          <div class="clue-meta-mini"><b>${meta.label}</b><span>SEALED</span></div>
           <div class="clue-txt">NOT YET LOGGED</div>
         </div>
       </div>`;
@@ -861,7 +960,7 @@ function renderBoard() {
     return `<div class="clue-row ${clue.type === 'gun' ? 'is-gun' : ''}" style="--i:${i};--tilt:${tilts[i]}deg">
       <span class="num">0${i + 1}</span>
       <div class="clue-body">
-        <div class="clue-meta-mini"><b>${obj.short}</b><span>CLUE 0${i + 1}</span><span class="gun-flag">SMOKING GUN</span></div>
+        <div class="clue-meta-mini"><b>${meta.label}</b><span>CLUE 0${i + 1}</span><span class="gun-flag">SMOKING GUN</span></div>
         <div class="clue-txt">${esc(clue.text)}</div>
       </div>
     </div>`;
