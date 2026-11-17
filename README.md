@@ -17,3 +17,31 @@
 - 🌍 [Create with OMGithub](https://go.ondev.store/).
 - 🧬 [Explore the remix source](https://github.com/DJBS1868/Midnight-Detective).
 <!-- omgithub:readme:end -->
+
+## The game
+
+A short, replayable 1940s noir murder mystery built for vertical phone screens. Every case
+randomizes the victim, the weapon, the three suspects, their motives and alibis, the four
+clues, the true killer, and one of **24 hand-drawn crime scenes**. Each location carries the
+room, pier, or suite number Miller gives you on the phone.
+
+### How to play
+
+1. **Answer the call.** Sergeant Miller gives you the address at 2:00 A.M.
+2. **Work the scene.** Tap the four marked details to log clues. One of them is the smoking gun.
+3. **Read the board.** Cross-check the evidence, motives, and alibis.
+4. **Accuse once.** The right name with the smoking gun closes the case. The right name
+   without it, or the wrong name, and the killer walks.
+
+Rain, ringing, and clue sounds are optional — tap **SOUND** in the top corner to enable them.
+
+### Run locally
+
+There is no build step and no runtime dependency. Serve the folder with any static server:
+
+```bash
+python3 -m http.server 4173
+```
+
+Then open <http://127.0.0.1:4173/index.html>. Fonts and artwork are bundled; the game also
+works when opened directly from disk.

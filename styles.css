@@ -408,9 +408,10 @@ p,h1,h2,h3{margin:0}
 .hud-clock>span{display:block;font-size:17px;letter-spacing:.1em;color:var(--paper-bright);font-weight:500;text-shadow:0 0 16px rgba(227,194,134,.18)}
 .hud-clock small{display:block;margin-top:3px;font-size:6.5px;letter-spacing:.22em;color:var(--paper-faint)}
 .sound-toggle{
-  display:block;margin:8px 0 0 auto;padding:3px 0;font-size:6.5px;letter-spacing:.18em;
+  position:relative;display:block;margin:8px 0 0 auto;padding:3px 0;font-size:6.5px;letter-spacing:.18em;
   color:var(--paper-faint);border-bottom:1px dotted rgba(233,221,196,.2);line-height:1;
 }
+.sound-toggle::after{content:"";position:absolute;inset:-11px -10px}
 .sound-toggle b{font-weight:500;color:var(--paper-dim)}
 .sound-toggle[aria-pressed="true"]{color:var(--gold);border-color:rgba(201,161,94,.5)}
 .sound-toggle[aria-pressed="true"] b{color:var(--gold-bright)}
@@ -972,7 +973,7 @@ p,h1,h2,h3{margin:0}
 @media (max-height:700px){
   .board-notes{display:none}
   .clue-txt{-webkit-line-clamp:3}
-  .scene-brief{display:none}
+  .scene-brief{margin-top:6px;font-size:7.5px;line-height:1.4}
   .accuse-case{display:none}
 }
 @media (max-height:670px){
