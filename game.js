@@ -319,519 +319,6 @@ function makeCase() {
     openedAt: Date.now()
   };
 }
-/* ================= CLOSE-UP ART ================= */
-const CLOSEUPS = {};
-
-CLOSEUPS.desk = `
-<svg viewBox="0 0 400 500" preserveAspectRatio="xMidYMid slice" role="img" aria-label="A rain-lit close-up of the dead man's desk">
-  <defs>
-    <linearGradient id="dk-wall" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0" stop-color="#171009"/><stop offset=".65" stop-color="#0d0906"/><stop offset="1" stop-color="#080605"/>
-    </linearGradient>
-    <linearGradient id="dk-wood" x1="0" y1="0" x2=".8" y2="1">
-      <stop offset="0" stop-color="#6a4528"/><stop offset=".35" stop-color="#482d19"/><stop offset=".75" stop-color="#2b1a0f"/><stop offset="1" stop-color="#160e08"/>
-    </linearGradient>
-    <radialGradient id="dk-lamp" cx=".5" cy=".5" r=".5">
-      <stop offset="0" stop-color="#ffce84" stop-opacity=".5"/>
-      <stop offset=".35" stop-color="#d3944e" stop-opacity=".2"/>
-      <stop offset="1" stop-color="#000" stop-opacity="0"/>
-    </radialGradient>
-    <radialGradient id="dk-vig" cx=".5" cy=".46" r=".7">
-      <stop offset=".4" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".7"/>
-    </radialGradient>
-    <filter id="dk-soft" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="7"/></filter>
-    <filter id="dk-soft2"><feGaussianBlur stdDeviation="2.5"/></filter>
-  </defs>
-  <rect width="400" height="500" fill="url(#dk-wall)"/>
-  <g stroke="#3a2a1a" stroke-width=".6" opacity=".18">
-    <line x1="24" y1="0" x2="24" y2="184"/><line x1="72" y1="0" x2="72" y2="184"/><line x1="120" y1="0" x2="120" y2="184"/>
-    <line x1="168" y1="0" x2="168" y2="184"/><line x1="216" y1="0" x2="216" y2="184"/><line x1="264" y1="0" x2="264" y2="184"/>
-    <line x1="312" y1="0" x2="312" y2="184"/><line x1="360" y1="0" x2="360" y2="184"/>
-  </g>
-  <path d="M-20 166 L420 138 L420 520 L-20 520Z" fill="url(#dk-wood)"/>
-  <path d="M-20 168 L420 140" stroke="#d5a96b" stroke-opacity=".35" stroke-width="1.6"/>
-  <path d="M-20 174 L420 146" stroke="#0b0603" stroke-opacity=".7" stroke-width="2"/>
-  <ellipse cx="300" cy="212" rx="180" ry="150" fill="url(#dk-lamp)"/>
-  <g stroke="#1a0f07" stroke-width="1" opacity=".5" fill="none">
-    <path d="M-10 225c70-12 150-12 232-2s130 15 190 11"/>
-    <path d="M-10 262c58-9 143-8 222 0s148 13 195 9"/>
-    <path d="M-8 313c71-7 142-7 217 0s142 10 208 7"/>
-    <path d="M-8 374c58-6 139-6 214-1s149 10 202 6"/>
-    <path d="M-8 446c75-8 158-6 234 1s137 9 181 5"/>
-    <path d="M43 178c8 74 5 162-3 290M130 170c7 61 3 148-2 300M222 162c6 80 3 161-1 238M310 154c4 64 6 160 2 300"/>
-  </g>
-  <g opacity=".6" fill="#efd8a8">
-    <circle cx="292" cy="180" r="1"/><circle cx="312" cy="197" r=".7"/><circle cx="261" cy="214" r=".8"/>
-    <circle cx="341" cy="228" r=".6"/><circle cx="278" cy="249" r=".7"/>
-  </g>
-
-  <!-- lamp, top right -->
-  <g transform="translate(316 88)">
-    <ellipse cx="0" cy="16" rx="112" ry="84" fill="#ffcd82" opacity=".13" filter="url(#dk-soft)"/>
-    <path d="M-58 3C-50-24 50-24 58 3L42 15H-42Z" fill="#25271b" stroke="#81734e" stroke-width="1.2"/>
-    <path d="M-47 6C-38-13 38-13 47 6Z" fill="#43462b" opacity=".9"/>
-    <path d="M-44 16h88" stroke="#caa66a" stroke-width="3" opacity=".6"/>
-    <rect x="-3" y="16" width="6" height="52" fill="#17120c"/>
-    <ellipse cx="0" cy="68" rx="31" ry="7" fill="#0c0906"/>
-  </g>
-
-  <!-- report and papers -->
-  <g transform="translate(60 224) rotate(-8)">
-    <rect x="6" y="8" width="154" height="186" fill="#000" opacity=".35" filter="url(#dk-soft2)"/>
-    <rect width="154" height="186" fill="#cdbc98"/>
-    <rect x="8" y="9" width="138" height="168" fill="none" stroke="#8d7755" stroke-opacity=".4"/>
-    <text x="13" y="27" font-family="'Special Elite','Courier New',monospace" font-size="9" letter-spacing="2" fill="#4c3a22">CASE FILE</text>
-    <text x="13" y="42" font-family="'Special Elite','Courier New',monospace" font-size="7.5" fill="#5d482c">3:05 A.M. / HOMICIDE</text>
-    <g stroke="#4d3c25" stroke-width=".8" opacity=".55">
-      <line x1="13" y1="57" x2="139" y2="57"/><line x1="13" y1="67" x2="132" y2="67"/>
-      <line x1="13" y1="77" x2="141" y2="77"/><line x1="13" y1="87" x2="124" y2="87"/>
-      <line x1="13" y1="97" x2="137" y2="97"/><line x1="13" y1="107" x2="117" y2="107"/>
-      <line x1="13" y1="117" x2="142" y2="117"/><line x1="13" y1="127" x2="130" y2="127"/>
-      <line x1="13" y1="137" x2="139" y2="137"/><line x1="13" y1="147" x2="105" y2="147"/>
-      <line x1="13" y1="157" x2="136" y2="157"/>
-    </g>
-    <path d="M100 170c17-5 34-4 46 5-15 5-36 6-54 2Z" fill="#6f2923" opacity=".25"/>
-    <path d="M154 186l-13-11-1 21Z" fill="#b6a27d"/>
-  </g>
-  <g transform="translate(38 227) rotate(5)" opacity=".7">
-    <rect width="82" height="108" fill="#b7a580"/>
-    <g stroke="#57452d" stroke-width=".7" opacity=".5"><line x1="9" y1="17" x2="72" y2="17"/><line x1="9" y1="26" x2="66" y2="26"/><line x1="9" y1="35" x2="73" y2="35"/><line x1="9" y1="44" x2="55" y2="44"/></g>
-  </g>
-
-  <!-- ashtray -->
-  <g transform="translate(294 334) rotate(-4)">
-    <ellipse cx="8" cy="18" rx="54" ry="25" fill="#000" opacity=".5" filter="url(#dk-soft2)"/>
-    <ellipse rx="50" ry="27" fill="#2c261d" stroke="#746448" stroke-width="1.4"/>
-    <ellipse rx="36" ry="17" fill="#0b0907"/>
-    <ellipse rx="36" ry="17" fill="none" stroke="#9c8459" stroke-opacity=".35"/>
-    <ellipse cx="17" cy="-4" rx="6" ry="2.1" fill="#d2c19d" transform="rotate(-17 17 -4)"/>
-    <circle cx="22" cy="-5" r="1.8" fill="#e06a39" opacity=".9"/>
-    <path d="M10-6c-16 4-22 14-13 23 2 3-1 7-4 10" stroke="#cfc3ab" stroke-width="2.2" fill="none" opacity=".22" filter="url(#dk-soft2)"/>
-    <path d="M14-9c-22 6-30 22-17 37 6 8 1 14-5 21" stroke="#d6cbb4" stroke-width="1.3" fill="none" opacity=".16"/>
-    <ellipse cx="-20" cy="2" rx="8" ry="3" fill="#5c4a32" opacity=".65" transform="rotate(13 -20 2)"/>
-  </g>
-
-  <!-- whiskey glass -->
-  <g transform="translate(104 422)">
-    <ellipse cx="3" cy="25" rx="29" ry="8" fill="#000" opacity=".45"/>
-    <path d="M-22-17h44l-5 38c-1 5-6 7-17 7s-16-2-17-7Z" fill="#7c5d30" opacity=".24" stroke="#c9b489" stroke-opacity=".36" stroke-width="1"/>
-    <path d="M-19 3h38l-3 17c-1 4-8 6-16 6s-15-2-16-6Z" fill="#9e6f2e" opacity=".45"/>
-    <ellipse cy="-17" rx="22" ry="5" fill="#d0bc91" opacity=".15"/>
-    <ellipse cy="-16" rx="18" ry="2.6" fill="#deb36f" opacity=".28"/>
-    <path d="M-16-14c3 2 28 2 32 0" stroke="#f5e5bc" stroke-opacity=".34" stroke-width="1"/>
-  </g>
-
-  <!-- ink bottle, pen, loose matchbook -->
-  <g transform="translate(243 424) rotate(8)">
-    <rect x="-15" y="-17" width="30" height="32" rx="3" fill="#101417" stroke="#4b5b60" stroke-width="1"/>
-    <rect x="-10" y="-22" width="20" height="8" rx="2" fill="#252b2e" stroke="#596a6f"/>
-    <path d="M-15-3h30" stroke="#c8a76b" stroke-opacity=".22"/>
-    <path d="M20-11l22-19" stroke="#b9a47c" stroke-width="2.4" stroke-linecap="round" opacity=".5"/>
-  </g>
-  <g transform="translate(329 416) rotate(-13)">
-    <rect width="52" height="30" rx="2" fill="#5f2a24" stroke="#8d5646" stroke-width="1"/>
-    <rect x="5" y="5" width="42" height="20" fill="none" stroke="#c29b73" stroke-opacity=".35"/>
-    <text x="26" y="17" text-anchor="middle" font-family="'Oswald',sans-serif" font-size="6" letter-spacing="1.5" fill="#dcc29d" opacity=".7">STARLIGHT</text>
-  </g>
-
-  <!-- blood smear at edge -->
-  <path d="M343 270c17 2 30 13 33 30 3 17-10 33-21 43-6 6-17 8-22 2-4-6 6-14 8-25 2-12-9-19-10-30-1-12 4-21 12-20Z" fill="#4f1515" opacity=".55" filter="url(#dk-soft2)"/>
-  <path d="M367 314c12 2 20 10 19 20" stroke="#671d1c" stroke-width="3" fill="none" opacity=".3"/>
-  <g fill="#e8d7ad">
-    <circle cx="200" cy="192" r=".8" opacity=".4"/><circle cx="352" cy="194" r=".6" opacity=".3"/><circle cx="237" cy="267" r=".7" opacity=".35"/>
-  </g>
-  <rect width="400" height="500" fill="url(#dk-vig)"/>
-</svg>`;
-CLOSEUPS.window = `
-<svg viewBox="0 0 400 500" preserveAspectRatio="xMidYMid slice" role="img" aria-label="A close-up of the shattered window and the rainy street beyond">
-  <defs>
-    <linearGradient id="wn-night" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0" stop-color="#0b1d28"/><stop offset=".55" stop-color="#162831"/><stop offset="1" stop-color="#2d2824"/>
-    </linearGradient>
-    <linearGradient id="wn-frame" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#4d4030"/><stop offset=".4" stop-color="#221b14"/><stop offset="1" stop-color="#0a0806"/>
-    </linearGradient>
-    <linearGradient id="wn-sill" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0" stop-color="#3b3228"/><stop offset=".35" stop-color="#1c1712"/><stop offset="1" stop-color="#090706"/>
-    </linearGradient>
-    <radialGradient id="wn-neon" cx=".5" cy=".5" r=".5">
-      <stop offset="0" stop-color="#ff6c81" stop-opacity=".45"/><stop offset="1" stop-color="#ff4768" stop-opacity="0"/>
-    </radialGradient>
-    <radialGradient id="wn-vig" cx=".5" cy=".48" r=".72">
-      <stop offset=".38" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".72"/>
-    </radialGradient>
-    <filter id="wn-glow" x="-40%" y="-40%" width="180%" height="180%">
-      <feGaussianBlur stdDeviation="5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
-    </filter>
-    <filter id="wn-blur"><feGaussianBlur stdDeviation="2.2"/></filter>
-    <filter id="wn-soft" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="6"/></filter>
-  </defs>
-
-  <rect width="400" height="500" fill="#06090b"/>
-  <rect x="22" y="16" width="356" height="408" fill="url(#wn-night)"/>
-
-  <!-- outside: skyline -->
-  <g fill="#091217">
-    <rect x="18" y="176" width="52" height="250"/><rect x="58" y="126" width="38" height="300"/>
-    <rect x="95" y="208" width="46" height="220"/><rect x="132" y="158" width="32" height="270"/>
-    <rect x="164" y="198" width="55" height="230"/><rect x="218" y="142" width="38" height="290"/>
-    <rect x="252" y="186" width="53" height="243"/><rect x="303" y="156" width="40" height="273"/>
-    <rect x="339" y="204" width="48" height="222"/>
-  </g>
-  <g fill="#d7ad67" opacity=".48">
-    <rect x="28" y="195" width="4" height="6"/><rect x="38" y="213" width="4" height="6"/><rect x="49" y="195" width="4" height="6"/>
-    <rect x="67" y="146" width="3" height="5"/><rect x="76" y="166" width="3" height="5"/><rect x="67" y="190" width="3" height="5"/>
-    <rect x="104" y="224" width="4" height="6"/><rect x="115" y="240" width="4" height="6"/><rect x="126" y="224" width="4" height="6"/>
-    <rect x="172" y="216" width="4" height="6"/><rect x="184" y="232" width="4" height="6"/><rect x="198" y="216" width="4" height="6"/>
-    <rect x="226" y="162" width="3" height="5"/><rect x="236" y="180" width="3" height="5"/><rect x="226" y="204" width="3" height="5"/>
-    <rect x="262" y="204" width="4" height="6"/><rect x="274" y="220" width="4" height="6"/><rect x="288" y="204" width="4" height="6"/>
-    <rect x="311" y="176" width="3" height="5"/><rect x="322" y="196" width="3" height="5"/><rect x="346" y="222" width="4" height="6"/>
-  </g>
-  <g fill="#86c3c4" opacity=".28"><rect x="44" y="238" width="3" height="4"/><rect x="140" y="238" width="3" height="4"/><rect x="268" y="248" width="3" height="4"/></g>
-
-  <!-- neon across the street -->
-  <g transform="translate(88 158) rotate(-90)" filter="url(#wn-glow)">
-    <rect x="-30" y="-14" width="60" height="28" fill="none" stroke="#ee6a80" stroke-width="1" opacity=".6"/>
-    <text x="0" y="4" text-anchor="middle" font-family="'Oswald',sans-serif" font-size="14" letter-spacing="3" fill="#ff7189" opacity=".85">BAR</text>
-  </g>
-  <ellipse cx="92" cy="236" rx="100" ry="130" fill="url(#wn-neon)"/>
-
-  <!-- rain outside -->
-  <g stroke="#b9d5dc" stroke-width=".9" opacity=".36">
-    <line x1="40" y1="40" x2="20" y2="112"/><line x1="83" y1="34" x2="61" y2="114"/><line x1="128" y1="32" x2="104" y2="120"/>
-    <line x1="174" y1="38" x2="149" y2="124"/><line x1="221" y1="30" x2="196" y2="118"/><line x1="268" y1="40" x2="241" y2="128"/>
-    <line x1="317" y1="32" x2="289" y2="122"/><line x1="358" y1="44" x2="331" y2="126"/>
-    <line x1="58" y1="132" x2="34" y2="226"/><line x1="104" y1="146" x2="78" y2="246"/><line x1="152" y1="132" x2="124" y2="232"/>
-    <line x1="202" y1="142" x2="174" y2="240"/><line x1="251" y1="132" x2="223" y2="234"/><line x1="301" y1="140" x2="272" y2="242"/>
-    <line x1="352" y1="132" x2="322" y2="238"/>
-    <line x1="66" y1="258" x2="38" y2="354"/><line x1="118" y1="268" x2="89" y2="368"/><line x1="169" y1="254" x2="140" y2="354"/>
-    <line x1="220" y1="266" x2="191" y2="370"/><line x1="272" y1="256" x2="242" y2="360"/><line x1="323" y1="270" x2="294" y2="374"/>
-    <line x1="52" y1="378" x2="24" y2="428"/><line x1="140" y1="382" x2="111" y2="438"/><line x1="230" y1="380" x2="201" y2="440"/><line x1="320" y1="382" x2="292" y2="438"/>
-  </g>
-
-  <!-- glass surface tint and reflections -->
-  <rect x="22" y="16" width="356" height="408" fill="#a9cfd8" opacity=".035"/>
-  <path d="M32 16h58L22 214V92Z" fill="#d6ecf2" opacity=".055"/>
-  <path d="M352 16h26v158L303 16Z" fill="#d6ecf2" opacity=".04"/>
-
-  <!-- frame -->
-  <rect x="14" y="8" width="372" height="424" fill="none" stroke="url(#wn-frame)" stroke-width="18"/>
-  <rect x="22" y="16" width="356" height="408" fill="none" stroke="#0a0807" stroke-width="2"/>
-  <rect x="193" y="16" width="14" height="408" fill="url(#wn-frame)" stroke="#0a0807" stroke-width="1"/>
-  <rect x="22" y="242" width="356" height="13" fill="url(#wn-frame)" stroke="#0a0807" stroke-width="1"/>
-  <rect x="22" y="16" width="356" height="408" fill="none" stroke="#a18761" stroke-opacity=".18" stroke-width="1"/>
-
-  <!-- impact and cracks -->
-  <g transform="translate(262 162)">
-    <circle r="9" fill="#0a0e10" stroke="#d7e7e8" stroke-opacity=".4" stroke-width="1"/>
-    <circle r="2.5" fill="#020303"/>
-    <g stroke="#d7e7e8" stroke-opacity=".65" stroke-width="1" fill="none">
-      <path d="M-8-4L-79-64M-9 1L-116-10M-6 7L-62 96M2 9L17 122M8 4L96 41M7-5L72-68M-3-9L-30-119"/>
-      <path d="M-79-64l-26-12M-79-64l-6-31M-116-10l-38 14M-62 96l-19 35M-62 96l20 23M17 122l-19 36M96 41l35-5M96 41l25 25M72-68l11-30"/>
-      <path d="M-45-20l-39 34M-36 48l-49 2M53 20l57 3M20-32l38-44"/>
-    </g>
-    <path d="M-28-35L-46-52l-17 9-3 24Z" fill="#d6e7e9" opacity=".08"/>
-  </g>
-  <!-- missing shard and loose glass -->
-  <path d="M276 130l49-51 13 64-24 17Z" fill="#0a171d" opacity=".75"/>
-  <path d="M276 130l49-51 13 64" fill="none" stroke="#d6e6e8" stroke-opacity=".38" stroke-width="1"/>
-  <g fill="#d7e6e7" opacity=".35">
-    <path d="M322 132l9 13-11 3Z"/><path d="M301 173l7 17-12-5Z"/><path d="M245 219l4 13-8-3Z"/>
-  </g>
-  <g stroke="#cfe3e6" stroke-opacity=".3" stroke-width=".8">
-    <line x1="40" y1="300" x2="60" y2="337"/><line x1="150" y1="280" x2="163" y2="316"/><line x1="330" y1="290" x2="348" y2="330"/>
-  </g>
-  <g fill="#d5e8eb" opacity=".3">
-    <ellipse cx="82" cy="214" rx="2" ry="4" transform="rotate(-17 82 214)"/>
-    <ellipse cx="176" cy="300" rx="1.6" ry="3.6" transform="rotate(-13 176 300)"/>
-    <ellipse cx="314" cy="260" rx="2.4" ry="5" transform="rotate(-19 314 260)"/>
-    <ellipse cx="356" cy="352" rx="1.8" ry="4" transform="rotate(-16 356 352)"/>
-    <ellipse cx="124" cy="376" rx="2" ry="4.4" transform="rotate(-14 124 376)"/>
-  </g>
-
-  <!-- curtains -->
-  <path d="M22 16c31 64 16 180 2 264 24 9 39 2 48-19 9-49 11-168-1-245Z" fill="#151417" opacity=".93"/>
-  <path d="M30 30c19 61 11 148 1 218M47 34c12 58 10 146 1 205" stroke="#4a4142" stroke-opacity=".22" stroke-width="2" fill="none"/>
-  <path d="M356 16c-22 72-13 169-1 248 20 3 29-8 27-30-1-42 6-108-1-218Z" fill="#111013" opacity=".9"/>
-  <path d="M364 42c-11 62-7 135-1 190" stroke="#4a4142" stroke-opacity=".16" stroke-width="2" fill="none"/>
-
-  <!-- sill and interior -->
-  <rect x="0" y="424" width="400" height="76" fill="url(#wn-sill)"/>
-  <rect x="8" y="430" width="384" height="8" fill="#725a3a" opacity=".28"/>
-  <path d="M14 424h372v10H14Z" fill="#a0855b" opacity=".16"/>
-  <ellipse cx="245" cy="462" rx="75" ry="14" fill="#7aa4ad" opacity=".12"/>
-  <ellipse cx="245" cy="461" rx="55" ry="8" fill="#b7d5da" opacity=".11"/>
-  <path d="M206 447c5 4 2 8 7 11M226 452c4 3 1 6 5 9M267 449c4 4 1 7 5 10" stroke="#d4e5e7" stroke-opacity=".24" stroke-width=".8" fill="none"/>
-  <g transform="translate(214 430)">
-    <rect width="30" height="12" rx="2" fill="#3a342a" stroke="#8d7a57" stroke-width="1"/>
-    <path d="M5 2l8 4-4 5M22 2l-7 4 4 5" stroke="#cfae74" stroke-width="1" fill="none" opacity=".7"/>
-    <path d="M30 4l14 2-3 8-12-2Z" fill="#2b2720" stroke="#8d7a57" stroke-width=".8"/>
-  </g>
-  <path d="M0 436h400M0 468h400M0 492h400" stroke="#000" stroke-opacity=".3"/>
-  <g fill="#c8b592" opacity=".35">
-    <path d="M320 444l9 8-5 9-9-7Z"/><path d="M337 462l6 6-4 6-6-6Z"/>
-  </g>
-  <rect width="400" height="500" fill="url(#wn-vig)"/>
-</svg>`;
-CLOSEUPS.coat = `
-<svg viewBox="0 0 400 500" preserveAspectRatio="xMidYMid slice" role="img" aria-label="A close-up of the dead man's trench coat hanging in the dark">
-  <defs>
-    <linearGradient id="ct-wall" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#17140f"/><stop offset=".55" stop-color="#0b0a08"/><stop offset="1" stop-color="#050404"/>
-    </linearGradient>
-    <linearGradient id="ct-coat" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#7a6b53"/><stop offset=".22" stop-color="#4a4032"/><stop offset=".62" stop-color="#241f19"/><stop offset="1" stop-color="#0c0a08"/>
-    </linearGradient>
-    <linearGradient id="ct-coat2" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#3c352a"/><stop offset=".6" stop-color="#1a1712"/><stop offset="1" stop-color="#090807"/>
-    </linearGradient>
-    <linearGradient id="ct-light" x1="0" y1="0" x2="1" y2="0">
-      <stop offset="0" stop-color="#ffdca0" stop-opacity=".22"/><stop offset="1" stop-color="#ffdca0" stop-opacity="0"/>
-    </linearGradient>
-    <pattern id="ct-check" width="18" height="18" patternUnits="userSpaceOnUse">
-      <rect width="18" height="18" fill="#1d1610"/>
-      <path d="M0 0h9v9H0Zm9 9h9v9H9Z" fill="#5e2c2a" opacity=".5"/>
-      <path d="M0 0v18M0 0h18" stroke="#9d8050" stroke-opacity=".18" stroke-width=".8"/>
-    </pattern>
-    <radialGradient id="ct-vig" cx=".46" cy=".46" r=".72">
-      <stop offset=".35" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".74"/>
-    </radialGradient>
-    <filter id="ct-blur" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="8"/></filter>
-    <filter id="ct-blur2"><feGaussianBlur stdDeviation="2"/></filter>
-  </defs>
-
-  <rect width="400" height="500" fill="url(#ct-wall)"/>
-  <g stroke="#3c3327" stroke-width=".7" opacity=".18">
-    <line x1="32" y1="0" x2="32" y2="500"/><line x1="96" y1="0" x2="96" y2="500"/><line x1="160" y1="0" x2="160" y2="500"/>
-    <line x1="224" y1="0" x2="224" y2="500"/><line x1="288" y1="0" x2="288" y2="500"/><line x1="352" y1="0" x2="352" y2="500"/>
-  </g>
-  <rect x="-40" y="0" width="210" height="500" fill="url(#ct-light)"/>
-  <ellipse cx="90" cy="250" rx="190" ry="260" fill="#ffce86" opacity=".05" filter="url(#ct-blur)"/>
-  <path d="M175 0l-38 500h168L270 0Z" fill="#ffd69a" opacity=".025"/>
-  <ellipse cx="208" cy="470" rx="148" ry="22" fill="#000" opacity=".45" filter="url(#ct-blur)"/>
-
-  <!-- hanger -->
-  <path d="M200 28v25" stroke="#8e7a56" stroke-width="3" fill="none"/>
-  <path d="M200 54l8-15c0-7-15-8-15-1 0 3 4 4 5 2" stroke="#a08a63" stroke-width="2.2" fill="none" stroke-linecap="round"/>
-  <path d="M200 53L94 140M200 53l106 87" stroke="#6f5e42" stroke-width="4" stroke-linecap="round"/>
-  <path d="M94 140l-6 22M306 140l6 22" stroke="#6f5e42" stroke-width="3"/>
-
-  <!-- coat silhouette -->
-  <path d="M105 154c32-13 62-18 95-18 34 0 65 5 97 18l-11 148-8 183c-20 8-37 11-51 10l-7-111-10-2-8 113c-18 1-35-2-53-9l-8-182Z" fill="url(#ct-coat)" stroke="#0a0806" stroke-width="1.5"/>
-  <path d="M140 154c19 27 41 41 65 41 25 0 47-14 65-42" fill="none" stroke="#9d8a6b" stroke-opacity=".28" stroke-width="1.4"/>
-  <path d="M141 156c15 48 12 107 8 201l27 31-1-174c-11-23-23-42-34-58Z" fill="#0c0a08" opacity=".6"/>
-  <path d="M263 157c-13 54-11 130-8 202l-24 30 1-172c11-23 21-42 31-60Z" fill="#070605" opacity=".65"/>
-
-  <!-- collar and lapels -->
-  <path d="M138 148c13-18 34-27 62-27 29 0 51 9 65 28l-25 62-41-35-39 35Z" fill="url(#ct-coat2)" stroke="#0a0806" stroke-width="1.2"/>
-  <path d="M140 150l-16 33 45 28-22-48Z" fill="#312b22" stroke="#0a0806" stroke-width="1"/>
-  <path d="M260 150l17 33-46 28 22-48Z" fill="#28231c" stroke="#0a0806" stroke-width="1"/>
-  <path d="M141 153l-3 27 27 14-10-28Z" fill="#1b1712"/>
-  <path d="M262 153l3 27-28 14 12-28Z" fill="#171410"/>
-  <path d="M148 152c25 9 52 9 104 0" stroke="#c2b08b" stroke-opacity=".18" stroke-width="1.2"/>
-  <path d="M168 188l33 30 31-30" fill="url(#ct-check)" stroke="#0b0907" stroke-width="1"/>
-  <path d="M200 212v66" stroke="#0a0806" stroke-width="2"/>
-  <path d="M199 216v72" stroke="#b4a17e" stroke-opacity=".12" stroke-width="1"/>
-
-  <!-- sleeve on left -->
-  <path d="M108 154c-23 8-38 22-44 41l-12 80c-2 12 6 18 18 19 10 1 16-4 17-14l9-66 30-34Z" fill="url(#ct-coat2)" stroke="#090705" stroke-width="1.2"/>
-  <path d="M54 268c8 7 21 10 34 8l-4 21c-11 4-22 2-30-3Z" fill="#14110d" stroke="#0b0907"/>
-  <path d="M60 278c5 3 13 4 21 3" stroke="#877656" stroke-opacity=".26" stroke-width="1"/>
-
-  <!-- fold lines -->
-  <g stroke="#0a0806" stroke-width="1" fill="none" opacity=".55">
-    <path d="M127 226c-9 59-8 128-7 186M155 246c-8 49-7 104-5 154M174 240c-4 53-2 105 1 154"/>
-    <path d="M236 233c8 57 10 122 10 182M259 238c7 48 6 102 3 155M283 224c7 57 8 119 7 176"/>
-  </g>
-  <g stroke="#af9a73" stroke-width=".8" fill="none" opacity=".1">
-    <path d="M132 224c-6 58-5 129-4 190M243 231c8 60 9 122 8 183M292 217c7 54 8 117 7 172"/>
-  </g>
-
-  <!-- belt -->
-  <path d="M113 320c30 9 58 13 86 13 31 0 60-4 89-13l-2 31c-27 9-57 13-87 13-29 0-57-4-84-12Z" fill="#1d1913" stroke="#0c0a08" stroke-width="1.4"/>
-  <path d="M114 324c57 17 115 17 170 0" stroke="#a28e69" stroke-opacity=".22" stroke-width="1.3"/>
-  <path d="M117 340c57 16 113 16 168 0" stroke="#000" stroke-opacity=".35"/>
-  <rect x="179" y="323" width="43" height="28" rx="3" fill="none" stroke="#b49a67" stroke-width="2.2"/>
-  <path d="M188 336h25" stroke="#c9b383" stroke-width="2" opacity=".55"/>
-  <circle cx="200" cy="336" r="3" fill="#0c0906" stroke="#a88d5a" stroke-width="1"/>
-
-  <!-- pockets and buttons -->
-  <path d="M72 360c22-5 44-5 64 0l-3 37c-20 5-40 4-58-1Z" fill="#16130f" stroke="#0b0907" stroke-width="1"/>
-  <path d="M74 362c20-4 41-4 60 0" stroke="#a38e69" stroke-opacity=".22" stroke-width="1"/>
-  <path d="M267 359c21-5 43-5 64 0l-2 36c-19 5-40 4-60-1Z" fill="#15120e" stroke="#0b0907" stroke-width="1"/>
-  <path d="M269 361c20-4 41-4 60 0" stroke="#a38e69" stroke-opacity=".2" stroke-width="1"/>
-  <g fill="#15120e" stroke="#a08a61" stroke-width="1.4">
-    <circle cx="203" cy="262" r="6"/><circle cx="203" cy="302" r="6"/><circle cx="203" cy="412" r="6"/>
-  </g>
-  <g fill="#c7ad77" opacity=".24"><circle cx="201" cy="260" r="1.5"/><circle cx="201" cy="300" r="1.5"/><circle cx="201" cy="410" r="1.5"/></g>
-
-  <!-- torn pocket thread -->
-  <path d="M268 380c-7 8-10 18-8 30" stroke="#0a0807" stroke-width="2.4" fill="none"/>
-  <g stroke="#9e8a66" stroke-width=".8" opacity=".6" fill="none">
-    <path d="M269 379c7 5 8 13 4 18M265 384c-6 7-5 16 0 21M272 388c2 6 1 12-2 16"/>
-  </g>
-
-  <!-- rain and stains -->
-  <g fill="#bcdae0" opacity=".27">
-    <ellipse cx="96" cy="213" rx="1.8" ry="4" transform="rotate(-12 96 213)"/>
-    <ellipse cx="286" cy="204" rx="1.5" ry="3.6" transform="rotate(-14 286 204)"/>
-    <ellipse cx="255" cy="284" rx="1.2" ry="3" transform="rotate(-11 255 284)"/>
-    <ellipse cx="130" cy="305" rx="1.5" ry="3.4" transform="rotate(-15 130 305)"/>
-    <ellipse cx="316" cy="346" rx="1.3" ry="3" transform="rotate(-13 316 346)"/>
-  </g>
-  <path d="M238 179c18 6 28 21 25 39-2 14-11 24-22 27-7 2-14-2-14-10 0-9 9-13 10-25 1-12-5-22 1-31Z" fill="#4d1414" opacity=".55" filter="url(#ct-blur2)"/>
-  <path d="M229 205c8-4 19-2 24 6" stroke="#6d2220" stroke-width="2" fill="none" opacity=".4"/>
-  <path d="M155 431c22 9 56 12 86 5" stroke="#0b0907" stroke-width="2" fill="none" opacity=".55"/>
-
-  <!-- evidence tag -->
-  <path d="M214 300c24 18 37 39 36 63" stroke="#b3a17f" stroke-width="1.2" fill="none" stroke-dasharray="2 2"/>
-  <g transform="translate(238 358) rotate(7)">
-    <rect x="0" y="0" width="61" height="35" fill="#d6c7a7" stroke="#95805d" stroke-width="1"/>
-    <circle cx="7" cy="7" r="2.5" fill="none" stroke="#6a5638"/>
-    <text x="12" y="16" font-family="'Oswald',sans-serif" font-size="6" letter-spacing="1" fill="#4a3923">EVIDENCE</text>
-    <text x="12" y="26" font-family="'Oswald',sans-serif" font-size="6" letter-spacing="1" fill="#4a3923">COAT / 03</text>
-  </g>
-
-  <rect width="400" height="500" fill="url(#ct-vig)"/>
-</svg>`;
-CLOSEUPS.safe = `
-<svg viewBox="0 0 400 500" preserveAspectRatio="xMidYMid slice" role="img" aria-label="A close-up of the open wall safe and its combination dial">
-  <defs>
-    <linearGradient id="sf-wall" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#11181b"/><stop offset=".6" stop-color="#080b0c"/><stop offset="1" stop-color="#040505"/>
-    </linearGradient>
-    <linearGradient id="sf-steel" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#8a9290"/><stop offset=".18" stop-color="#4f5756"/><stop offset=".55" stop-color="#252c2c"/><stop offset=".82" stop-color="#3e4645"/><stop offset="1" stop-color="#111616"/>
-    </linearGradient>
-    <linearGradient id="sf-door" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#727b79"/><stop offset=".2" stop-color="#424a49"/><stop offset=".58" stop-color="#1e2424"/><stop offset=".9" stop-color="#424a49"/><stop offset="1" stop-color="#121717"/>
-    </linearGradient>
-    <radialGradient id="sf-cold" cx=".35" cy=".18" r=".75">
-      <stop offset="0" stop-color="#a9d7db" stop-opacity=".2"/><stop offset=".5" stop-color="#4b757c" stop-opacity=".07"/><stop offset="1" stop-color="#000" stop-opacity="0"/>
-    </radialGradient>
-    <radialGradient id="sf-vig" cx=".5" cy=".48" r=".72">
-      <stop offset=".36" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".76"/>
-    </radialGradient>
-    <filter id="sf-blur" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="7"/></filter>
-    <filter id="sf-soft2"><feGaussianBlur stdDeviation="1.8"/></filter>
-  </defs>
-
-  <rect width="400" height="500" fill="url(#sf-wall)"/>
-  <g stroke="#2a3437" stroke-width=".8" opacity=".16">
-    <line x1="0" y1="82" x2="400" y2="82"/><line x1="0" y1="164" x2="400" y2="164"/><line x1="0" y1="246" x2="400" y2="246"/>
-    <line x1="0" y1="328" x2="400" y2="328"/><line x1="0" y1="410" x2="400" y2="410"/>
-    <line x1="78" y1="0" x2="78" y2="500"/><line x1="156" y1="0" x2="156" y2="500"/><line x1="234" y1="0" x2="234" y2="500"/><line x1="312" y1="0" x2="312" y2="500"/>
-  </g>
-  <ellipse cx="180" cy="130" rx="230" ry="210" fill="url(#sf-cold)"/>
-  <path d="M30 40L150 0 70 500 0 500Z" fill="#b9e2e5" opacity=".025"/>
-
-  <!-- safe body -->
-  <rect x="44" y="58" width="316" height="388" rx="7" fill="#000" opacity=".55" filter="url(#sf-blur)"/>
-  <rect x="38" y="50" width="324" height="390" rx="6" fill="url(#sf-steel)" stroke="#0a0d0d" stroke-width="2"/>
-  <rect x="46" y="58" width="308" height="374" rx="3" fill="none" stroke="#b6c1bd" stroke-opacity=".17" stroke-width="1.2"/>
-  <rect x="56" y="68" width="288" height="354" fill="#080b0c"/>
-  <rect x="64" y="76" width="272" height="338" fill="#111617" stroke="#5d6866" stroke-opacity=".35" stroke-width="1.2"/>
-
-  <!-- interior -->
-  <rect x="72" y="84" width="248" height="322" fill="#0a0d0e"/>
-  <g stroke="#323c3b" stroke-width="1.2" opacity=".55">
-    <line x1="76" y1="184" x2="318" y2="184"/><line x1="76" y1="288" x2="318" y2="288"/>
-    <line x1="76" y1="376" x2="318" y2="376"/>
-  </g>
-  <g>
-    <ellipse cx="172" cy="180" rx="76" ry="5" fill="#000" opacity=".55"/>
-    <g transform="translate(108 126)">
-      <rect x="0" y="0" width="72" height="52" rx="2" fill="#2e3b33" stroke="#526755" stroke-width="1"/>
-      <rect x="7" y="-7" width="58" height="59" rx="2" fill="#314136" stroke="#526755" stroke-width="1"/>
-      <g stroke="#90a285" stroke-opacity=".32" stroke-width=".7"><line x1="10" y1="34" x2="61" y2="34"/><line x1="10" y1="41" x2="57" y2="41"/></g>
-      <text x="36" y="22" text-anchor="middle" font-family="'Special Elite','Courier New',monospace" font-size="8" fill="#d9cfaf" opacity=".65">MAY 1947</text>
-    </g>
-    <g transform="translate(198 133) rotate(-3)">
-      <rect width="98" height="45" rx="1" fill="#c1af8b" stroke="#736043" stroke-width="1"/>
-      <text x="8" y="16" font-family="'Special Elite','Courier New',monospace" font-size="7" letter-spacing="1" fill="#55432c">LEDGER / B</text>
-      <g stroke="#6e5a3c" stroke-width=".6" opacity=".6"><line x1="8" y1="26" x2="88" y2="26"/><line x1="8" y1="33" x2="80" y2="33"/><line x1="8" y1="40" x2="87" y2="40"/></g>
-      <path d="M0 0v45" stroke="#8f7b57" stroke-width="2" opacity=".5"/>
-    </g>
-    <g transform="translate(112 236) rotate(2)">
-      <rect x="0" y="0" width="120" height="46" rx="2" fill="#16351f" stroke="#3f6e4b" stroke-width="1"/>
-      <text x="60" y="26" text-anchor="middle" font-family="'Oswald',sans-serif" font-size="11" letter-spacing="3" fill="#a8c7a7" opacity=".65">BONDS</text>
-      <rect x="9" y="9" width="102" height="28" fill="none" stroke="#5b8b65" stroke-opacity=".4"/>
-    </g>
-    <g transform="translate(240 224)">
-      <rect x="0" y="6" width="50" height="30" fill="#293f31" stroke="#54715c" stroke-width="1" transform="rotate(5)"/>
-      <rect x="4" y="0" width="50" height="30" fill="#31503b" stroke="#54715c" stroke-width="1"/>
-      <text x="29" y="20" text-anchor="middle" font-family="'Special Elite','Courier New',monospace" font-size="7" fill="#b9c6a9" opacity=".55">CASH</text>
-    </g>
-    <g transform="translate(118 320)">
-      <rect x="0" y="0" width="80" height="54" fill="#35271b" stroke="#6d5438" stroke-width="1"/>
-      <rect x="6" y="6" width="68" height="42" fill="#16120e"/>
-      <ellipse cx="40" cy="27" rx="13" ry="16" fill="#c7b18b" opacity=".22"/>
-      <circle cx="40" cy="20" r="7" fill="#b19c78" opacity=".25"/>
-      <path d="M31 44c5-10 13-10 18 0" fill="#b19c78" opacity=".22"/>
-      <path d="M0 0l4 54" stroke="#8a6a44" stroke-opacity=".4"/>
-    </g>
-    <g transform="translate(221 315) rotate(-4)">
-      <rect width="58" height="58" fill="#37221e" stroke="#755047" stroke-width="1"/>
-      <rect x="7" y="7" width="44" height="44" fill="#14100e"/>
-      <text x="29" y="33" text-anchor="middle" font-family="'Oswald',sans-serif" font-size="8" letter-spacing="2" fill="#b78f77" opacity=".45">IOU</text>
-    </g>
-  </g>
-  <g fill="#a9d8dd" opacity=".1">
-    <circle cx="107" cy="101" r="1"/><circle cx="203" cy="99" r=".8"/><circle cx="301" cy="197" r=".7"/><circle cx="157" cy="249" r=".8"/><circle cx="287" cy="364" r=".7"/>
-  </g>
-
-  <!-- door, swung open to the right -->
-  <g>
-    <path d="M322 64L446 34v430l-124-31Z" fill="#000" opacity=".5" filter="url(#sf-blur)"/>
-    <path d="M316 58L440 28v436l-124-34Z" fill="url(#sf-door)" stroke="#0a0d0d" stroke-width="2"/>
-    <path d="M326 68L429 43v404l-103-29Z" fill="none" stroke="#bcc7c3" stroke-opacity=".14" stroke-width="1"/>
-    <path d="M334 78L419 57v376l-85-25Z" fill="#0d1112" opacity=".28"/>
-    <g stroke="#111616" stroke-width="2" fill="none" opacity=".65">
-      <path d="M338 103c9 19 6 40-5 58M400 92c-8 34-5 79 3 115M348 308c9 14 8 33-1 49M392 338c-6 16-5 35 2 52"/>
-    </g>
-    <g fill="#aab8b3" opacity=".16">
-      <circle cx="336" cy="86" r="4"/><circle cx="336" cy="417" r="4"/><circle cx="424" cy="60" r="4"/><circle cx="424" cy="448" r="4"/>
-    </g>
-
-    <!-- dial -->
-    <g transform="translate(373 247)">
-      <circle r="55" fill="#141919" stroke="#8a9995" stroke-width="2.5"/>
-      <circle r="48" fill="#202626" stroke="#4e5a58" stroke-width="1"/>
-      <circle r="39" fill="none" stroke="#bac5c0" stroke-opacity=".18"/>
-      <g stroke="#c2cdc8" stroke-width=".9" opacity=".6">
-        <line x1="0" y1="-43" x2="0" y2="-36"/><line x1="0" y1="43" x2="0" y2="36"/>
-        <line x1="-43" y1="0" x2="-36" y2="0"/><line x1="43" y1="0" x2="36" y2="0"/>
-        <line x1="-30" y1="-30" x2="-25" y2="-25"/><line x1="30" y1="-30" x2="25" y2="-25"/>
-        <line x1="-30" y1="30" x2="-25" y2="25"/><line x1="30" y1="30" x2="25" y2="25"/>
-      </g>
-      <g fill="#b7c3be" font-family="'Oswald',sans-serif" font-size="5.5" opacity=".45" text-anchor="middle">
-        <text x="0" y="-44">90</text><text x="44" y="2">45</text><text x="0" y="48">10</text><text x="-44" y="2">25</text>
-      </g>
-      <circle r="20" fill="#252c2c" stroke="#8a9793" stroke-width="2"/>
-      <circle r="7" fill="#0b0e0e" stroke="#b6c1bd" stroke-width="1"/>
-      <path d="M0-19v5M0 19v-5M-19 0h5M19 0h-5" stroke="#d2dad5" stroke-width="1.2" opacity=".5"/>
-      <path d="M3 3L19 24" stroke="#8b9b95" stroke-width="2" stroke-linecap="round" opacity=".5"/>
-    </g>
-    <!-- handle -->
-    <g transform="translate(374 352)">
-      <circle r="23" fill="#1c2222" stroke="#8d9a95" stroke-width="1.4"/>
-      <path d="M-16 0H16M0-16V16" stroke="#abb8b2" stroke-width="5" stroke-linecap="round" opacity=".48"/>
-      <circle r="8" fill="#2f3838" stroke="#b8c3bd" stroke-width="1"/>
-    </g>
-    <path d="M317 91c14-1 27-4 38-7" stroke="#fff" stroke-opacity=".15" stroke-width="1"/>
-  </g>
-
-  <!-- dust and scratches -->
-  <g fill="#d5dfd8" opacity=".13">
-    <circle cx="73" cy="118" r=".8"/><circle cx="298" cy="156" r=".7"/><circle cx="356" cy="415" r=".8"/><circle cx="236" cy="444" r=".6"/>
-  </g>
-  <g stroke="#dce6e0" stroke-opacity=".16" stroke-width=".7" fill="none">
-    <path d="M58 86c34 2 81 1 119-1M89 416c42 1 80-1 118-4M330 110c10 40 9 87 2 129M406 141c-8 42-6 84 2 125"/>
-  </g>
-  <path d="M70 405c22 7 49 8 73 2" stroke="#020303" stroke-opacity=".6" stroke-width="3" fill="none"/>
-  <ellipse cx="358" cy="442" rx="78" ry="10" fill="#000" opacity=".35" filter="url(#sf-blur)"/>
-  <rect width="400" height="500" fill="url(#sf-vig)"/>
-</svg>`;
 /* ================= STATE + RENDERING ================= */
 const state = {
   caseData: null,
@@ -926,7 +413,9 @@ function renderZoom() {
   const obj = OBJECTS[key];
   const meta = stationOf(c.location, key);
   const clue = c.clues[key];
-  $('#zoomCanvas').innerHTML = CLOSEUPS[key];
+
+  // Fill the copy first: a longer clue grows the sheet and shortens the
+  // camera bay, so the crop must be measured against the final layout.
   $('#zoomArt').dataset.object = key;
   $('#zoomExhibit').textContent = `EXHIBIT ${obj.exhibit} · ${meta.label}`;
   $('#zoomPlate').textContent = `PLATE ${obj.plate}`;
@@ -936,6 +425,25 @@ function renderZoom() {
   $('#clueSheet').classList.toggle('is-gun', clue.type === 'gun');
   $('#zoomFound').textContent = `${state.found.size} / 4`;
   $('#zoomArt').setAttribute('aria-label', `Close-up of ${meta.name}`);
+
+  const bay = $('#zoomCanvas').getBoundingClientRect();
+  const stage = $('#sceneCanvas').getBoundingClientRect();
+  const ratio = bay.width > 0 && bay.height > 0 ? bay.width / bay.height : 0.62;
+  const closeup = renderCloseup(c.location, key, ratio);
+  $('#zoomCanvas').innerHTML = closeup.svg;
+  const zoom = stage.width > 0
+    ? (bay.width / closeup.frame.w) / (stage.width / 400)
+    : 400 / closeup.frame.w;
+  const mag = Math.max(1.2, Math.min(19, zoom));
+  state.zoomMeta = {
+    ...closeup,
+    ratio,
+    zoom: mag,
+    stageWidth: stage.width,
+    bayWidth: bay.width,
+    bayHeight: bay.height
+  };
+  $('#zoomMag').textContent = `MAGNIFIED · ${mag >= 10 ? Math.round(mag) : mag.toFixed(1)}X`;
 }
 
 function renderBoard() {
@@ -1139,6 +647,7 @@ const screenMap = {
 };
 
 function showScreen(name) {
+  if (name !== 'zoom') cancelZoomTransit();
   state.screen = name;
   app.dataset.scene = name;
   Object.entries(screenMap).forEach(([key, id]) => {
@@ -1153,15 +662,140 @@ function showScreen(name) {
   window.scrollTo(0, 0);
 }
 
+let zoomTransit = null;
+
+function prefersReducedMotion() {
+  return window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+}
+
+function cancelZoomTransit() {
+  if (!zoomTransit) return;
+  const { timer, cleanup } = zoomTransit;
+  if (timer) clearTimeout(timer);
+  if (cleanup) clearTimeout(cleanup);
+  zoomTransit = null;
+  const transit = $('#zoomTransit');
+  const frame = $('#zoomTransitFrame');
+  transit.classList.remove('is-on');
+  frame.getAnimations().forEach((a) => a.cancel());
+  $('.zoom-transit-veil')?.getAnimations().forEach((a) => a.cancel());
+  frame.innerHTML = '';
+  frame.style.transform = '';
+  frame.style.transformOrigin = '';
+  frame.style.left = '';
+  frame.style.top = '';
+  frame.style.width = '';
+  frame.style.height = '';
+  $('#screen-zoom').classList.remove('is-transit');
+}
+
+function beginZoomIn(key, snapshot) {
+  const meta = state.zoomMeta;
+  if (!meta || !snapshot || prefersReducedMotion() || !snapshot.box.width) {
+    $('#screen-zoom').classList.remove('is-transit');
+    return;
+  }
+  const device = $('.device').getBoundingClientRect();
+  const bay = $('#zoomCanvas').getBoundingClientRect();
+  if (!bay.width || !bay.height) {
+    $('#screen-zoom').classList.remove('is-transit');
+    return;
+  }
+
+  const transit = $('#zoomTransit');
+  const frame = $('#zoomTransitFrame');
+  const veil = $('.zoom-transit-veil');
+  const left = snapshot.box.left - device.left;
+  const top = snapshot.box.top - device.top;
+  frame.innerHTML = snapshot.room;
+  frame.style.left = `${left}px`;
+  frame.style.top = `${top}px`;
+  frame.style.width = `${snapshot.box.width}px`;
+  frame.style.height = `${snapshot.box.height}px`;
+
+  // Land on the exact station rect the close-up camera uses. Measuring the
+  // same object on both copies absorbs SVG slice rounding, so the last
+  // frame of the push-in and the still close-up are the same picture.
+  const frameBox = frame.getBoundingClientRect();
+  const roomStation = frame.querySelector(`[data-station="${key}"]`);
+  const bayStation = $('#zoomCanvas').querySelector(`[data-station="${key}"]`);
+  const roomRect = roomStation?.getBoundingClientRect();
+  const bayRect = bayStation?.getBoundingClientRect();
+  let originX;
+  let originY;
+  let scale;
+  let tx;
+  let ty;
+
+  if (roomRect && bayRect && roomRect.width > 1 && bayRect.width > 1) {
+    originX = roomRect.left - frameBox.left + roomRect.width / 2;
+    originY = roomRect.top - frameBox.top + roomRect.height / 2;
+    scale = bayRect.width / roomRect.width;
+    tx = (bayRect.left - device.left + bayRect.width / 2) - (left + originX);
+    ty = (bayRect.top - device.top + bayRect.height / 2) - (top + originY);
+  } else {
+    const roomW = frame.clientWidth || snapshot.box.width;
+    originX = (meta.frame.cx / 400) * roomW;
+    originY = (meta.frame.cy / 500) * frame.clientHeight;
+    scale = Math.max(1.2, (bay.width / meta.frame.w) / (roomW / 400));
+    tx = (bay.left - device.left + bay.width / 2) - (left + originX);
+    ty = (bay.top - device.top + bay.height / 2) - (top + originY);
+  }
+
+  frame.style.transformOrigin = `${originX}px ${originY}px`;
+  frame.style.transform = 'translate(0px, 0px) scale(1)';
+  transit.classList.add('is-on');
+  veil.style.opacity = '0';
+
+  const token = Symbol('zoom');
+  zoomTransit = { token, timer: 0, cleanup: 0 };
+  const ease = 'cubic-bezier(.3,.16,.12,1)';
+  frame.animate([
+    { transform: 'translate(0px, 0px) scale(1)' },
+    { transform: `translate(${tx}px, ${ty}px) scale(${scale})` }
+  ], { duration: 700, easing: ease, fill: 'forwards' });
+  veil.animate([
+    { opacity: 0 },
+    { opacity: 0.32, offset: 0.55 },
+    { opacity: 0.55 }
+  ], { duration: 700, easing: 'ease-in', fill: 'forwards' });
+
+  const finish = () => {
+    if (!zoomTransit || zoomTransit.token !== token) return;
+    $('#screen-zoom').classList.remove('is-transit');
+    frame.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 250, easing: 'ease-out', fill: 'forwards' });
+    veil.animate([{ opacity: 0.55 }, { opacity: 0 }], { duration: 280, easing: 'ease-out', fill: 'forwards' });
+    zoomTransit.cleanup = setTimeout(() => {
+      if (!zoomTransit || zoomTransit.token !== token) return;
+      transit.classList.remove('is-on');
+      frame.innerHTML = '';
+      frame.style.transform = '';
+      frame.style.transformOrigin = '';
+      frame.style.left = '';
+      frame.style.top = '';
+      frame.style.width = '';
+      frame.style.height = '';
+      veil.style.opacity = '0';
+      zoomTransit = null;
+      cameraFlash(0.45);
+    }, 270);
+  };
+  zoomTransit.timer = setTimeout(finish, 700);
+}
+
 function openObject(key) {
   if (state.busy) return;
   state.currentObject = key;
   const isNew = !state.found.has(key);
   state.found.add(key);
-  renderZoom();
+  const snapshot = {
+    room: $('#sceneCanvas').innerHTML,
+    box: $('#sceneCanvas').getBoundingClientRect()
+  };
+  $('#screen-zoom').classList.add('is-transit');
   showScreen('zoom');
+  beginZoomIn(key, snapshot);
   if (isNew) {
-    cameraFlash(0.7);
     Sfx.clue();
     announce(`Clue logged: ${state.caseData.clues[key].text}`);
   }

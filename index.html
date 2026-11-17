@@ -381,7 +381,7 @@
       <div class="zoom-art" id="zoomArt" data-object="desk">
         <div class="zoom-canvas" id="zoomCanvas" aria-hidden="true"></div>
         <div class="reticle" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
-        <div class="zoom-caption" aria-hidden="true"><span>MAGNIFIED · 8X</span><span id="zoomPlate">PLATE 01</span></div>
+        <div class="zoom-caption" aria-hidden="true"><span id="zoomMag">MAGNIFIED · 8X</span><span id="zoomPlate">PLATE 01</span></div>
       </div>
       <div class="clue-sheet" id="clueSheet">
         <div class="clue-meta">
@@ -500,6 +500,12 @@
     </div>
 
     <div class="sr-only" aria-live="polite" id="liveRegion"></div>
+
+    <!-- camera transition: a clone of the room travels into the close-up bay -->
+    <div class="zoom-transit" id="zoomTransit" aria-hidden="true">
+      <div class="zoom-transit-frame" id="zoomTransitFrame"></div>
+      <div class="zoom-transit-veil"></div>
+    </div>
   </div>
 </div>
 <script src="scene-core.js"></script>
@@ -507,6 +513,7 @@
 <script src="scene-stations.js"></script>
 <script src="scene-stations2.js"></script>
 <script src="scenes.js"></script>
+<script src="scene-closeups.js"></script>
 <script src="game.js"></script>
 </body>
 </html>
