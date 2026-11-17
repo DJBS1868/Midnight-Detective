@@ -33,9 +33,9 @@ room, pier, or suite number Miller gives you on the phone.
 4. **Accuse once.** The right name with the smoking gun closes the case. The right name
    without it, or the wrong name, and the killer walks.
 
-Every tap pushes the camera into the room and inspects the object that is actually there: the
-close-up is cropped from the same scene drawing, so a porthole stays a porthole and a coat
-stays the same coat.
+Every tap pushes the camera into the room and inspects the object that is actually there; leaving
+pulls the camera back out the same way. The close-up is cropped from the same scene drawing, so a
+porthole stays a porthole and a coat stays the same coat.
 
 Rain, ringing, and clue sounds are optional — tap **SOUND** in the top corner to enable them.
 
