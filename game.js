@@ -646,14 +646,28 @@ const screenMap = {
   board: 'screen-board', accuse: 'screen-accuse', end: 'screen-end'
 };
 
-function showScreen(name) {
-  if (name !== 'zoom') cancelZoomTransit();
+let roomInTimer = 0;
+
+function replayRoomIn() {
+  const art = $('#sceneArt');
+  art.classList.remove('room-enter');
+  void art.offsetWidth;
+  art.classList.add('room-enter');
+  clearTimeout(roomInTimer);
+  roomInTimer = setTimeout(() => art.classList.remove('room-enter'), 900);
+}
+
+function showScreen(name, opts = {}) {
+  if (name !== 'zoom' && !opts.keepTransit) cancelZoomTransit();
   state.screen = name;
   app.dataset.scene = name;
   Object.entries(screenMap).forEach(([key, id]) => {
     document.getElementById(id).classList.toggle('is-active', key === name);
   });
-  if (name === 'scene') renderSceneState();
+  if (name === 'scene') {
+    renderSceneState();
+    if (!opts.skipRoomIn) replayRoomIn();
+  }
   if (name === 'board') { renderBoard(); requestAnimationFrame(drawBoardStrings); }
   if (name === 'accuse') renderAccuse();
   if (name === 'zoom') renderZoom();
@@ -670,7 +684,7 @@ function prefersReducedMotion() {
 
 function cancelZoomTransit() {
   if (!zoomTransit) return;
-  const { timer, cleanup } = zoomTransit;
+  const { timer, cleanup, mode } = zoomTransit;
   if (timer) clearTimeout(timer);
   if (cleanup) clearTimeout(cleanup);
   zoomTransit = null;
@@ -686,7 +700,16 @@ function cancelZoomTransit() {
   frame.style.top = '';
   frame.style.width = '';
   frame.style.height = '';
+  frame.style.opacity = '';
+  $('.zoom-transit-veil').style.opacity = '0';
   $('#screen-zoom').classList.remove('is-transit');
+  if (mode === 'out') {
+    const zoomScreen = $('#screen-zoom');
+    zoomScreen.getAnimations().forEach((a) => a.cancel());
+    zoomScreen.classList.remove('is-leaving');
+    $('#screen-scene').classList.remove('is-instant');
+    if (state.screen === 'zoom') $('#screen-scene').classList.remove('is-active');
+  }
 }
 
 function beginZoomIn(key, snapshot) {
@@ -748,7 +771,7 @@ function beginZoomIn(key, snapshot) {
   veil.style.opacity = '0';
 
   const token = Symbol('zoom');
-  zoomTransit = { token, timer: 0, cleanup: 0 };
+  zoomTransit = { token, timer: 0, cleanup: 0, mode: 'in' };
   const ease = 'cubic-bezier(.3,.16,.12,1)';
   frame.animate([
     { transform: 'translate(0px, 0px) scale(1)' },
@@ -768,6 +791,7 @@ function beginZoomIn(key, snapshot) {
     zoomTransit.cleanup = setTimeout(() => {
       if (!zoomTransit || zoomTransit.token !== token) return;
       transit.classList.remove('is-on');
+      frame.getAnimations().forEach((a) => a.cancel());
       frame.innerHTML = '';
       frame.style.transform = '';
       frame.style.transformOrigin = '';
@@ -775,6 +799,8 @@ function beginZoomIn(key, snapshot) {
       frame.style.top = '';
       frame.style.width = '';
       frame.style.height = '';
+      frame.style.opacity = '';
+      veil.getAnimations().forEach((a) => a.cancel());
       veil.style.opacity = '0';
       zoomTransit = null;
       cameraFlash(0.45);
@@ -783,8 +809,137 @@ function beginZoomIn(key, snapshot) {
   zoomTransit.timer = setTimeout(finish, 700);
 }
 
+/* Reverse the camera: the same room copy pulls back out of the object and
+   settles over the live scene, which is then revealed underneath. */
+function beginZoomOut() {
+  const key = state.currentObject;
+  const meta = state.zoomMeta;
+  if (!key || !meta || prefersReducedMotion()) return false;
+  if (zoomTransit) {
+    if (zoomTransit.mode === 'out') return true;
+    cancelZoomTransit();
+  }
+
+  // A finished push-in leaves fill-forwards animations on the shared frame.
+  // Clear them before measuring, or the clone is read at the old zoom level.
+  const staleFrame = $('#zoomTransitFrame');
+  const staleVeil = $('.zoom-transit-veil');
+  staleFrame.getAnimations().forEach((a) => a.cancel());
+  staleVeil.getAnimations().forEach((a) => a.cancel());
+  staleFrame.style.opacity = '';
+  staleVeil.style.opacity = '0';
+
+  // Let the scene exist behind the close-up so its real layout can be
+  // measured at the current viewport, without playing its entry animation.
+  const sceneScreen = $('#screen-scene');
+  sceneScreen.classList.add('is-instant', 'is-active');
+
+  const bay = $('#zoomCanvas').getBoundingClientRect();
+  const stage = $('#sceneCanvas').getBoundingClientRect();
+  if (!bay.width || !bay.height || !stage.width || !stage.height) {
+    if (state.screen === 'zoom') sceneScreen.classList.remove('is-active', 'is-instant');
+    return false;
+  }
+
+  const device = $('.device').getBoundingClientRect();
+  const transit = $('#zoomTransit');
+  const frame = $('#zoomTransitFrame');
+  const veil = $('.zoom-transit-veil');
+  const zoomScreen = $('#screen-zoom');
+  zoomScreen.classList.add('is-leaving');
+  zoomScreen.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 200, delay: 200, easing: 'ease-out', fill: 'forwards' });
+  const left = stage.left - device.left;
+  const top = stage.top - device.top;
+  frame.innerHTML = $('#sceneCanvas').innerHTML;
+  frame.style.left = `${left}px`;
+  frame.style.top = `${top}px`;
+  frame.style.width = `${stage.width}px`;
+  frame.style.height = `${stage.height}px`;
+
+  const frameBox = frame.getBoundingClientRect();
+  const roomStation = frame.querySelector(`[data-station="${key}"]`);
+  const bayStation = $('#zoomCanvas').querySelector(`[data-station="${key}"]`);
+  const roomRect = roomStation?.getBoundingClientRect();
+  const bayRect = bayStation?.getBoundingClientRect();
+  let originX;
+  let originY;
+  let scale;
+  let tx;
+  let ty;
+
+  if (roomRect && bayRect && roomRect.width > 1 && bayRect.width > 1) {
+    originX = roomRect.left - frameBox.left + roomRect.width / 2;
+    originY = roomRect.top - frameBox.top + roomRect.height / 2;
+    scale = bayRect.width / roomRect.width;
+    tx = (bayRect.left - device.left + bayRect.width / 2) - (left + originX);
+    ty = (bayRect.top - device.top + bayRect.height / 2) - (top + originY);
+  } else {
+    const roomW = frame.clientWidth || stage.width;
+    originX = (meta.frame.cx / 400) * roomW;
+    originY = (meta.frame.cy / 500) * frame.clientHeight;
+    scale = Math.max(1.2, (bay.width / meta.frame.w) / (roomW / 400));
+    tx = (bay.left - device.left + bay.width / 2) - (left + originX);
+    ty = (bay.top - device.top + bay.height / 2) - (top + originY);
+  }
+
+  const startTransform = `translate(${tx}px, ${ty}px) scale(${scale})`;
+  frame.style.transformOrigin = `${originX}px ${originY}px`;
+  frame.style.transform = startTransform;
+  frame.style.opacity = '0';
+  veil.style.opacity = '0';
+  transit.classList.add('is-on');
+
+  const token = Symbol('zoom-out');
+  zoomTransit = { token, timer: 0, cleanup: 0, mode: 'out' };
+  const total = 800;
+  frame.animate([
+    { transform: startTransform, offset: 0 },
+    { transform: startTransform, offset: 0.24 },
+    { transform: 'translate(0px, 0px) scale(1)', offset: 1 }
+  ], { duration: total, easing: 'cubic-bezier(.3,.16,.12,1)', fill: 'forwards' });
+  frame.animate([
+    { opacity: 0, offset: 0 },
+    { opacity: 1, offset: 0.24 },
+    { opacity: 1, offset: 1 }
+  ], { duration: total, easing: 'ease-out', fill: 'forwards' });
+  veil.animate([
+    { opacity: 0, offset: 0 },
+    { opacity: 0.42, offset: 0.12 },
+    { opacity: 0.42, offset: 0.5 },
+    { opacity: 0, offset: 1 }
+  ], { duration: total, easing: 'ease-in-out', fill: 'forwards' });
+
+  const finish = () => {
+    if (!zoomTransit || zoomTransit.token !== token) return;
+    // The room copy is back at full size. Swap in the live scene while the
+    // overlay still covers it, then dissolve the copy away.
+    showScreen('scene', { keepTransit: true, skipRoomIn: true });
+    frame.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 220, easing: 'ease-out', fill: 'forwards' });
+    zoomTransit.cleanup = setTimeout(() => {
+      if (!zoomTransit || zoomTransit.token !== token) return;
+      transit.classList.remove('is-on');
+      frame.getAnimations().forEach((a) => a.cancel());
+      frame.innerHTML = '';
+      frame.style.transform = '';
+      frame.style.transformOrigin = '';
+      frame.style.left = '';
+      frame.style.top = '';
+      frame.style.width = '';
+      frame.style.height = '';
+      frame.style.opacity = '';
+      veil.style.opacity = '0';
+      sceneScreen.classList.remove('is-instant');
+      zoomScreen.getAnimations().forEach((a) => a.cancel());
+      zoomScreen.classList.remove('is-leaving');
+      zoomTransit = null;
+    }, 240);
+  };
+  zoomTransit.timer = setTimeout(finish, total);
+  return true;
+}
+
 function openObject(key) {
-  if (state.busy) return;
+  if (state.busy || (zoomTransit && zoomTransit.mode === 'out')) return;
   state.currentObject = key;
   const isNew = !state.found.has(key);
   state.found.add(key);
@@ -792,7 +947,12 @@ function openObject(key) {
     room: $('#sceneCanvas').innerHTML,
     box: $('#sceneCanvas').getBoundingClientRect()
   };
-  $('#screen-zoom').classList.add('is-transit');
+  const zoomScreen = $('#screen-zoom');
+  if (zoomScreen.classList.contains('is-leaving')) {
+    zoomScreen.getAnimations().forEach((a) => a.cancel());
+    zoomScreen.classList.remove('is-leaving');
+  }
+  zoomScreen.classList.add('is-transit');
   showScreen('zoom');
   beginZoomIn(key, snapshot);
   if (isNew) {
@@ -802,6 +962,7 @@ function openObject(key) {
 }
 
 function goScene() {
+  if (state.screen === 'zoom' && beginZoomOut()) return;
   renderSceneState();
   showScreen('scene');
 }

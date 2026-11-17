@@ -78,6 +78,7 @@ p,h1,h2,h3{margin:0}
   overflow:hidden;overflow:clip;
 }
 .screen.is-active{opacity:1;visibility:visible;pointer-events:auto;transform:none;z-index:10}
+.screen.is-instant{transition:none!important;pointer-events:none}
 .hud{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-shrink:0;position:relative;z-index:4}
 .hud-left{min-width:0}
 .hud h2{font-family:var(--serif);font-weight:900;font-size:clamp(19px,2.9vh,24px);line-height:1;letter-spacing:-.015em;margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -572,11 +573,17 @@ p,h1,h2,h3{margin:0}
 .scene-progress span:nth-child(2){color:var(--paper-dim)}
 
 /* scene transitions */
-.screen-scene.is-active .scene-art{animation:roomIn .85s cubic-bezier(.2,.8,.2,1) both}
+.scene-art.room-enter{animation:roomIn .85s cubic-bezier(.2,.8,.2,1) both}
 @keyframes roomIn{from{opacity:0;transform:scale(.955)}to{opacity:1;transform:scale(1)}}
 /* ================= STAGE 3 : ZOOM-IN ================= */
 .screen-zoom{background:linear-gradient(180deg,#0b0908 0%,#050404 100%)}
 .screen-zoom.is-transit{opacity:0!important;visibility:visible;transition:none!important;pointer-events:none}
+.screen-zoom.is-leaving{pointer-events:none}
+.screen-zoom.is-leaving .zoom-hud,
+.screen-zoom.is-leaving .zoom-caption,
+.screen-zoom.is-leaving .reticle,
+.screen-zoom.is-leaving .clue-sheet,
+.screen-zoom.is-leaving .footer-actions{opacity:0;transition:opacity .16s ease .06s}
 .zoom-transit{
   position:absolute;inset:0;z-index:70;pointer-events:none;
   visibility:hidden;opacity:0;overflow:hidden;background:transparent;
