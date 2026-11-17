@@ -348,7 +348,7 @@ function renderScene(loc) {
   const stationLayer = Object.entries(scene.stations || {})
     .map(([key, st]) => {
       const def = STATIONS[st.t];
-      return def ? def.draw(st, key) : '';
+      return def ? `<g data-station="${key}">${def.draw(st, key)}</g>` : '';
     }).join('');
   const sign = scene.sign
     ? (SCENE_SIGNS[scene.sign.style] || SCENE_SIGNS.enamel)({
