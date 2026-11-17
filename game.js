@@ -753,7 +753,8 @@ const state = {
   selected: null,
   failure: null,
   screen: 'office',
-  busy: false
+  busy: false,
+  call: { answered: false, index: 0, done: false, lines: [] }
 };
 const app = $('#app');
 
@@ -790,7 +791,6 @@ function setCaseChrome() {
     if (el) el.textContent = value;
   });
   $('#officeAddress').textContent = c.location.address;
-  $('#millerLine').textContent = `“${c.tip}”`;
   $('#scenePlace').textContent = c.location.name;
   $('#sceneVictim').textContent = `${c.victim.name} · ${c.victim.role}`;
   $('#sceneBrief').textContent = c.location.feel;
@@ -1078,6 +1078,94 @@ function goBoard() {
   showScreen('board');
 }
 
+function buildCallLines(c) {
+  return [
+    'That you, detective? Miller, Third Precinct. You picked up on the fourth ring.',
+    c.tip,
+    "Coroner's already on his way. Get here before the uniforms ruin my scene."
+  ];
+}
+
+function resetCall() {
+  state.call = { answered: false, index: 0, done: false, lines: buildCallLines(state.caseData) };
+  const office = $('#screen-office');
+  office.classList.remove('is-answered', 'call-done');
+  office.classList.add('is-ringing');
+  $('#callStatus').textContent = 'INCOMING';
+  $('#callStep').textContent = '';
+  $('#callLine').textContent = '';
+  $('#btnCallNext').hidden = true;
+  $('#btnSceneLabel').textContent = 'ANSWER THE PHONE';
+  $('#btnGoScene').disabled = true;
+  $('#phoneZone').setAttribute('aria-label', 'Answer the ringing telephone');
+  $('#phoneHint').textContent = 'TAP TO ANSWER';
+  $('#officeKicker').textContent = '2:00 A.M. · THE CALL';
+  $('#officeClock').textContent = '02:00';
+  $('#officeSub').textContent = 'The phone has been screaming for a minute. You pick up on the fourth ring.';
+}
+
+function renderCallLine() {
+  const call = state.call;
+  const line = call.lines[call.index];
+  const lineEl = $('#callLine');
+  lineEl.textContent = line;
+  lineEl.classList.remove('line-in');
+  void lineEl.offsetWidth;
+  lineEl.classList.add('line-in');
+  $('#callStep').textContent = `LINE ${call.index + 1} / ${call.lines.length}`;
+  const next = $('#btnCallNext');
+  next.hidden = false;
+  next.innerHTML = call.index === call.lines.length - 1
+    ? 'TAKE THE ADDRESS <span>→</span>'
+    : 'NEXT <span>→</span>';
+}
+
+function answerPhone() {
+  if (state.call.answered) return;
+  state.call.answered = true;
+  const office = $('#screen-office');
+  office.classList.remove('is-ringing');
+  office.classList.add('is-answered');
+  Sfx.stopRing();
+  Sfx.pickup();
+  $('#callStatus').textContent = 'CONNECTED';
+  $('#officeKicker').textContent = '2:02 A.M. · LINE 3';
+  $('#officeClock').textContent = '02:02';
+  $('#officeSub').textContent = 'Miller sounds like he has been awake for a week.';
+  $('#phoneZone').setAttribute('aria-label', 'Telephone connected. Tap to continue the call.');
+  $('#btnSceneLabel').textContent = 'FINISH THE CALL';
+  renderCallLine();
+  announce('Sgt. Miller: ' + state.call.lines[0]);
+}
+
+function finishCall() {
+  state.call.done = true;
+  const office = $('#screen-office');
+  office.classList.add('call-done');
+  $('#callStatus').textContent = 'LINE SECURED';
+  $('#btnCallNext').hidden = true;
+  $('#btnGoScene').disabled = false;
+  $('#btnSceneLabel').textContent = 'HEAD TO THE CRIME SCENE';
+  $('#phoneZone').setAttribute('aria-label', 'Telephone hung up');
+  $('#officeKicker').textContent = '2:05 A.M. · THE ADDRESS';
+  $('#officeClock').textContent = '02:05';
+  $('#officeSub').textContent = 'The line goes dead. The rain is already waiting outside.';
+  Sfx.tick();
+  announce(`Miller gave the address: ${state.caseData.location.address}. Head to the crime scene.`);
+}
+
+function advanceCall() {
+  if (!state.call.answered || state.call.done) return;
+  if (state.call.index < state.call.lines.length - 1) {
+    state.call.index += 1;
+    renderCallLine();
+    announce('Sgt. Miller: ' + state.call.lines[state.call.index]);
+    Sfx.tick();
+    return;
+  }
+  finishCall();
+}
+
 function startCase() {
   closeConfirm();
   state.caseData = makeCase();
@@ -1087,6 +1175,7 @@ function startCase() {
   state.failure = null;
   state.busy = false;
   renderCase();
+  resetCall();
   renderSceneState();
   showScreen('office');
   announce(`New case ${state.caseData.id}: ${state.caseData.victim.name} is dead at ${state.caseData.location.address}.`);
@@ -1100,6 +1189,11 @@ $$('[data-open-board]').forEach((btn) => {
   btn.addEventListener('click', goBoard);
 });
 $('#btnGoScene').addEventListener('click', () => { goScene(); Sfx.tick(); });
+$('#phoneZone').addEventListener('click', () => {
+  if (!state.call.answered) answerPhone();
+  else if (!state.call.done) advanceCall();
+});
+$('#btnCallNext').addEventListener('click', advanceCall);
 $('#btnZoomOut').addEventListener('click', goScene);
 $('#btnZoomOutTop').addEventListener('click', goScene);
 $('#btnBoardBack').addEventListener('click', goScene);
@@ -1176,10 +1270,10 @@ const Sfx = {
     else this.stopRing();
   },
   startRing() {
-    if (!this.enabled || !this.ctx || state.screen !== 'office' || this.ringTimer) return;
+    if (!this.enabled || !this.ctx || state.screen !== 'office' || state.call.answered || this.ringTimer) return;
     this.ringBurst(0);
     this.ringTimer = setInterval(() => {
-      if (!this.enabled || state.screen !== 'office') { this.stopRing(); return; }
+      if (!this.enabled || state.screen !== 'office' || state.call.answered) { this.stopRing(); return; }
       this.ringBurst(0);
     }, 3400);
   },
@@ -1191,19 +1285,83 @@ const Sfx = {
     if (!this.ctx) return;
     const ctx = this.ctx;
     const t = ctx.currentTime + delay;
-    [420, 480].forEach((freq) => {
+    const bell = ctx.createGain();
+    bell.gain.setValueAtTime(0.0001, t);
+    bell.gain.exponentialRampToValueAtTime(0.055, t + 0.035);
+    bell.gain.setValueAtTime(0.052, t + 0.66);
+    bell.gain.exponentialRampToValueAtTime(0.0001, t + 1.06);
+    const band = ctx.createBiquadFilter();
+    band.type = 'bandpass';
+    band.frequency.value = 1450;
+    band.Q.value = 0.7;
+    bell.connect(band).connect(this.master);
+    [[1046, 0.62, 'triangle'], [1470, 0.27, 'sine'], [2190, 0.11, 'sine']].forEach(([freq, amp, type]) => {
       const osc = ctx.createOscillator();
-      osc.type = 'sine';
-      osc.frequency.value = freq;
-      const gain = ctx.createGain();
-      gain.gain.setValueAtTime(0.0001, t);
-      gain.gain.linearRampToValueAtTime(0.028, t + 0.018);
-      gain.gain.setValueAtTime(0.028, t + 0.3);
-      gain.gain.exponentialRampToValueAtTime(0.0001, t + 0.42);
-      osc.connect(gain).connect(this.master);
+      osc.type = type;
+      osc.frequency.setValueAtTime(freq * 1.007, t);
+      osc.frequency.exponentialRampToValueAtTime(freq, t + 0.34);
+      const partial = ctx.createGain();
+      partial.gain.value = amp;
+      osc.connect(partial).connect(bell);
       osc.start(t);
-      osc.stop(t + 0.44);
+      osc.stop(t + 1.08);
     });
+    const lfo = ctx.createOscillator();
+    lfo.type = 'sine';
+    lfo.frequency.value = 19;
+    const lfoDepth = ctx.createGain();
+    lfoDepth.gain.value = 0.014;
+    lfo.connect(lfoDepth).connect(bell.gain);
+    lfo.start(t);
+    lfo.stop(t + 1.07);
+    const clickBuffer = ctx.createBuffer(1, Math.floor(ctx.sampleRate * 0.07), ctx.sampleRate);
+    const clickData = clickBuffer.getChannelData(0);
+    for (let i = 0; i < clickData.length; i++) {
+      clickData[i] = (Math.random() * 2 - 1) * (1 - i / clickData.length);
+    }
+    const click = ctx.createBufferSource();
+    click.buffer = clickBuffer;
+    const clickFilter = ctx.createBiquadFilter();
+    clickFilter.type = 'bandpass';
+    clickFilter.frequency.value = 2400;
+    clickFilter.Q.value = 1.1;
+    const clickGain = ctx.createGain();
+    clickGain.gain.setValueAtTime(0.014, t);
+    clickGain.gain.exponentialRampToValueAtTime(0.0001, t + 0.065);
+    click.connect(clickFilter).connect(clickGain).connect(this.master);
+    click.start(t);
+    click.stop(t + 0.08);
+  },
+  pickup() {
+    if (!this.enabled || !this.ctx) return;
+    const ctx = this.ctx;
+    const t = ctx.currentTime;
+    const thunk = ctx.createOscillator();
+    thunk.type = 'triangle';
+    thunk.frequency.setValueAtTime(190, t);
+    thunk.frequency.exponentialRampToValueAtTime(92, t + 0.11);
+    const thunkGain = ctx.createGain();
+    thunkGain.gain.setValueAtTime(0.0001, t);
+    thunkGain.gain.linearRampToValueAtTime(0.03, t + 0.008);
+    thunkGain.gain.exponentialRampToValueAtTime(0.0001, t + 0.15);
+    thunk.connect(thunkGain).connect(this.master);
+    thunk.start(t);
+    thunk.stop(t + 0.17);
+    const buffer = ctx.createBuffer(1, Math.floor(ctx.sampleRate * 0.24), ctx.sampleRate);
+    const data = buffer.getChannelData(0);
+    for (let i = 0; i < data.length; i++) data[i] = (Math.random() * 2 - 1) * 0.55;
+    const staticSrc = ctx.createBufferSource();
+    staticSrc.buffer = buffer;
+    const filter = ctx.createBiquadFilter();
+    filter.type = 'bandpass';
+    filter.frequency.value = 1250;
+    filter.Q.value = 0.8;
+    const gain = ctx.createGain();
+    gain.gain.setValueAtTime(0.012, t + 0.02);
+    gain.gain.exponentialRampToValueAtTime(0.0001, t + 0.22);
+    staticSrc.connect(filter).connect(gain).connect(this.master);
+    staticSrc.start(t + 0.02);
+    staticSrc.stop(t + 0.25);
   },
   tick() {
     if (!this.enabled || !this.ctx) return;
@@ -1266,6 +1424,8 @@ window.__midnight = {
   goBoard,
   showScreen,
   showEnd,
+  answerPhone,
+  advanceCall,
   accuseIndex: (i) => { selectSuspect(i); doAccuse(); },
   Sfx
 };
