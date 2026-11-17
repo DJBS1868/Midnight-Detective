@@ -1,0 +1,566 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<meta name="theme-color" content="#080706">
+<meta name="description" content="A gritty 1940s noir murder mystery, played in the rain at 2 A.M.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%230a0807'/%3E%3Ctext x='16' y='22' text-anchor='middle' font-family='Georgia' font-size='15' fill='%23c9a15e'%3EMD%3C/text%3E%3C/svg%3E">
+<title>Midnight Detective — A Case After Dark</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<svg class="svg-defs" aria-hidden="true" focusable="false">
+  <defs>
+    <symbol id="p-fedora" viewBox="0 0 60 76">
+      <path fill="currentColor" d="M7 76c1-13 8-21 18-24l5-4 6-1 6 1 5 4c10 3 17 11 18 24H7Z"/>
+      <path fill="currentColor" d="M24 47V36h12v11c-2 3-4 4-6 4s-4-1-6-4Z"/>
+      <path fill="currentColor" d="M16 36c0-10 5-17 14-17s14 7 14 17c0 4-6 7-14 7s-14-3-14-7Z"/>
+      <path fill="currentColor" d="M8 34c8-4 35-6 44-2 5 2 4 7-3 8-12 2-30 1-39-2-4-1-5-2-2-4Z"/>
+      <path fill="currentColor" d="M18 31c2-11 7-16 12-16s10 5 12 16c-3 2-7 3-12 3s-9-1-12-3Z"/>
+      <path fill="#fff" opacity=".08" d="M18 31c6 2 18 2 24 0l-2 4c-6 2-14 2-20 0Z"/>
+      <path fill="#fff" opacity=".07" d="M24 50c4 2 8 2 12 0l-2 3H26Z"/>
+    </symbol>
+    <symbol id="p-cloche" viewBox="0 0 60 76">
+      <path fill="currentColor" d="M6 76c2-13 9-21 20-24h8c11 3 18 11 20 24H6Z"/>
+      <path fill="currentColor" d="M25 45v-7h10v7c-2 4-3 5-5 5s-3-1-5-5Z"/>
+      <path fill="currentColor" d="M18 37c0-8 5-13 12-13s12 5 12 13c0 5-5 8-12 8s-12-3-12-8Z"/>
+      <path fill="currentColor" d="M14 28c0-9 7-15 16-15s16 6 16 15c0 3-3 4-16 4S14 31 14 28Z"/>
+      <path fill="currentColor" d="M11 31c3-5 35-5 38 0 2 4-4 7-19 7s-21-3-19-7Z"/>
+      <path fill="currentColor" d="M20 44c-4 3-6 8-6 13l4 1c2-6 5-10 9-12Z"/>
+      <path fill="currentColor" d="M40 44c4 3 6 8 6 13l-4 1c-2-6-5-10-9-12Z"/>
+      <path fill="#fff" opacity=".09" d="M18 26c1-4 4-7 8-8-2 3-3 7-3 11Z"/>
+    </symbol>
+    <symbol id="p-veil" viewBox="0 0 60 76">
+      <path fill="currentColor" d="M5 76c2-14 10-22 21-25h8c11 3 19 11 21 25H5Z"/>
+      <path fill="currentColor" d="M25 47v-8h10v8c-2 3-3 4-5 4s-3-1-5-4Z"/>
+      <path fill="currentColor" d="M19 38c0-8 5-13 11-13s11 5 11 13c0 5-5 8-11 8s-11-3-11-8Z"/>
+      <path fill="currentColor" d="M13 26c2-10 9-16 18-16 8 0 15 6 17 15 2 6-2 9-8 7-7-2-16-2-22 0-6 3-7-1-5-6Z"/>
+      <path fill="none" stroke="#fff" stroke-opacity=".17" stroke-width=".7" d="M18 34c8-3 19-3 27 0M20 38c7-2 16-2 23 0"/>
+      <path fill="#fff" opacity=".08" d="M14 26c7 2 28 2 33-2l-1 4c-7 3-23 3-31 1Z"/>
+    </symbol>
+    <symbol id="p-bald" viewBox="0 0 60 76">
+      <path fill="currentColor" d="M4 76c2-14 10-22 21-25l3-2h9l3 2c11 3 19 11 21 25H4Z"/>
+      <path fill="currentColor" d="M24 48v-7h13v7c-2 3-4 4-7 4s-5-1-6-4Z"/>
+      <path fill="currentColor" d="M16 35c0-12 6-19 15-19s15 7 15 19c0 8-6 13-15 13s-15-5-15-13Z"/>
+      <path fill="currentColor" d="M16 21c5-4 27-4 31 1-4 5-27 6-31-1Z"/>
+      <path fill="none" stroke="#fff" stroke-opacity=".22" stroke-width="1.2" d="M22 36h6m6 0h6m-12 0h6"/>
+      <path fill="none" stroke="#fff" stroke-opacity=".12" stroke-width="1" d="M23 44c5 2 11 2 15 0"/>
+      <path fill="currentColor" d="M17 57c-2 3-3 7-3 11l5 1c0-4 1-8 3-11Z"/>
+    </symbol>
+    <symbol id="p-rough" viewBox="0 0 60 76">
+      <path fill="currentColor" d="M2 76c2-15 11-23 23-25l5-1 5 1c12 2 21 10 23 25H2Z"/>
+      <path fill="currentColor" d="M24 48v-8h12v8c-2 3-4 4-6 4s-4-1-6-4Z"/>
+      <path fill="currentColor" d="M14 34c0-12 7-19 16-19s16 7 16 19c0 8-7 14-16 14s-16-6-16-14Z"/>
+      <path fill="currentColor" d="M10 25c3-7 12-11 22-11 9 0 16 4 18 10 1 4-2 6-6 4-9-4-23-4-31 0-3 1-4 0-3-3Z"/>
+      <path fill="currentColor" d="M11 27c3-2 35-3 39-1 3 2 1 5-3 5-9 1-27 1-35-1-2-1-2-2-1-3Z"/>
+      <path fill="#fff" opacity=".06" d="M15 22c6-3 24-3 31 0l-2 2c-8-2-21-2-27 0Z"/>
+      <path fill="#fff" opacity=".07" d="M18 54c7 4 17 4 24 0l-3 4H21Z"/>
+    </symbol>
+  </defs>
+</svg>
+
+<div id="app" class="app" data-scene="office">
+  <div class="device">
+    <div class="grain" aria-hidden="true"></div>
+    <div class="global-vignette" aria-hidden="true"></div>
+    <div class="safe-frame" aria-hidden="true"></div>
+    <div id="flash" class="flash" aria-hidden="true"></div>
+    <!-- ================= STAGE 1 : THE CALL ================= -->
+    <section id="screen-office" class="screen screen-office is-active" aria-label="Stage one: the call">
+      <div class="office-art" aria-hidden="true">
+        <div class="office-wall"></div>
+        <div class="office-window">
+          <svg class="city" viewBox="0 0 300 220" preserveAspectRatio="xMidYMid slice">
+            <defs>
+              <linearGradient id="o-sky" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0" stop-color="#0b1a23"/><stop offset=".55" stop-color="#1a2029"/><stop offset="1" stop-color="#3a2620"/>
+              </linearGradient>
+              <linearGradient id="o-build" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0" stop-color="#14181c"/><stop offset="1" stop-color="#080a0c"/>
+              </linearGradient>
+              <filter id="o-neon"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+            </defs>
+            <rect width="300" height="220" fill="url(#o-sky)"/>
+            <circle cx="226" cy="36" r="28" fill="#d9c19a" opacity=".08"/>
+            <g fill="url(#o-build)">
+              <rect x="4" y="98" width="44" height="122"/><rect x="42" y="70" width="34" height="150"/>
+              <rect x="72" y="120" width="28" height="100"/><rect x="98" y="86" width="46" height="134"/>
+              <rect x="140" y="52" width="32" height="168"/><rect x="168" y="110" width="38" height="110"/>
+              <rect x="202" y="78" width="56" height="142"/><rect x="254" y="116" width="46" height="104"/>
+            </g>
+            <g fill="#d7a864" opacity=".55">
+              <rect x="14" y="112" width="4" height="6"/><rect x="24" y="128" width="4" height="6"/><rect x="34" y="112" width="4" height="6"/>
+              <rect x="17" y="152" width="4" height="6"/><rect x="53" y="84" width="3" height="5"/><rect x="61" y="104" width="3" height="5"/>
+              <rect x="107" y="100" width="4" height="6"/><rect x="119" y="116" width="4" height="6"/><rect x="131" y="100" width="4" height="6"/>
+              <rect x="110" y="146" width="4" height="6"/><rect x="148" y="70" width="3" height="5"/><rect x="158" y="88" width="3" height="5"/>
+              <rect x="148" y="122" width="3" height="5"/><rect x="214" y="92" width="4" height="6"/><rect x="228" y="108" width="4" height="6"/>
+              <rect x="242" y="92" width="4" height="6"/><rect x="214" y="138" width="4" height="6"/><rect x="264" y="130" width="3" height="5"/>
+            </g>
+            <g fill="#7fb4b9" opacity=".28">
+              <rect x="90" y="134" width="3" height="4"/><rect x="181" y="124" width="4" height="5"/><rect x="236" y="160" width="3" height="4"/>
+            </g>
+            <g transform="translate(239 62) rotate(90)" filter="url(#o-neon)">
+              <text font-family="Oswald, sans-serif" font-size="17" letter-spacing="4" fill="#e36574" opacity=".8">HOTEL</text>
+            </g>
+            <g stroke="#a9c6d1" stroke-width=".7" opacity=".32">
+              <line x1="10" y1="0" x2="0" y2="36"/><line x1="44" y1="0" x2="28" y2="48"/><line x1="82" y1="0" x2="62" y2="54"/>
+              <line x1="120" y1="0" x2="98" y2="60"/><line x1="160" y1="0" x2="136" y2="62"/><line x1="202" y1="0" x2="178" y2="64"/>
+              <line x1="246" y1="0" x2="220" y2="66"/><line x1="286" y1="0" x2="260" y2="60"/>
+            </g>
+          </svg>
+          <div class="rain r1"></div>
+          <div class="rain r2"></div>
+          <div class="blind-lines"></div>
+          <div class="window-glare"></div>
+        </div>
+        <div class="blind-shadow"></div>
+        <div class="office-door"><span>PRIVATE</span><i></i></div>
+        <div class="office-lamp">
+          <div class="lamp-glow"></div>
+          <div class="lamp-shade"><i></i></div>
+          <div class="lamp-stem"></div>
+          <div class="lamp-base"></div>
+        </div>
+        <div class="office-desk"><span class="desk-grain"></span></div>
+        <div class="phone-zone" id="phoneZone">
+          <div class="ring-arcs"><span></span><span></span><span></span></div>
+          <svg class="phone-svg" viewBox="0 0 240 170" role="img" aria-label="A rotary telephone ringing on the desk">
+            <defs>
+              <linearGradient id="ph-body" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0" stop-color="#5b5040"/><stop offset=".36" stop-color="#2c261f"/><stop offset="1" stop-color="#0b0907"/>
+              </linearGradient>
+              <linearGradient id="ph-metal" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0" stop-color="#c4b18d"/><stop offset=".38" stop-color="#72624a"/><stop offset=".7" stop-color="#2a241c"/><stop offset="1" stop-color="#8e7b5d"/>
+              </linearGradient>
+              <linearGradient id="ph-handset" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0" stop-color="#6c5f4b"/><stop offset=".5" stop-color="#2a241c"/><stop offset="1" stop-color="#080706"/>
+              </linearGradient>
+              <radialGradient id="ph-sheen" cx=".3" cy=".15" r=".8">
+                <stop offset="0" stop-color="#fff" stop-opacity=".18"/><stop offset="1" stop-color="#fff" stop-opacity="0"/>
+              </radialGradient>
+            </defs>
+            <ellipse cx="121" cy="151" rx="94" ry="12" fill="#000" opacity=".6"/>
+            <path d="M38 94c0-12 8-20 24-22l58-5 73-4c22 0 30 8 29 22l-7 43c-1 12-9 18-24 19l-122 5c-18 1-26-6-27-19Z" fill="url(#ph-body)" stroke="#6a5b44" stroke-opacity=".55" stroke-width="1.4"/>
+            <path d="M45 87c20-12 126-18 166-9l-5 26c-53-7-115-5-155 5Z" fill="url(#ph-sheen)" opacity=".7"/>
+            <path d="M54 134c42-10 123-12 164-4l-4 14c-52-6-110-5-153 4Z" fill="#000" opacity=".18"/>
+            <g transform="translate(104 112)">
+              <circle r="38" fill="#1a1612" stroke="url(#ph-metal)" stroke-width="3"/>
+              <circle r="32" fill="#0d0b09" stroke="#4a4031" stroke-width="1"/>
+              <circle r="10" fill="#2d2720" stroke="#8f7b5a" stroke-width="1.4"/>
+              <circle cx="0" cy="-21" r="4.2" fill="#080706" stroke="#7f6c4d" stroke-width="1"/>
+              <circle cx="14.8" cy="-14.8" r="4.2" fill="#080706" stroke="#7f6c4d" stroke-width="1"/>
+              <circle cx="21" cy="0" r="4.2" fill="#080706" stroke="#7f6c4d" stroke-width="1"/>
+              <circle cx="14.8" cy="14.8" r="4.2" fill="#080706" stroke="#7f6c4d" stroke-width="1"/>
+              <circle cx="0" cy="21" r="4.2" fill="#080706" stroke="#7f6c4d" stroke-width="1"/>
+              <circle cx="-14.8" cy="14.8" r="4.2" fill="#080706" stroke="#7f6c4d" stroke-width="1"/>
+              <circle cx="-21" cy="0" r="4.2" fill="#080706" stroke="#7f6c4d" stroke-width="1"/>
+              <circle cx="-14.8" cy="-14.8" r="4.2" fill="#080706" stroke="#7f6c4d" stroke-width="1"/>
+              <path d="M28 24l5 9" stroke="#c4b18d" stroke-width="2" stroke-linecap="round" opacity=".6"/>
+            </g>
+            <path d="M45 76c1-10 8-17 19-19l48-4 63-3c16 0 26 6 27 17 1 9-6 16-18 17l-55 3-55 3c-15 1-25-4-26-14Z" fill="url(#ph-handset)" stroke="#6a5b44" stroke-opacity=".55" stroke-width="1.2"/>
+            <path d="M49 70c10-9 34-12 77-14l48-2" stroke="#cbb894" stroke-opacity=".22" stroke-width="2" fill="none"/>
+            <path d="M44 75c-4-12 3-22 15-24 10-2 17 3 20 11l6 18c2 8-3 14-11 15-10 1-17-3-20-10Z" fill="#17130f" stroke="#5f523e" stroke-width="1"/>
+            <path d="M180 70c2-11 10-17 21-16 12 1 18 10 15 21l-5 18c-3 9-10 13-18 10-9-3-12-9-11-17Z" fill="#17130f" stroke="#5f523e" stroke-width="1"/>
+            <path d="M198 128c24 9 31 21 22 31-8 9-26 8-31 22-4 11 4 18 15 20" fill="none" stroke="#2b241b" stroke-width="4" stroke-linecap="round" stroke-dasharray="1 7"/>
+            <path d="M32 111c12-4 27-5 43-6" stroke="#d0bb94" stroke-opacity=".14" stroke-width="1.2" fill="none"/>
+          </svg>
+        </div>
+        <div class="smoke"><span></span><span></span><span></span></div>
+        <div class="office-shade"></div>
+      </div>
+      <div class="office-content">
+        <div class="hud office-hud">
+          <div class="hud-brand"><span class="brand-mark">MD</span><span>MIDNIGHT DIVISION<br><i>CASE <b id="officeCaseNo">#0417</b></i></span></div>
+          <div class="hud-clock"><span id="officeClock">02:00</span><small>AM · RAIN</small>
+            <button id="soundToggle" class="sound-toggle" type="button" aria-pressed="false">SOUND <b>OFF</b></button>
+          </div>
+        </div>
+
+        <header class="office-head">
+          <span class="kicker">2:00 A.M. · THE CALL</span>
+          <h1>Somebody's<br><em>dead</em> in the rain.</h1>
+          <p class="sub">The phone has been screaming for a minute. You pick up on the fourth ring.</p>
+        </header>
+
+        <div class="office-spacer"></div>
+
+        <div class="call-card">
+          <div class="call-meta">
+            <span class="call-dot"></span>
+            <span class="call-who">SGT. MILLER <i>· 3RD PRECINCT</i></span>
+            <span class="call-live">LINE 3</span>
+          </div>
+          <p class="call-line" id="millerLine">“Body's at the Marlowe Hotel, Room 814. Door was locked from the inside.”</p>
+          <div class="call-address">
+            <span>CRIME SCENE</span>
+            <strong id="officeAddress">The Marlowe Hotel, Room 814</strong>
+          </div>
+        </div>
+        <button id="btnGoScene" class="btn btn-primary btn-main" type="button">
+          <span>HEAD TO THE CRIME SCENE</span><span class="arrow">→</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- ================= STAGE 2 : THE CRIME SCENE ================= -->
+    <section id="screen-scene" class="screen screen-scene" aria-label="Stage two: the crime scene">
+      <div class="hud scene-hud">
+        <div class="hud-left">
+          <span class="kicker"><b id="sceneCaseNo">CASE #0417</b> · 2:17 A.M.</span>
+          <h2 id="scenePlace">The Marlowe Hotel</h2>
+          <span class="hud-sub">VICTIM — <b id="sceneVictim">Arthur Vale</b></span>
+        </div>
+        <button class="board-chip" type="button" data-open-board aria-label="Open evidence board">EVIDENCE<br>BOARD <i>↗</i></button>
+      </div>
+
+      <p class="scene-brief" id="sceneBrief">Rain hisses on the fire escape. The suite smells of gin and cold cigar smoke.</p>
+
+      <div class="scene-wrap">
+        <div class="scene-art" id="sceneArt" data-place="hotel">
+          <svg class="room-svg" viewBox="0 0 400 500" aria-hidden="true">
+            <defs>
+              <radialGradient id="rm-lamp" cx=".30" cy=".19" r=".52">
+                <stop offset="0" stop-color="#ffc274" stop-opacity=".34"/>
+                <stop offset=".45" stop-color="#c9833d" stop-opacity=".13"/>
+                <stop offset="1" stop-color="#000" stop-opacity="0"/>
+              </radialGradient>
+              <radialGradient id="rm-window" cx=".76" cy=".05" r=".7">
+                <stop offset="0" stop-color="#8fbfd1" stop-opacity=".22"/>
+                <stop offset=".45" stop-color="#49727e" stop-opacity=".08"/>
+                <stop offset="1" stop-color="#000" stop-opacity="0"/>
+              </radialGradient>
+              <linearGradient id="rm-glass" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0" stop-color="#8eb5c2" stop-opacity=".35"/>
+                <stop offset=".5" stop-color="#263a44" stop-opacity=".5"/>
+                <stop offset="1" stop-color="#0b1419" stop-opacity=".8"/>
+              </linearGradient>
+              <linearGradient id="rm-wood" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0" stop-color="var(--wood-hi)"/><stop offset=".5" stop-color="var(--wood)"/><stop offset="1" stop-color="#120d09"/>
+              </linearGradient>
+              <linearGradient id="rm-safe" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0" stop-color="var(--metal-hi)"/><stop offset=".55" stop-color="var(--metal)"/><stop offset="1" stop-color="#101314"/>
+              </linearGradient>
+              <linearGradient id="rm-coat" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0" stop-color="#3f3830"/><stop offset=".5" stop-color="#1d1a17"/><stop offset="1" stop-color="#0a0908"/>
+              </linearGradient>
+              <radialGradient id="rm-blood">
+                <stop offset="0" stop-color="#6d2023"/><stop offset=".7" stop-color="var(--blood)"/><stop offset="1" stop-color="#2a0d0e"/>
+              </radialGradient>
+              <radialGradient id="rm-vig" cx=".5" cy=".48" r=".72">
+                <stop offset=".35" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".65"/>
+              </radialGradient>
+              <filter id="rm-soft" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="5"/></filter>
+              <filter id="rm-soft2"><feGaussianBlur stdDeviation="2"/></filter>
+            </defs>
+
+            <rect width="400" height="500" fill="var(--floor)"/>
+            <g stroke="var(--floor-line)" stroke-width="1" opacity=".65">
+              <line x1="28" y1="26" x2="28" y2="474"/><line x1="70" y1="26" x2="70" y2="474"/>
+              <line x1="112" y1="26" x2="112" y2="474"/><line x1="154" y1="26" x2="154" y2="474"/>
+              <line x1="196" y1="26" x2="196" y2="474"/><line x1="238" y1="26" x2="238" y2="474"/>
+              <line x1="280" y1="26" x2="280" y2="474"/><line x1="322" y1="26" x2="322" y2="474"/>
+              <line x1="364" y1="26" x2="364" y2="474"/>
+              <line x1="20" y1="92" x2="380" y2="92" opacity=".28"/><line x1="20" y1="176" x2="380" y2="176" opacity=".22"/>
+              <line x1="20" y1="264" x2="380" y2="264" opacity=".2"/><line x1="20" y1="352" x2="380" y2="352" opacity=".22"/>
+              <line x1="20" y1="438" x2="380" y2="438" opacity=".26"/>
+            </g>
+            <ellipse cx="130" cy="98" rx="160" ry="132" fill="url(#rm-lamp)"/>
+            <ellipse cx="305" cy="35" rx="120" ry="150" fill="url(#rm-window)"/>
+            <polygon points="252,30 352,30 300,208 188,214" fill="#87b5c7" opacity=".055"/>
+
+            <!-- rug -->
+            <g transform="rotate(-2 200 280)">
+              <rect x="96" y="176" width="208" height="214" rx="2" fill="var(--rug)" stroke="var(--rug-line)" stroke-width="2"/>
+              <rect x="108" y="188" width="184" height="190" fill="none" stroke="var(--rug-line)" stroke-width="1" opacity=".8"/>
+              <path d="M116 196h56v56h-56zm112 0h56v56h-56zm-112 112h56v56h-56zm112 0h56v56h-56z" fill="none" stroke="var(--rug-line)" stroke-width="1" opacity=".32"/>
+              <path d="M200 214v158M124 292h152" stroke="var(--rug-line)" stroke-width="1" opacity=".3"/>
+            </g>
+
+            <!-- walls -->
+            <rect y="0" width="400" height="24" fill="var(--wall)"/>
+            <rect x="0" y="0" width="22" height="500" fill="var(--wall)"/>
+            <rect x="378" y="0" width="22" height="500" fill="var(--wall)"/>
+            <rect x="0" y="476" width="154" height="24" fill="var(--wall)"/>
+            <rect x="246" y="476" width="154" height="24" fill="var(--wall)"/>
+            <g fill="var(--wall-hi)" opacity=".5">
+              <rect x="22" y="21" width="356" height="3"/><rect x="19" y="24" width="3" height="452"/>
+              <rect x="378" y="24" width="3" height="452"/><rect x="22" y="473" width="132" height="3"/>
+              <rect x="246" y="473" width="132" height="3"/>
+            </g>
+
+            <!-- door -->
+            <rect x="154" y="476" width="92" height="24" fill="#0a0d0f"/>
+            <polygon points="154,476 166,430 236,434 246,476" fill="#2a2119" opacity=".85"/>
+            <polygon points="168,472 180,442 224,444 232,472" fill="#8b6a3e" opacity=".1"/>
+            <path d="M236 438l8 4-2 12-6-4Z" fill="#b39a6b" opacity=".65"/>
+            <rect x="150" y="470" width="100" height="8" fill="var(--wall-hi)"/>
+
+            <!-- window -->
+            <rect x="250" y="1" width="104" height="24" fill="#05090c"/>
+            <rect x="254" y="4" width="96" height="17" fill="url(#rm-glass)" stroke="#4e6a73" stroke-width="1.4"/>
+            <g stroke="#b9dce7" stroke-width=".8" opacity=".55">
+              <line x1="270" y1="4" x2="264" y2="21"/><line x1="288" y1="4" x2="280" y2="21"/>
+              <line x1="309" y1="4" x2="301" y2="21"/><line x1="331" y1="4" x2="323" y2="21"/>
+              <line x1="256" y1="12" x2="348" y2="9" opacity=".35"/>
+            </g>
+            <path d="M254 7l27 3-8 10-16 1Z" fill="#d7edf4" opacity=".1"/>
+            <path d="M320 6l22 1-4 9-22-2Z" fill="#d7edf4" opacity=".09"/>
+            <path d="M286 4l2 17m18-17l-1 17" stroke="#151413" stroke-width="2"/>
+            <rect x="252" y="22" width="100" height="4" fill="#4c3a27"/>
+            <rect x="361" y="2" width="12" height="22" fill="var(--wall-hi)" opacity=".55"/>
+
+            <!-- blood and body outline -->
+            <ellipse cx="207" cy="268" rx="56" ry="38" fill="url(#rm-blood)" opacity=".72" filter="url(#rm-soft2)"/>
+            <path d="M198 245c-16 4-30 12-35 22 8-1 18-6 25-11-4 8-5 17-2 24 5-7 9-14 12-20 5 8 9 17 10 26 6-9 6-20 3-30 8 4 14 10 18 17 2-9-2-19-9-26-11-8-25-10-36-6Z" fill="#3f1012" opacity=".65"/>
+            <g fill="none" stroke="var(--chalk)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="7 4" opacity=".72">
+              <circle cx="205" cy="215" r="16"/>
+              <path d="M205 232c1 20 0 37-2 51M203 252l-38-21 18-7M203 251l37-22 15 11M203 283l-25 46 15 10M203 283l25 45-16 11M203 283l-2 46"/>
+              <path d="M190 207c4-4 9-6 15-6s11 2 15 6"/>
+            </g>
+            <path d="M229 262c11 5 19 14 23 24-10 0-20-4-25-10Z" fill="url(#rm-blood)" opacity=".55" filter="url(#rm-soft2)"/>
+            <g fill="#241011" opacity=".5">
+              <ellipse cx="249" cy="333" rx="13" ry="5" transform="rotate(18 249 333)"/>
+              <ellipse cx="265" cy="322" rx="12" ry="5" transform="rotate(18 265 322)"/>
+              <ellipse cx="279" cy="310" rx="12" ry="5" transform="rotate(18 279 310)"/>
+            </g>
+
+            <!-- desk -->
+            <g transform="rotate(-1.5 115 98)">
+              <rect x="44" y="70" width="134" height="62" rx="3" fill="#000" opacity=".55" filter="url(#rm-soft)"/>
+              <rect x="40" y="64" width="134" height="62" rx="3" fill="url(#rm-wood)" stroke="#1a120c" stroke-width="1.4"/>
+              <rect x="44" y="68" width="126" height="6" fill="#c8a978" opacity=".12"/>
+              <g stroke="#1a110a" stroke-width=".7" opacity=".45">
+                <path d="M48 78c40 3 81 1 120-3M46 88c44 4 86 2 124-1M45 108c42-3 82-2 124 2M48 116c36 3 73 1 119-2"/>
+              </g>
+              <rect x="56" y="78" width="38" height="27" fill="#c7b493" opacity=".75" transform="rotate(-7 75 90)"/>
+              <g stroke="#56442c" stroke-width="1" opacity=".6">
+                <line x1="60" y1="84" x2="88" y2="82"/><line x1="60" y1="89" x2="87" y2="87"/><line x1="60" y1="94" x2="84" y2="92"/>
+              </g>
+              <ellipse cx="114" cy="92" rx="12" ry="11" fill="#1c1410" stroke="#54442f" stroke-width="1"/>
+              <ellipse cx="114" cy="91" rx="6" ry="5" fill="#0d0a08"/>
+              <rect x="142" y="82" width="18" height="29" rx="2" fill="#20160f" stroke="#4c3a28" stroke-width="1"/>
+              <g fill="#b89055" opacity=".55"><circle cx="147" cy="90" r=".8"/><circle cx="153" cy="96" r=".8"/><circle cx="149" cy="102" r=".8"/></g>
+              <ellipse cx="151" cy="111" rx="10" ry="3" fill="#a5824d" opacity=".14"/>
+            </g>
+            <g>
+              <rect x="86" y="132" width="34" height="26" rx="5" fill="#161311" opacity=".9"/>
+              <rect x="90" y="152" width="26" height="8" rx="3" fill="#0b0908"/>
+              <path d="M88 140c-15 17-22 34-18 50" stroke="#141110" stroke-width="4" fill="none" opacity=".6"/>
+            </g>
+            <g fill="#d8b474" opacity=".7">
+              <rect x="167" y="103" width="12" height="8" fill="var(--accent)" transform="rotate(-12 173 107)"/>
+              <text x="170.5" y="109.5" font-family="Oswald, sans-serif" font-size="6" fill="#1b140c" transform="rotate(-12 173 107)">1</text>
+            </g>
+
+            <!-- coat on chair -->
+            <g transform="rotate(3 80 390)">
+              <rect x="51" y="354" width="60" height="66" rx="3" fill="#000" opacity=".5" filter="url(#rm-soft)"/>
+              <rect x="47" y="348" width="58" height="68" rx="3" fill="#1c1713" stroke="#2f2720" stroke-width="1"/>
+              <rect x="54" y="386" width="44" height="24" fill="#0e0b09"/>
+              <path d="M46 361c9-9 23-12 35-10 12 2 19 8 24 17l-7 42c-8 7-18 10-30 9-12-1-21-5-27-12Z" fill="url(#rm-coat)" stroke="#40372c" stroke-width="1"/>
+              <path d="M60 361l11 1 7 23-11 2Z" fill="#211c17"/>
+              <path d="M82 363l11 1-4 24-11-2Z" fill="#191613"/>
+              <path d="M55 376c16 4 31 4 47 0" stroke="#6b5a42" stroke-width="2" opacity=".5"/>
+              <path d="M80 388l-1 26M86 388l2 26" stroke="#0b0908" stroke-width="2"/>
+              <rect x="76" y="391" width="12" height="5" fill="#8d754b" opacity=".55"/>
+              <path d="M47 370c-10 6-14 15-12 24l9 2c1-9 5-16 11-20Z" fill="#1a1612"/>
+              <circle cx="70" cy="404" r="7" fill="#c8a874" opacity=".12"/>
+            </g>
+            <g fill="#d8b474" opacity=".7">
+              <rect x="118" y="385" width="12" height="8" fill="var(--accent)" transform="rotate(8 124 389)"/>
+              <text x="121.5" y="391.5" font-family="Oswald, sans-serif" font-size="6" fill="#1b140c" transform="rotate(8 124 389)">3</text>
+            </g>
+
+            <!-- safe -->
+            <g transform="rotate(1 320 413)">
+              <rect x="296" y="382" width="64" height="64" rx="3" fill="#000" opacity=".55" filter="url(#rm-soft)"/>
+              <rect x="292" y="377" width="64" height="64" rx="3" fill="url(#rm-safe)" stroke="#111516" stroke-width="1.4"/>
+              <rect x="297" y="382" width="54" height="54" fill="none" stroke="#a9b3b3" stroke-opacity=".18"/>
+              <circle cx="319" cy="409" r="13" fill="#1a1e1f" stroke="#aeb7b5" stroke-width="1.2"/>
+              <circle cx="319" cy="409" r="4" fill="#7e8a8a"/>
+              <path d="M319 396v3M319 419v3M306 409h3M329 409h3" stroke="#cfd5d2" stroke-width="1" opacity=".7"/>
+              <rect x="338" y="402" width="9" height="14" rx="2" fill="#252b2c" stroke="#899393" stroke-width="1"/>
+              <path d="M300 386c7-2 15-2 21 0" stroke="#fff" stroke-opacity=".16" stroke-width="1"/>
+            </g>
+            <g fill="#d8b474" opacity=".7">
+              <rect x="365" y="390" width="12" height="8" fill="var(--accent)" transform="rotate(-6 371 394)"/>
+              <text x="368.5" y="396.5" font-family="Oswald, sans-serif" font-size="6" fill="#1b140c" transform="rotate(-6 371 394)">4</text>
+            </g>
+            <g fill="#d8b474" opacity=".7">
+              <rect x="356" y="45" width="12" height="8" fill="var(--accent)" transform="rotate(6 362 49)"/>
+              <text x="359.5" y="51.5" font-family="Oswald, sans-serif" font-size="6" fill="#1b140c" transform="rotate(6 362 49)">2</text>
+            </g>
+
+            <!-- scattered details -->
+            <g stroke="#b8a995" stroke-opacity=".3" stroke-width="1" fill="none">
+              <path d="M262 299l13 9-8 13 12 4"/>
+            </g>
+            <g>
+              <ellipse cx="290" cy="344" rx="16" ry="11" fill="#121112" stroke="#51483b" stroke-width="1" opacity=".9"/>
+              <ellipse cx="290" cy="344" rx="8" ry="5" fill="#6f5b3d" opacity=".5"/>
+              <path d="M306 338l12-4" stroke="#d1c4aa" stroke-width="1.6" opacity=".5"/>
+            </g>
+            <path d="M232 444c7-3 15-3 21 1l-2 5c-6-2-12-2-18 0Z" fill="#2b2119" opacity=".7"/>
+            <circle cx="268" cy="440" r="5" fill="#b7a78e" opacity=".22"/>
+            <path d="M162 430c18-5 33-6 49-4" stroke="#d1c4aa" stroke-opacity=".18" stroke-width="1.4" fill="none"/>
+
+            <rect width="400" height="500" fill="url(#rm-vig)" pointer-events="none"/>
+          </svg>
+
+          <button class="hotspot" type="button" data-object="desk" data-side="bottom" aria-label="Inspect the desk">
+            <span class="ring"></span><span class="dot"></span><span class="tag">DESK</span>
+          </button>
+          <button class="hotspot" type="button" data-object="window" data-side="bottom" aria-label="Inspect the shattered window">
+            <span class="ring"></span><span class="dot"></span><span class="tag">WINDOW</span>
+          </button>
+          <button class="hotspot" type="button" data-object="coat" data-side="top" aria-label="Inspect the coat">
+            <span class="ring"></span><span class="dot"></span><span class="tag">COAT</span>
+          </button>
+          <button class="hotspot" type="button" data-object="safe" data-side="top" aria-label="Inspect the wall safe">
+            <span class="ring"></span><span class="dot"></span><span class="tag">SAFE</span>
+          </button>
+          <div class="scene-stamp">CRIME SCENE · DO NOT CROSS</div>
+        </div>
+      </div>
+
+      <div class="scene-foot">
+        <div class="scene-progress"><span class="pulse-dot"></span><span id="clueProgress">0 OF 4 CLUES LOGGED</span><span class="tap-hint">TAP A DETAIL</span></div>
+        <button class="btn btn-primary" type="button" data-open-board>OPEN EVIDENCE BOARD <span class="arrow">→</span></button>
+      </div>
+    </section>
+
+    <!-- ================= STAGE 3 : THE ZOOM-IN ================= -->
+    <section id="screen-zoom" class="screen screen-zoom" aria-label="Stage three: close inspection">
+      <div class="hud zoom-hud">
+        <button class="back-chip" type="button" id="btnZoomOutTop">← ZOOM OUT</button>
+        <span class="zoom-label" id="zoomExhibit">EXHIBIT A · DESK</span>
+        <button class="board-chip board-chip-small" type="button" data-open-board aria-label="Open evidence board">BOARD <i>↗</i></button>
+      </div>
+      <div class="zoom-art" id="zoomArt" data-object="desk">
+        <div class="zoom-canvas" id="zoomCanvas" aria-hidden="true"></div>
+        <div class="reticle" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+        <div class="zoom-caption" aria-hidden="true"><span>MAGNIFIED · 8X</span><span id="zoomPlate">PLATE 01</span></div>
+      </div>
+      <div class="clue-sheet" id="clueSheet">
+        <div class="clue-meta">
+          <span id="zoomClueNo">CLUE 01 / 04</span>
+          <span class="clue-object" id="zoomObject">DESK</span>
+          <span class="gun-tag" id="gunTag">SMOKING GUN</span>
+        </div>
+        <p class="clue-text" id="clueText">A clue should be here.</p>
+        <div class="clue-foot"><span class="logged">✓ LOGGED TO EVIDENCE BOARD</span><span id="zoomFound">1 / 4</span></div>
+      </div>
+      <div class="footer-actions">
+        <button class="btn btn-ghost" type="button" id="btnZoomOut">ZOOM OUT</button>
+        <button class="btn btn-primary" type="button" data-open-board>EVIDENCE BOARD</button>
+      </div>
+    </section>
+
+    <!-- ================= STAGE 4 : EVIDENCE BOARD ================= -->
+    <section id="screen-board" class="screen screen-board" aria-label="Stage four: evidence board">
+      <div class="hud board-hud">
+        <div class="hud-left">
+          <span class="kicker">CASE <b id="boardCaseNo">#0417</b> · THE FILE</span>
+          <h2>Evidence Board</h2>
+        </div>
+        <button class="back-chip" type="button" id="btnBoardBack">← SCENE</button>
+      </div>
+
+      <div class="board-body">
+        <svg class="board-strings" id="boardStrings" aria-hidden="true"></svg>
+        <div class="board-victim"><span>VICTIM</span><b id="boardVictim">Arthur Vale</b><i id="boardVictimRole">nightclub owner</i></div>
+        <div class="section-head"><span>CLUES</span><span id="boardClueCount">0 / 4</span></div>
+        <div class="clue-list" id="clueList"></div>
+        <div class="section-head suspects-head"><span>PERSONS OF INTEREST</span><span>3</span></div>
+        <div class="suspect-list" id="suspectList"></div>
+        <div class="board-notes" id="boardNotes">
+          <div class="notes-head"><span>CASE NOTES</span><span>1:45 A.M.</span></div>
+          <div class="notes-grid">
+            <div><span>WEAPON</span><b id="boardWeapon">—</b></div>
+            <div><span>ENTRY</span><b>No forced entry</b></div>
+            <div><span>THEORY</span><b>One name. One lie.</b></div>
+          </div>
+          <p>Motive is cheap. The smoking gun is the only witness that can't lie.</p>
+        </div>
+      </div>
+
+      <div class="board-actions">
+        <button class="btn btn-primary" type="button" id="btnAccuse">ACCUSE A SUSPECT <span class="arrow">→</span></button>
+        <button class="btn btn-ghost" type="button" id="btnBackScene">RETURN TO CRIME SCENE</button>
+      </div>
+    </section>
+
+    <!-- ================= ACCUSATION ================= -->
+    <section id="screen-accuse" class="screen screen-accuse" aria-label="Accuse a suspect">
+      <div class="hud">
+        <button class="back-chip" type="button" id="btnAccuseBack">← EVIDENCE</button>
+        <span class="zoom-label">THE LAST CALL</span>
+        <span class="case-tag" id="accuseCaseNo">#0417</span>
+      </div>
+      <header class="accuse-head">
+        <span class="kicker">ONE NAME. ONE CHANCE.</span>
+        <h2>Point the finger.</h2>
+        <p id="accuseSub">Pick the face you can put in a cell. The city won't wait.</p>
+      </header>
+      <div class="accuse-case">
+        <div><span>VICTIM</span><b id="accuseVictim">Arthur Vale</b></div>
+        <div><span>SCENE</span><b id="accuseScene">The Marlowe Hotel</b></div>
+      </div>
+      <div class="accuse-list" id="accuseList"></div>
+      <div class="accuse-warning" id="gunWarning"><span>!</span> NO SMOKING GUN YET — THIS WILL GO COLD.</div>
+      <button class="btn btn-primary btn-main" type="button" id="btnMakeAccusation" disabled>ACCUSE</button>
+    </section>
+
+    <!-- ================= END : WIN / LOSS ================= -->
+    <section id="screen-end" class="screen screen-end" aria-label="Case result">
+      <div class="end-art" aria-hidden="true">
+        <div class="end-glow"></div>
+        <div class="end-blinds"></div>
+        <div class="rain r1"></div><div class="rain r2"></div>
+        <div class="end-floor"></div>
+      </div>
+      <div class="hud end-hud">
+        <span class="kicker" id="endCaseNo">CASE #0417 · 3:12 A.M.</span>
+        <span class="end-weather" id="endWeather">RAIN · NO WITNESSES</span>
+      </div>
+      <div class="verdict">
+        <div class="stamp" id="endStamp">CASE COLD</div>
+        <div class="verdict-figure" id="verdictFigure">
+          <div class="vf-photo"><svg viewBox="0 0 60 76" aria-hidden="true"><use id="endPortraitUse" href="#p-fedora"></use></svg></div>
+          <div class="vf-text">
+            <span class="vf-tag" id="vfTag">BOOKING PHOTO</span>
+            <b id="vfName">Miles Calloway</b>
+            <i id="vfNote">Homicide · 3:12 A.M.</i>
+          </div>
+          <span class="vf-stamp" id="vfStamp">ARRESTED</span>
+        </div>
+        <h2 id="endHeadline">The killer walked.</h2>
+        <p id="endCopy">The rain swallowed the trail before dawn.</p>
+      </div>
+      <div class="end-card">
+        <div class="end-row"><span id="endKillerLabel">TRUE KILLER</span><b id="endKiller">—</b></div>
+        <div class="end-row"><span>VICTIM</span><b id="endVictim">—</b></div>
+        <div class="end-row"><span>WEAPON</span><b id="endWeapon">—</b></div>
+        <p class="end-nail" id="endNail"></p>
+      </div>
+      <button class="btn btn-primary btn-main" type="button" id="btnNewCase">NEW CASE <span class="arrow">→</span></button>
+    </section>
+
+    <!-- ================= CONFIRM ================= -->
+    <div class="overlay" id="confirmOverlay" role="dialog" aria-modal="true" aria-labelledby="confirmTitle">
+      <div class="confirm-card">
+        <span class="kicker">ONCE IT'S SAID</span>
+        <h3 id="confirmTitle">Accuse <em id="confirmName">Vera Lane?</em></h3>
+        <p>No second chances. No quiet retractions.</p>
+        <button class="btn btn-danger" type="button" id="btnDoAccuse">SAY IT</button>
+        <button class="btn btn-ghost" type="button" id="btnCancelAccuse">NOT YET</button>
+      </div>
+    </div>
+
+    <div class="sr-only" aria-live="polite" id="liveRegion"></div>
+  </div>
+</div>
+<script src="game.js"></script>
+</body>
+</html>
