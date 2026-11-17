@@ -57,10 +57,18 @@ const PROPS = {
   `),
 
   chair: ({ x, y, r = 0 }) => sceneG(x, y, 1, r, `
-    <ellipse cx="0" cy="16" rx="20" ry="7" fill="#000" opacity=".4"/>
-    <rect x="-17" y="-14" width="34" height="30" rx="2" fill="var(--wood)" stroke="#1a110a"/>
-    <rect x="-17" y="-23" width="34" height="9" rx="2" fill="var(--wood-hi)" opacity=".4"/>
-    <path d="M-14 16v14M14 16v14" stroke="#1a110a" stroke-width="2"/>
+    <ellipse cx="0" cy="20" rx="23" ry="8" fill="#000" opacity=".42" filter="url(#rs-blur2)"/>
+    <g stroke="#1a110a" stroke-width="1.6" stroke-linecap="round" opacity=".9">
+      <path d="M-15 10l-7 18M15 10l7 18"/>
+      <path d="M-17 -17l-4 7M17 -17l4 7"/>
+    </g>
+    <rect x="-19" y="-26" width="38" height="13" rx="4" fill="var(--wood)" stroke="#1a110a" stroke-width="1.2"/>
+    <rect x="-15" y="-23" width="30" height="4" rx="2" fill="var(--wood-hi)" opacity=".45"/>
+    <path d="M-17 -26v-3M17 -26v-3" stroke="var(--wood-hi)" stroke-width="2" opacity=".32"/>
+    <rect x="-18" y="-14" width="36" height="32" rx="4" fill="var(--wood)" stroke="#1a110a" stroke-width="1.2"/>
+    <rect x="-14" y="-10" width="28" height="24" rx="3" fill="var(--wood-hi)" opacity=".16"/>
+    <path d="M0 -12v27" stroke="#1a110a" stroke-width=".9" opacity=".26"/>
+    <path d="M-21 -12v19c0 3 1 4 3 5M21 -12v19c0 3-1 4-3 5" fill="none" stroke="var(--wood-hi)" stroke-width="1.8" opacity=".34"/>
   `),
 
   couch: ({ x, y, r = 0 }) => sceneG(x, y, 1, r, `
