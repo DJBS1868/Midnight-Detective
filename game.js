@@ -23,18 +23,18 @@ const pad2 = (n) => String(n).padStart(2, '0');
 const exhibitLetter = (i) => String.fromCharCode(65 + i);
 
 const SUSPECT_POOL = [
-  { name: 'Vera Lane', portrait: 'cloche', trace: 'a trace of gardenia perfume' },
-  { name: 'Miles Calloway', portrait: 'fedora', trace: 'a black pearl cufflink' },
-  { name: 'Iris Voss', portrait: 'veil', trace: 'a red lipstick smudge' },
-  { name: 'Sonny Delacroix', portrait: 'fedora', trace: 'a half-smoked Gauloise' },
-  { name: 'Ruthie Kane', portrait: 'cloche', trace: 'a scarlet silk thread' },
-  { name: 'Elliot Graves', portrait: 'bald', trace: 'silver polish from a tipped cane' },
-  { name: 'Lana Moreau', portrait: 'veil', trace: 'green dust from a jade ring' },
-  { name: 'Frankie Sabini', portrait: 'rough', trace: 'lighter fluid from a brass lighter' },
-  { name: 'Vivian Cross', portrait: 'cloche', trace: 'a scratch from a diamond tie pin' },
-  { name: 'Walter Pike', portrait: 'bald', trace: 'a cracked watch crystal' },
-  { name: 'Clara Boone', portrait: 'cloche', trace: 'a scrap of crocodile leather' },
-  { name: 'Desmond Shaw', portrait: 'fedora', trace: 'a smear of bay rum cologne' }
+  { name: 'Vera Lane', portrait: 'cloche', trace: 'a trace of gardenia perfume', desc: "5'5\" · slight · black bob · gardenia perfume" },
+  { name: 'Miles Calloway', portrait: 'fedora', trace: 'a black pearl cufflink', desc: "6'0\" · broad · grey temples · a crooked nose" },
+  { name: 'Iris Voss', portrait: 'veil', trace: 'a red lipstick smudge', desc: "5'7\" · willowy · red hair · beauty mark at the lip" },
+  { name: 'Sonny Delacroix', portrait: 'fedora', trace: 'a half-smoked Gauloise', desc: "5'11\" · lean · slicked hair · cut knuckle" },
+  { name: 'Ruthie Kane', portrait: 'cloche', trace: 'a scarlet silk thread', desc: "5'4\" · compact · copper curls · chipped tooth" },
+  { name: 'Elliot Graves', portrait: 'bald', trace: 'silver polish from a tipped cane', desc: "6'1\" · heavy · bald crown · silver tooth" },
+  { name: 'Lana Moreau', portrait: 'veil', trace: 'green dust from a jade ring', desc: "5'8\" · narrow · dark wave · jade ring" },
+  { name: 'Frankie Sabini', portrait: 'rough', trace: 'lighter fluid from a brass lighter', desc: "5'9\" · thick-necked · black hair · burn scar" },
+  { name: 'Vivian Cross', portrait: 'cloche', trace: 'a scratch from a diamond tie pin', desc: "5'6\" · tailored · dark hair · diamond tie pin" },
+  { name: 'Walter Pike', portrait: 'bald', trace: 'a cracked watch crystal', desc: "5'10\" · paunchy · balding · cracked watch" },
+  { name: 'Clara Boone', portrait: 'cloche', trace: 'a scrap of crocodile leather', desc: "5'5\" · straight-backed · ash hair · crocodile valise" },
+  { name: 'Desmond Shaw', portrait: 'fedora', trace: 'a smear of bay rum cologne', desc: "6'0\" · spare · salt-and-pepper · bay rum cologne" }
 ];
 
 const VICTIMS = [
@@ -1276,19 +1276,11 @@ function drawBoardStrings() {
 
 function renderAccuse() {
   const c = state.caseData;
-  state.selected = null;
-  $('#accuseList').innerHTML = c.suspects.map((s, i) => `
-    <button class="accuse-row" type="button" data-index="${i}" style="--i:${i}" aria-pressed="false">
-      <div class="mugshot"><svg viewBox="0 0 60 76" aria-hidden="true"><use href="#p-${s.portrait}"></use></svg></div>
-      <div class="accuse-info">
-        <div class="accuse-top"><span class="accuse-name">${esc(s.name)}</span><span class="accuse-role">${esc(s.role)}</span></div>
-        <div class="accuse-lines">
-          <div class="accuse-line"><b>MOTIVE</b><span>${esc(s.motive)}</span></div>
-          <div class="accuse-line"><b>ALIBI</b><span>${esc(s.alibi)}</span></div>
-        </div>
-      </div>
-      <span class="accuse-pick" aria-hidden="true"></span>
-    </button>`).join('');
+  const count = c.suspects.length;
+  if (state.selected == null || state.selected >= count) state.selected = 0;
+  $('#accuseTotal').textContent = pad2(count);
+  $('#accuseSubjectTotal').textContent = pad2(count);
+  $('#accuseBookingNo').textContent = `#${c.id}-${pad2(state.selected + 1)}`;
   const warning = $('#gunWarning');
   if (hasSmokingGun()) {
     warning.classList.add('safe');
@@ -1297,23 +1289,47 @@ function renderAccuse() {
     warning.classList.remove('safe');
     warning.innerHTML = '<span>!</span> NO SMOKING GUN YET — THIS WILL GO COLD.';
   }
-  const btn = $('#btnMakeAccusation');
-  btn.disabled = true;
-  btn.textContent = 'SELECT A SUSPECT';
+  showSuspect(state.selected);
 }
 
-function selectSuspect(index) {
-  state.selected = index;
-  $$('.accuse-row').forEach((row) => {
-    const on = Number(row.dataset.index) === index;
-    row.classList.toggle('selected', on);
-    row.setAttribute('aria-pressed', on ? 'true' : 'false');
-  });
-  const s = state.caseData.suspects[index];
+/* The lineup shows one full booking file at a time. Browsing with the
+   arrows also selects the face currently on screen, so the button always
+   says exactly who will be arrested. */
+function showSuspect(index, direction = 0) {
+  const c = state.caseData;
+  if (!c) return;
+  const count = c.suspects.length;
+  const at = ((index % count) + count) % count;
+  state.selected = at;
+  const s = c.suspects[at];
+  $('#accusePortraitUse').setAttribute('href', `#p-${s.portrait}`);
+  $('#accuseIndex').textContent = pad2(at + 1);
+  $('#accuseSubjectNo').textContent = pad2(at + 1);
+  $('#accuseBookingNo').textContent = `#${c.id}-${pad2(at + 1)}`;
+  $('#accuseName').textContent = s.name;
+  $('#accuseRole').textContent = s.role;
+  $('#accuseDesc').textContent = s.desc || s.role;
+  $('#accuseMotive').textContent = s.motive;
+  $('#accuseAlibi').textContent = s.alibi;
   const btn = $('#btnMakeAccusation');
   btn.disabled = false;
   btn.textContent = `ACCUSE ${s.name.toUpperCase()}`;
-  Sfx.tick();
+  const file = $('#bookingFile');
+  file.classList.remove('swap-next', 'swap-prev');
+  if (direction) {
+    void file.offsetWidth;
+    file.classList.add(direction > 0 ? 'swap-next' : 'swap-prev');
+  }
+}
+
+function selectSuspect(index, direction = 0, silent = false) {
+  showSuspect(index, direction);
+  if (!silent) Sfx.tick();
+}
+
+function stepSuspect(direction) {
+  if (state.screen !== 'accuse' || !state.caseData) return;
+  selectSuspect(state.selected + direction, direction);
 }
 
 let confirmReturnFocus = null;
@@ -1858,10 +1874,23 @@ $('#btnBoardBack').addEventListener('click', goScene);
 $('#btnBackScene').addEventListener('click', goScene);
 $('#btnAccuse').addEventListener('click', () => { renderAccuse(); showScreen('accuse'); });
 $('#btnAccuseBack').addEventListener('click', goBoard);
-$('#accuseList').addEventListener('click', (e) => {
-  const row = e.target.closest('.accuse-row');
-  if (row) selectSuspect(Number(row.dataset.index));
+$('#btnPrevSuspect').addEventListener('click', () => stepSuspect(-1));
+$('#btnNextSuspect').addEventListener('click', () => stepSuspect(1));
+// A horizontal drag across the booking file browses the lineup on touch.
+let lineupSwipe = null;
+$('#bookingFile').addEventListener('pointerdown', (e) => {
+  if (e.pointerType === 'mouse') return;
+  lineupSwipe = { x: e.clientX, y: e.clientY, id: e.pointerId };
 });
+$('#bookingFile').addEventListener('pointerup', (e) => {
+  if (!lineupSwipe || lineupSwipe.id !== e.pointerId) return;
+  const dx = e.clientX - lineupSwipe.x;
+  const dy = e.clientY - lineupSwipe.y;
+  lineupSwipe = null;
+  if (Math.abs(dx) < 44 || Math.abs(dx) < Math.abs(dy) * 1.4) return;
+  stepSuspect(dx < 0 ? 1 : -1);
+});
+$('#bookingFile').addEventListener('pointercancel', () => { lineupSwipe = null; });
 $('#btnMakeAccusation').addEventListener('click', openConfirm);
 $('#btnCancelAccuse').addEventListener('click', closeConfirm);
 $('#btnDoAccuse').addEventListener('click', doAccuse);
@@ -1880,6 +1909,15 @@ $('#btnNewCase').addEventListener('click', startCase);
 $('#soundToggle').addEventListener('click', () => Sfx.toggle());
 
 document.addEventListener('keydown', (e) => {
+  if (
+    state.screen === 'accuse' &&
+    !$('#confirmOverlay').classList.contains('open') &&
+    (e.key === 'ArrowLeft' || e.key === 'ArrowRight')
+  ) {
+    e.preventDefault();
+    stepSuspect(e.key === 'ArrowRight' ? 1 : -1);
+    return;
+  }
   if (e.key !== 'Escape') return;
   if ($('#confirmOverlay').classList.contains('open')) { closeConfirm(); return; }
   if (state.screen === 'zoom') goScene();

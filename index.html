@@ -431,14 +431,46 @@
       </div>
       <header class="accuse-head">
         <span class="kicker">ONE NAME. ONE CHANCE.</span>
-        <h2>Point the finger.</h2>
-        <p id="accuseSub">Pick the face you can put in a cell. The city won't wait.</p>
+        <div class="accuse-heading">
+          <h2>Point the finger.</h2>
+          <span class="accuse-count" aria-hidden="true"><b id="accuseIndex">01</b><i>/</i><span id="accuseTotal">03</span></span>
+        </div>
       </header>
-      <div class="accuse-case">
-        <div><span>VICTIM</span><b id="accuseVictim">Arthur Vale</b></div>
-        <div><span>SCENE</span><b id="accuseScene">The Marlowe Hotel</b></div>
+      <div class="accuse-deck">
+        <button class="lineup-arrow lineup-prev" type="button" id="btnPrevSuspect" aria-label="Previous suspect">
+          <svg viewBox="0 0 24 32" aria-hidden="true"><path d="M18 4 6 16l12 12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="square"/><path d="M15 10 9 16l6 6" fill="none" stroke="currentColor" stroke-width=".8" stroke-linecap="square" opacity=".45"/></svg>
+        </button>
+        <article class="booking-file" id="bookingFile" aria-live="polite">
+          <div class="booking-photo">
+            <div class="booking-head"><span>POLICE DEPT · HOMICIDE</span><b id="accuseBookingNo">#0417-01</b></div>
+            <div class="booking-frame">
+              <div class="height-ruler" aria-hidden="true"><span>6'0</span><span>5'9</span><span>5'6</span><span>5'3</span><span>5'0</span></div>
+              <div class="booking-portrait">
+                <svg viewBox="0 0 60 76" aria-hidden="true"><use id="accusePortraitUse" href="#p-cloche"></use></svg>
+              </div>
+            </div>
+            <span class="booking-plate" aria-hidden="true">FRONT</span>
+            <span class="booking-serial" aria-hidden="true">BOOKING PHOTO · 2:00 A.M.</span>
+            <div class="booking-caption">
+              <div><b>VICTIM</b><i id="accuseVictim">Arthur Vale</i></div>
+              <div><b>SCENE</b><i id="accuseScene">The Marlowe Hotel</i></div>
+            </div>
+          </div>
+          <div class="booking-data">
+            <div class="booking-data-head"><span>SUBJECT <b id="accuseSubjectNo">01</b> / <span id="accuseSubjectTotal">03</span></span><span>PERSON OF INTEREST</span></div>
+            <h3 class="booking-name" id="accuseName">Walter Pike</h3>
+            <span class="booking-role" id="accuseRole">Club manager</span>
+            <dl class="booking-facts">
+              <div class="desc"><dt>DESC.</dt><dd id="accuseDesc">5'10" · paunchy · balding · a cracked watch on the chain</dd></div>
+              <div><dt>MOTIVE</dt><dd id="accuseMotive">The victim stole the only thing that mattered.</dd></div>
+              <div><dt>ALIBI</dt><dd id="accuseAlibi">Insists the doorman saw them leave at 1:10.</dd></div>
+            </dl>
+          </div>
+        </article>
+        <button class="lineup-arrow lineup-next" type="button" id="btnNextSuspect" aria-label="Next suspect">
+          <svg viewBox="0 0 24 32" aria-hidden="true"><path d="M6 4l12 12L6 28" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="square"/><path d="M9 10l6 6-6 6" fill="none" stroke="currentColor" stroke-width=".8" stroke-linecap="square" opacity=".45"/></svg>
+        </button>
       </div>
-      <div class="accuse-list" id="accuseList"></div>
       <div class="accuse-warning" id="gunWarning"><span>!</span> NO SMOKING GUN YET — THIS WILL GO COLD.</div>
       <button class="btn btn-primary btn-main" type="button" id="btnMakeAccusation" disabled>ACCUSE</button>
     </section>
