@@ -35,7 +35,9 @@ objects on the same board are ever the same.
 1. **Answer the call.** Sergeant Miller gives you the address at 2:00 A.M.
 2. **Work the scene.** Tap each marked detail to inspect it. Every object hides **three or
    four search spots** — a drawer, a pocket, a windowsill, a latch. One spot holds the clue;
-   the others hold fresh debris and false leads. Exactly one clue in the room is the smoking gun.
+   the others hold fresh debris and false leads. Searching turns the finding up inside the
+   object; **tap the finding to take it** and log it on the board. Exactly one clue in the
+   room is the smoking gun.
 3. **Read the board.** Cross-check the evidence, motives, and alibis.
 4. **Accuse once.** The right name with the smoking gun closes the case. The right name
    without it, or the wrong name, and the killer walks.

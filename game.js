@@ -315,6 +315,44 @@ const SEARCH_FLAVOR = {
   ]
 };
 
+/* What the player feels before the sheet writes it down. The clue is
+   revealed as a physical token in the macro view; this line only hints
+   that something is there. */
+const REVEAL_LINES = [
+  '{place}: something hidden, deliberately out of sight.',
+  '{place}: your fingers catch an edge. It does not belong to the room.',
+  '{place}: a shape in the dust, tucked where nobody would look.'
+];
+
+/* The object reacts to the search. The macro art is one station group,
+   so these are broad physical beats rather than true part animation. */
+function probeActionFor(label) {
+  const s = String(label || '').toUpperCase();
+  if (/(DRAWER|TRAY|TILL|POCKET|LINING|SLEEVE|CUFF|HEM|HOOD|COLLAR|SHELF|PAGE)/.test(s)) return 'open';
+  if (/(TABLETOP|BAR TOP|COUNTER|BENCH|FELT|GLASS|PANE|MIRROR|LABEL|LENS|CHART|FACE|BACK|RIM|EDGE)/.test(s)) return 'wipe';
+  if (/(CORD|STRAP|STRING|RAIL|THRESHOLD|STEP|TRANSOM|SLAT|BARS|DOOR)/.test(s)) return 'pull';
+  if (/(DIAL|LOCK|HINGE|LATCH|HANDLE|KNOB|CLASP|STRIKER|PRIMER|CHAIN|RING|FOB|TEETH|SPINE)/.test(s)) return 'turn';
+  return 'lift';
+}
+
+const PROBE_CLASSES = ['probe-open', 'probe-lift', 'probe-turn', 'probe-pull', 'probe-wipe'];
+
+/* One small silhouette per clue family, so the thing taken out of the
+   drawer reads as paper, brass, steel or a ticket before the text does. */
+const FIND_ICONS = {
+  note: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"><path d="M6 3h9l3 3v15H6z"/><path d="M15 3v3h3M9 10h6M9 13h6M9 16h3"/></svg>',
+  gun: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"><rect x="8" y="4" width="6" height="12" rx="1.2"/><path d="M10 16h8l-1.4 3H10z"/><path d="M9 7h4"/></svg>',
+  weapon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"><path d="M4 19l11.5-13 4.5 3.6L9.5 21z"/><path d="M14 5l4.5 3.6"/></svg>',
+  alibi: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"><path d="M4 7h16v10H4z"/><path d="M9 7v10M15 7v10"/><path d="M11 10h.01M13 10h.01M11 13h.01M13 13h.01"/></svg>',
+  red: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"><path d="M9 11V7l3-3 3 3v4"/><rect x="8" y="11" width="8" height="9" rx="1"/><path d="M8 14h8"/></svg>'
+};
+
+function revealLineFor(plan, meta) {
+  const spot = plan?.spots?.[plan.clueSpot];
+  if (!spot) return 'Something is hidden here, deliberately out of sight.';
+  return pick(REVEAL_LINES).replaceAll('{place}', cap(spotPhrase(spot.label, meta)));
+}
+
 /* Natural hiding-place phrases for every search spot. The clue prose is
    built from the spot the clue actually hides in, so a line never says
    "in the drawer" while the player found it under the hatband. */
@@ -397,7 +435,7 @@ function buildSearchPlan(loc, key) {
       ? null
       : `${cap(spotPhrase(label, meta))}: ${flavors[flavorAt++]}`
   }));
-  return { clueSpot, spots };
+  return { clueSpot, spots, revealed: false, revealLine: '' };
 }
 
 function getSearchPlan(key) {
@@ -813,6 +851,8 @@ function renderZoom() {
   const plan = getSearchPlan(key);
   const searched = searchedSpots(key);
   const found = state.found.has(key);
+  const revealed = !found && !!plan.revealed;
+  if (revealed && !plan.revealLine) plan.revealLine = revealLineFor(plan, meta);
 
   // Fill the copy first: the sheet grows with the text and shortens the
   // camera bay, so the crop must be measured against the final layout.
@@ -823,16 +863,22 @@ function renderZoom() {
   $('#zoomObject').textContent = meta.label;
   $('#clueText').textContent = found
     ? clue.text
-    : `Work ${meta.name}. ${plan.spots.length} marked spots — tap one to search.`;
+    : revealed
+      ? plan.revealLine
+      : `Work ${meta.name}. ${plan.spots.length} marked spots — tap one to search.`;
   $('#clueSheet').classList.toggle('is-gun', found && clue.type === 'gun');
-  $('#clueSheet').classList.toggle('is-searching', !found);
+  $('#clueSheet').classList.toggle('is-searching', !found && !revealed);
+  $('#clueSheet').classList.toggle('is-revealed', revealed);
   const status = $('#zoomStatus');
   status.classList.toggle('ok', found);
+  status.classList.toggle('find', revealed);
   status.textContent = found
     ? '✓ LOGGED TO EVIDENCE BOARD'
-    : (searched.size
-      ? `${searched.size}/${plan.spots.length} SPOTS · CLUE STILL HIDDEN`
-      : `TAP A GLINT · ${plan.spots.length} SPOTS TO SEARCH`);
+    : revealed
+      ? 'CLUE FOUND · TAP TO TAKE'
+      : (searched.size
+        ? `${searched.size}/${plan.spots.length} SPOTS · CLUE STILL HIDDEN`
+        : `TAP A GLINT · ${plan.spots.length} SPOTS TO SEARCH`);
   $('#zoomFound').textContent = `${state.found.size} / ${c.objects.length}`;
   $('#zoomArt').setAttribute('aria-label', `Close-up of ${meta.name}`);
 
@@ -855,29 +901,76 @@ function renderZoom() {
   };
   $('#zoomMag').textContent = `MAGNIFIED · ${mag >= 10 ? Math.round(mag) : mag.toFixed(1)}X`;
   renderSearchSpots(key, plan, closeup.frame);
+  renderFindToken(key, plan, closeup.frame);
 }
 
 /* Overlay the search points on the macro view. The close-up SVG uses a
    viewBox crop with xMidYMid slice, so the same crop math the camera
    uses also places the buttons exactly over the object. */
+/* Map a normalized search point through the same crop the close-up SVG
+   uses, so pips, findings and labels stay locked to the object. */
+function spotPixel(plan, index, frame, layerBox, bayBox) {
+  const spot = plan.spots[index];
+  if (!spot) return null;
+  const scale = Math.max(bayBox.width / frame.w, bayBox.height / frame.h);
+  const offsetX = bayBox.left - layerBox.left + (bayBox.width - frame.w * scale) / 2;
+  const offsetY = bayBox.top - layerBox.top + (bayBox.height - frame.h * scale) / 2;
+  const px = frame.box.x + spot.u * frame.box.w;
+  const py = frame.box.y + spot.v * frame.box.h;
+  return { x: offsetX + (px - frame.x) * scale, y: offsetY + (py - frame.y) * scale };
+}
+
 function placeSearchSpots(plan, frame) {
   const layer = $('#zoomSpots');
   if (!layer) return;
   const layerBox = layer.getBoundingClientRect();
   const bayBox = $('#zoomCanvas').getBoundingClientRect();
   if (!layerBox.width || !layerBox.height || !bayBox.width || !bayBox.height) return;
-  const scale = Math.max(bayBox.width / frame.w, bayBox.height / frame.h);
-  const offsetX = bayBox.left - layerBox.left + (bayBox.width - frame.w * scale) / 2;
-  const offsetY = bayBox.top - layerBox.top + (bayBox.height - frame.h * scale) / 2;
   $$('.search-spot', layer).forEach((btn, i) => {
-    const spot = plan.spots[i];
-    if (!spot) return;
-    const px = frame.box.x + spot.u * frame.box.w;
-    const py = frame.box.y + spot.v * frame.box.h;
-    btn.style.left = `${clamp(offsetX + (px - frame.x) * scale, 23, layerBox.width - 23)}px`;
-    btn.style.top = `${clamp(offsetY + (py - frame.y) * scale, 23, layerBox.height - 23)}px`;
+    const pos = spotPixel(plan, i, frame, layerBox, bayBox);
+    if (!pos) return;
+    btn.style.left = `${clamp(pos.x, 23, layerBox.width - 23)}px`;
+    btn.style.top = `${clamp(pos.y, 23, layerBox.height - 23)}px`;
   });
   requestAnimationFrame(() => requestAnimationFrame(layoutSearchSpots));
+}
+
+/* The physical clue token sits over the spot that hid it. It is the
+   only thing that writes to the board; searching alone never does. */
+function renderFindToken(key, plan, frame) {
+  const layer = $('#zoomFinds');
+  if (!layer) return;
+  layer.innerHTML = '';
+  if (!plan?.revealed || state.found.has(key)) return;
+  const spot = plan.spots[plan.clueSpot];
+  if (!spot) return;
+  const meta = stationOf(state.caseData.location, key);
+  const clue = state.caseData.clues[key];
+  const btn = document.createElement('button');
+  btn.type = 'button';
+  btn.className = 'clue-find';
+  btn.dataset.spot = String(plan.clueSpot);
+  btn.innerHTML = `<span class="find-halo"></span><span class="find-card">${FIND_ICONS[clue.type] || FIND_ICONS.note}</span><span class="find-tag">TAKE</span>`;
+  btn.setAttribute('aria-label', `Take the clue hidden ${spotPhrase(spot.label, meta)}`);
+  btn.addEventListener('click', () => collectClue(key));
+  layer.appendChild(btn);
+  placeFindToken(plan, frame);
+}
+
+function placeFindToken(plan, frame) {
+  const layer = $('#zoomFinds');
+  const token = layer && $('.clue-find', layer);
+  if (!token) return;
+  const layerBox = layer.getBoundingClientRect();
+  const bayBox = $('#zoomCanvas').getBoundingClientRect();
+  if (!layerBox.width || !layerBox.height || !bayBox.width || !bayBox.height) return;
+  const pos = spotPixel(plan, plan.clueSpot, frame, layerBox, bayBox);
+  if (!pos) return;
+  const x = clamp(pos.x, 33, layerBox.width - 33);
+  const y = clamp(pos.y, 31, layerBox.height - 31);
+  token.style.left = `${x}px`;
+  token.style.top = `${y}px`;
+  token.dataset.tag = y > layerBox.height - 44 ? 'top' : 'bottom';
 }
 
 function renderSearchSpots(key, plan, frame) {
@@ -896,6 +989,7 @@ function renderSearchSpots(key, plan, frame) {
     btn.dataset.side = spot.side || 'bottom';
     if (done) btn.dataset.searched = 'true';
     if (found && i === plan.clueSpot) btn.classList.add('is-clue');
+    if (!found && plan.revealed && i === plan.clueSpot) btn.classList.add('has-find');
     btn.innerHTML = `<span class="glint"></span><span class="spot-tag">${spot.label}</span>`;
     btn.setAttribute(
       'aria-label',
@@ -904,6 +998,7 @@ function renderSearchSpots(key, plan, frame) {
     layer.appendChild(btn);
   });
   placeSearchSpots(plan, frame);
+  placeFindToken(plan, frame);
 }
 
 /* Choose a side for every spot label. The pips stay where the object
@@ -953,29 +1048,93 @@ function showSpotResult(index) {
   const spot = plan?.spots[index];
   if (!spot) return;
   const clue = state.caseData.clues[key];
-  const isClue = index === plan.clueSpot;
   const found = state.found.has(key);
+  const revealed = !found && !!plan.revealed;
   const searched = searchedSpots(key);
+  const meta = stationOf(state.caseData.location, key);
+  if (revealed && !plan.revealLine) plan.revealLine = revealLineFor(plan, meta);
   const sheet = $('#clueSheet');
-  sheet.classList.toggle('is-searching', !found);
+  sheet.classList.toggle('is-searching', !found && !revealed);
+  sheet.classList.toggle('is-revealed', revealed);
   sheet.classList.toggle('is-gun', found && clue.type === 'gun');
-  // Once the clue is logged, keep it on the sheet. Re-checking a drawer
-  // should not replace the evidence with a line about dead matches.
-  $('#clueText').textContent = found ? clue.text : spot.text;
+  // Searching only turns something up. The clue text and the board entry
+  // wait until the player picks the finding out of the object.
+  $('#clueText').textContent = found ? clue.text : revealed ? plan.revealLine : spot.text;
   const left = plan.spots.length - searched.size;
   const status = $('#zoomStatus');
-  status.classList.toggle('ok', found || isClue);
+  status.classList.toggle('ok', found);
+  status.classList.toggle('find', revealed);
   status.textContent = found
     ? '✓ LOGGED TO EVIDENCE BOARD'
-    : `SEARCHING ${spot.label} · ${left} ${left === 1 ? 'SPOT' : 'SPOTS'} LEFT`;
+    : revealed
+      ? 'CLUE FOUND · TAP TO TAKE'
+      : `SEARCHING ${spot.label} · ${left} ${left === 1 ? 'SPOT' : 'SPOTS'} LEFT`;
   $('#zoomFound').textContent = `${state.found.size} / ${state.caseData.objects.length}`;
   // The result text can add or lose a line, which resizes the camera bay.
-  // Re-place the pips against the new bay on the next frame.
+  // Re-place the pips and the finding against the new bay on the next frame.
   const activeKey = key;
   requestAnimationFrame(() => {
     if (state.screen !== 'zoom' || state.currentObject !== activeKey) return;
-    if (state.zoomMeta?.frame) placeSearchSpots(plan, state.zoomMeta.frame);
+    if (state.zoomMeta?.frame) {
+      placeSearchSpots(plan, state.zoomMeta.frame);
+      placeFindToken(plan, state.zoomMeta.frame);
+    }
   });
+}
+
+let probeTimer = 0;
+
+/* Search feedback: a ring at the point, and a physical beat from the
+   object itself. The finding token is the only thing that logs a clue. */
+function probeSpot(key, index) {
+  const plan = getSearchPlan(key);
+  const spot = plan?.spots[index];
+  if (!spot) return;
+  const station = $(`#zoomCanvas .closeup-svg [data-station="${key}"]`);
+  if (station) {
+    station.classList.remove(...PROBE_CLASSES);
+    void station.getBoundingClientRect();
+    station.classList.add(`probe-${probeActionFor(spot.label)}`);
+    clearTimeout(probeTimer);
+    probeTimer = setTimeout(() => station.classList.remove(...PROBE_CLASSES), 680);
+  }
+  const layer = $('#zoomSpots');
+  const frame = state.zoomMeta?.frame;
+  if (!layer || !frame) return;
+  const layerBox = layer.getBoundingClientRect();
+  const bayBox = $('#zoomCanvas').getBoundingClientRect();
+  const pos = spotPixel(plan, index, frame, layerBox, bayBox);
+  if (!pos) return;
+  const ripple = document.createElement('span');
+  ripple.className = 'probe-ripple';
+  ripple.style.left = `${clamp(pos.x, 25, layerBox.width - 25)}px`;
+  ripple.style.top = `${clamp(pos.y, 25, layerBox.height - 25)}px`;
+  layer.appendChild(ripple);
+  setTimeout(() => ripple.remove(), 700);
+}
+
+function collectClue(key) {
+  if (state.screen !== 'zoom' || state.currentObject !== key) return;
+  const plan = getSearchPlan(key);
+  if (!plan?.revealed || state.found.has(key)) return;
+  const clue = state.caseData.clues[key];
+  state.found.add(key);
+  renderSceneState();
+  const spotBtn = $(`#zoomSpots .search-spot[data-spot="${plan.clueSpot}"]`);
+  if (spotBtn) {
+    spotBtn.classList.remove('has-find');
+    spotBtn.classList.add('is-clue');
+    spotBtn.focus({ preventScroll: true });
+  }
+  const token = $('#zoomFinds .clue-find');
+  if (token) {
+    token.classList.add('is-taken');
+    setTimeout(() => token.remove(), 300);
+  }
+  Sfx.clue();
+  cameraFlash(0.5);
+  showSpotResult(plan.clueSpot);
+  announce(`Clue logged: ${clue.text}`);
 }
 
 function searchSpot(index) {
@@ -989,26 +1148,45 @@ function searchSpot(index) {
   searched.add(index);
   const btn = $(`#zoomSpots .search-spot[data-spot="${index}"]`);
   if (btn) btn.dataset.searched = 'true';
+  const found = state.found.has(key);
   const isClue = index === plan.clueSpot;
+
   if (isClue) {
-    btn?.classList.add('is-clue');
-    if (!state.found.has(key)) {
-      state.found.add(key);
-      renderSceneState();
-      Sfx.clue();
-      announce(`Clue logged: ${state.caseData.clues[key].text}`);
-    } else {
+    // A found clue can be reviewed. A newly found one is first revealed
+    // in the object; only the next tap on the finding logs it.
+    if (found) {
+      btn?.classList.add('is-clue');
       Sfx.tick();
+      showSpotResult(index);
+      return;
     }
-  } else {
-    Sfx.tick();
-    if (firstLook) {
-      announce(
-        state.found.has(key)
-          ? `${spot.label}: nothing new. The logged clue stands.`
-          : `${spot.label}: ${spot.text}`
-      );
+    if (plan.revealed) {
+      collectClue(key);
+      return;
     }
+    plan.revealed = true;
+    plan.revealLine = revealLineFor(plan, stationOf(state.caseData.location, key));
+    btn?.classList.add('has-find');
+    Sfx.discover();
+    renderFindToken(key, plan, state.zoomMeta.frame);
+    probeSpot(key, index);
+    showSpotResult(index);
+    announce(`Something is hidden here. Tap the finding to take the clue.`);
+    requestAnimationFrame(() => {
+      const token = $('#zoomFinds .clue-find');
+      if (token) token.focus({ preventScroll: true });
+    });
+    return;
+  }
+
+  Sfx.tick();
+  probeSpot(key, index);
+  if (firstLook) {
+    announce(
+      found
+        ? `${spot.label}: nothing new. The logged clue stands.`
+        : `${spot.label}: ${spot.text}`
+    );
   }
   showSpotResult(index);
 }
@@ -1882,6 +2060,21 @@ const Sfx = {
     osc.connect(gain).connect(this.master);
     osc.start(t); osc.stop(t + 0.04);
   },
+  discover() {
+    if (!this.enabled || !this.ctx) return;
+    const ctx = this.ctx;
+    const t = ctx.currentTime;
+    const osc = ctx.createOscillator();
+    osc.type = 'triangle';
+    osc.frequency.setValueAtTime(420, t);
+    osc.frequency.exponentialRampToValueAtTime(660, t + 0.16);
+    const gain = ctx.createGain();
+    gain.gain.setValueAtTime(0.0001, t);
+    gain.gain.linearRampToValueAtTime(0.026, t + 0.02);
+    gain.gain.exponentialRampToValueAtTime(0.0001, t + 0.32);
+    osc.connect(gain).connect(this.master);
+    osc.start(t); osc.stop(t + 0.34);
+  },
   clue() {
     if (!this.enabled || !this.ctx) return;
     const ctx = this.ctx;
@@ -1933,6 +2126,7 @@ window.__midnight = {
   answerPhone,
   advanceCall,
   searchSpot,
+  collectClue,
   getSearchPlan,
   accuseIndex: (i) => { selectSuspect(i); doAccuse(); },
   Sfx
