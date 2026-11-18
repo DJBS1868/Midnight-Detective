@@ -348,25 +348,13 @@
       <div class="scene-wrap">
         <div class="scene-art" id="sceneArt">
           <div class="scene-canvas" id="sceneCanvas" aria-hidden="true"></div>
-
-          <button class="hotspot" type="button" data-object="desk" data-side="bottom" aria-label="Inspect the desk">
-            <span class="ring"></span><span class="dot"></span><span class="tag">DESK</span>
-          </button>
-          <button class="hotspot" type="button" data-object="window" data-side="bottom" aria-label="Inspect the shattered window">
-            <span class="ring"></span><span class="dot"></span><span class="tag">WINDOW</span>
-          </button>
-          <button class="hotspot" type="button" data-object="coat" data-side="top" aria-label="Inspect the coat">
-            <span class="ring"></span><span class="dot"></span><span class="tag">COAT</span>
-          </button>
-          <button class="hotspot" type="button" data-object="safe" data-side="top" aria-label="Inspect the wall safe">
-            <span class="ring"></span><span class="dot"></span><span class="tag">SAFE</span>
-          </button>
+          <!-- The hotspots are generated per case: 3 to 8 unique details. -->
           <div class="scene-stamp">CRIME SCENE · DO NOT CROSS</div>
         </div>
       </div>
 
       <div class="scene-foot">
-        <div class="scene-progress"><span class="pulse-dot"></span><span id="clueProgress">0 OF 4 CLUES LOGGED</span><span class="tap-hint">TAP A DETAIL</span></div>
+        <div class="scene-progress"><span class="pulse-dot"></span><span id="clueProgress">0 DETAILS LOGGED</span><span class="tap-hint">TAP A DETAIL</span></div>
         <button class="btn btn-primary" type="button" data-open-board>OPEN EVIDENCE BOARD <span class="arrow">→</span></button>
       </div>
     </section>
@@ -385,7 +373,7 @@
       </div>
       <div class="clue-sheet" id="clueSheet">
         <div class="clue-meta">
-          <span id="zoomClueNo">CLUE 01 / 04</span>
+          <span id="zoomClueNo">DETAIL 01 / 04</span>
           <span class="clue-object" id="zoomObject">DESK</span>
           <span class="gun-tag" id="gunTag">SMOKING GUN</span>
         </div>
@@ -411,7 +399,7 @@
       <div class="board-body">
         <svg class="board-strings" id="boardStrings" aria-hidden="true"></svg>
         <div class="board-victim"><span>VICTIM</span><b id="boardVictim">Arthur Vale</b><i id="boardVictimRole">nightclub owner</i></div>
-        <div class="section-head"><span>CLUES</span><span id="boardClueCount">0 / 4</span></div>
+        <div class="section-head"><span>DETAILS &amp; CLUES</span><span id="boardClueCount">0 / 4</span></div>
         <div class="clue-list" id="clueList"></div>
         <div class="section-head suspects-head"><span>PERSONS OF INTEREST</span><span>3</span></div>
         <div class="suspect-list" id="suspectList"></div>
@@ -512,6 +500,7 @@
 <script src="scene-props.js"></script>
 <script src="scene-stations.js"></script>
 <script src="scene-stations2.js"></script>
+<script src="scene-items.js"></script>
 <script src="scenes.js"></script>
 <script src="scene-closeups.js"></script>
 <script src="game.js"></script>

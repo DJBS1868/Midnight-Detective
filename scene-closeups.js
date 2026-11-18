@@ -71,9 +71,13 @@ function getCloseupFrame(loc, key, ratio = 0.62) {
   // The zoom bay changes shape from phone to phone. Match its aspect so
   // the same crop that is drawn is the crop that fills the bay.
   const ar = Math.max(0.46, Math.min(2.5, ratio || 0.62));
-  const maxW = key === 'coat' ? 0.8 : 0.88;
-  const maxH = key === 'coat' ? 0.78 : 0.80;
-  let w = Math.max(box.w / maxW, (box.h / maxH) * ar, 70);
+  // Loose evidence is smaller than a desk or a safe; frame it tighter so a
+  // lipstick or a key ring does not sit lost in the middle of the room.
+  const trinket = getStationMeta(loc, key).kind === 'trinket';
+  const maxW = trinket ? 0.62 : key === 'coat' ? 0.8 : 0.88;
+  const maxH = trinket ? 0.5 : key === 'coat' ? 0.78 : 0.80;
+  const minW = trinket ? 34 : 70;
+  let w = Math.max(box.w / maxW, (box.h / maxH) * ar, minW);
   let h = w / ar;
   const cx = box.x + box.w / 2;
   const cy = box.y + box.h / 2;
