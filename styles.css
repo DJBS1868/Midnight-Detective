@@ -557,6 +557,17 @@ p,h1,h2,h3{margin:0}
   backdrop-filter:blur(2px);transition:.2s;
 }
 .hotspot[data-side="top"] .tag{top:auto;bottom:calc(100% - 1px)}
+/* Loose evidence on a desk or sill gets its label to the side, so three
+   nearby details do not stack three tags on top of each other. */
+.hotspot[data-align="left"] .tag{
+  left:auto;right:calc(50% + 8px);top:50%;bottom:auto;transform:translateY(-50%);
+}
+.hotspot[data-align="right"] .tag{
+  left:calc(50% + 8px);right:auto;top:50%;bottom:auto;transform:translateY(-50%);
+}
+.hotspot[data-align][data-vshift="up"] .tag{top:calc(50% - 14px)}
+.hotspot[data-align][data-vshift="down"] .tag{top:calc(50% + 14px)}
+.scene-art.is-laying-out .tag{transition:none}
 .hotspot.found .ring{animation:none;border-style:dashed;opacity:.4;border-color:rgba(233,221,196,.37)}
 .hotspot.found .dot{background:var(--paper-dim);box-shadow:none;width:5px;height:5px;margin:-2.5px}
 .hotspot.found .tag{color:var(--gold);border-color:rgba(201,161,94,.3);background:rgba(8,6,5,.9)}
@@ -995,9 +1006,26 @@ p,h1,h2,h3{margin:0}
   .end-card{padding:8px 11px}
   .end-row{padding:3px 0}
 }
+@media (max-height:880px){
+  /* Eight details plus the case notes is one block too many on a phone. */
+  .screen-board[data-clues="8"] .board-notes{display:none}
+  .screen-board[data-clues="8"] .clue-txt{-webkit-line-clamp:2}
+  .screen-board[data-clues="8"] .mugshot{width:32px;height:42px;flex-basis:32px}
+  .screen-board[data-clues="8"] .suspect-row{padding:4px 7px}
+  .screen-board[data-clues="8"] .sus-line{margin-top:2.5px}
+}
 @media (max-height:700px){
   .board-notes{display:none}
   .clue-txt{-webkit-line-clamp:3}
+  /* Seven or eight details is the busiest board the case engine can deal.
+     Tighten the rows so the full list still fits above the buttons. */
+  .screen-board[data-clues="7"] .clue-list,
+  .screen-board[data-clues="8"] .clue-list{gap:3px}
+  .screen-board[data-clues="7"] .clue-row,
+  .screen-board[data-clues="8"] .clue-row{padding-top:2px;padding-bottom:2px;min-height:0}
+  .screen-board[data-clues="7"] .clue-txt,
+  .screen-board[data-clues="8"] .clue-txt{-webkit-line-clamp:2;font-size:7.4px;line-height:1.28}
+  .screen-board[data-clues="8"] .clue-row .num{font-size:14px}
   .scene-brief{margin-top:6px;font-size:7.5px;line-height:1.4}
   .accuse-case{display:none}
 }
@@ -1037,11 +1065,30 @@ p,h1,h2,h3{margin:0}
   .clue-text{font-size:10px}
 }
 @media (max-height:600px){
+  /* On a 480-568px-tall phone the board is down to bare essentials:
+     one-line suspects, and a single line of clue copy when the case
+     deals seven or eight details. */
+  .screen-board .sus-line{display:none}
+  .screen-board .suspect-row{padding:2px 4px}
+  .screen-board .mugshot{width:20px;height:26px;flex-basis:20px}
+  .screen-board .sus-name{font-size:10.5px}
+  .screen-board .sus-role{font-size:5.6px}
+  .screen-board[data-clues="7"] .clue-txt,
+  .screen-board[data-clues="8"] .clue-txt{-webkit-line-clamp:1;font-size:7.2px}
   .screen-office.is-answered .office-lamp{transform:translateY(-56px) rotate(-1deg)}
   .screen-office.is-answered .phone-zone{transform:translateY(-56px)}
   .screen-office.is-answered .office-head h1{font-size:25px}
   .call-line{font-size:8.8px}
   .call-card{padding:8px 10px 8px}
+}
+@media (max-height:500px){
+  /* The smallest supported portrait phones: keep the three names without
+     mugshots or motive lines so eight details still fit on one board. */
+  .screen-board .mugshot{display:none}
+  .screen-board .suspect-row{padding:1px 4px}
+  .screen-board .sus-name{font-size:10px}
+  .screen-board .sus-role{font-size:5.4px}
+  .screen-board .suspect-list{gap:2px}
 }
 @media (max-width:370px){
   .screen{padding-left:12px;padding-right:12px}

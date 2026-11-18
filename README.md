@@ -21,14 +21,19 @@
 ## The game
 
 A short, replayable 1940s noir murder mystery built for vertical phone screens. Every case
-randomizes the victim, the weapon, the three suspects, their motives and alibis, the four
-clues, the true killer, and one of **24 hand-drawn crime scenes**. Each location carries the
+randomizes the victim, the weapon, the three suspects, their motives and alibis, the clues,
+the true killer, and one of **24 hand-drawn crime scenes**. Each location carries the
 room, pier, or suite number Miller gives you on the phone.
+
+Each scene deals a different number of inspectable details — anywhere from **3 to 8** — and
+never repeats the same count the next time you visit that location. The loose evidence
+(ashtrays, matchbooks, watches, gloves, and so on) is unique within a scene, so no two
+objects on the same board are ever the same.
 
 ### How to play
 
 1. **Answer the call.** Sergeant Miller gives you the address at 2:00 A.M.
-2. **Work the scene.** Tap the four marked details to log clues. One of them is the smoking gun.
+2. **Work the scene.** Tap each marked detail to log a clue. Exactly one is the smoking gun.
 3. **Read the board.** Cross-check the evidence, motives, and alibis.
 4. **Accuse once.** The right name with the smoking gun closes the case. The right name
    without it, or the wrong name, and the killer walks.

@@ -337,7 +337,12 @@ const SCENE_SIGNS = {
 };
 
 /* ---------- renderer ---------- */
-function renderScene(loc) {
+/* The four authored anchors are part of the room itself, so they stay on
+   screen even when a case does not make them inspectable. Loose evidence
+   stations are only drawn when the case actually contains them. */
+const CORE_STATION_KEYS = ['desk', 'window', 'coat', 'safe'];
+
+function renderScene(loc, objects) {
   const scene = (typeof SCENES !== 'undefined' && SCENES[loc.scene]) || {};
   const pal = SCENE_PALETTES[scene.palette || loc.scene] || SCENE_PALETTES.hotel;
   const floor = SCENE_FLOORS[scene.floor] || SCENE_FLOORS.wood;
@@ -345,7 +350,9 @@ function renderScene(loc) {
     `<ellipse cx="${x}" cy="${y}" rx="${rx}" ry="${ry}" fill="${color}" opacity=".26" filter="url(#rs-blur)"/>`).join('');
   const wallProps = (scene.wallProps || []).map(drawSceneProp).join('');
   const props = (scene.props || []).map(drawSceneProp).join('');
+  const chosen = new Set((objects || []).map((o) => o.key));
   const stationLayer = Object.entries(scene.stations || {})
+    .filter(([key]) => CORE_STATION_KEYS.includes(key) || chosen.has(key))
     .map(([key, st]) => {
       const def = STATIONS[st.t];
       return def ? `<g data-station="${key}">${def.draw(st, key)}</g>` : '';

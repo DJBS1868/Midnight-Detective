@@ -19,13 +19,8 @@ const shuffle = (arr) => {
 const take = (arr, n) => shuffle(arr).slice(0, n);
 const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 
-const OBJECT_ORDER = ['desk', 'window', 'coat', 'safe'];
-const OBJECTS = {
-  desk: { name: 'The desk', short: 'DESK', exhibit: 'A', plate: '01', place: 'Under the desk', tag: 'the desk' },
-  window: { name: 'The window', short: 'WINDOW', exhibit: 'B', plate: '02', place: 'On the window latch', tag: 'the window' },
-  coat: { name: 'The coat', short: 'COAT', exhibit: 'C', plate: '03', place: "In the coat's lining", tag: 'the coat' },
-  safe: { name: 'The safe', short: 'SAFE', exhibit: 'D', plate: '04', place: "Inside the safe's dial", tag: 'the safe' }
-};
+const pad2 = (n) => String(n).padStart(2, '0');
+const exhibitLetter = (i) => String.fromCharCode(65 + i);
 
 const SUSPECT_POOL = [
   { name: 'Vera Lane', portrait: 'cloche', trace: 'a trace of gardenia perfume' },
@@ -208,12 +203,7 @@ const TIPS = [
 const cap = (s) => (s ? s.charAt(0).toUpperCase() + s.slice(1) : s);
 const stationOf = (loc, key) => getStationMeta(loc, key);
 
-const GUN_OPENERS = {
-  desk: '{place}: {trace}.',
-  window: '{place}: {trace}.',
-  coat: '{place}: {trace}.',
-  safe: '{place}: {trace}.'
-};
+const GUN_OPENERS = '{place}: {trace}.';
 
 const GUN_CLOSERS = [
   'Only {killer} leaves that signature.',
@@ -223,24 +213,199 @@ const GUN_CLOSERS = [
 ];
 
 const WEAPON_LINES = {
-  desk: 'The {weapon} lies {place}, wiped clean. The killer knew where it was kept.',
-  window: 'The {weapon} rests {place}, wiped clean. Whoever came that way came prepared.',
-  coat: 'The {weapon} is rolled up {place}, wiped clean. This was planned, not passion.',
-  safe: 'The {weapon} is stashed {place}, wiped clean. The killer knew the combination.'
+  surface: 'The {weapon} lies {place}, wiped clean. The killer knew where it was kept.',
+  opening: 'The {weapon} rests {place}, wiped clean. Whoever came that way came prepared.',
+  garment: 'The {weapon} is rolled up {place}, wiped clean. This was planned, not passion.',
+  container: 'The {weapon} is stashed {place}, wiped clean. The killer knew the combination.',
+  trinket: 'The {weapon} lies {place}, wiped clean. Set down, not dropped.'
 };
 
 const ALIBI_LINES = {
-  desk: 'A betting slip found {place} puts {name} here at 1:35. That is not the story {name} told.',
-  window: 'A cab receipt {place} is timed 1:35 and made out to {name}. The alibi does not hold.',
-  coat: "A pawn ticket {place} is stamped 1:35 and carries {name}'s initials. The alibi does not hold.",
-  safe: 'A betting slip {place} is stamped 1:35—the exact minute {name} claims to have been elsewhere.'
+  surface: 'A betting slip found {place} puts {name} here at 1:35. That is not the story {name} told.',
+  opening: 'A cab receipt {place} is timed 1:35 and made out to {name}. The alibi does not hold.',
+  garment: "A pawn ticket {place} is stamped 1:35 and carries {name}'s initials. The alibi does not hold.",
+  container: 'A betting slip {place} is stamped 1:35—the exact minute {name} claims to have been elsewhere.',
+  trinket: 'A betting slip found near {object} is stamped 1:35—the minute {name} claims to be elsewhere.'
 };
+
+const NOTE_LINES = [
+  '{place}: a dead match and a ring of dust. Nobody troubled to stage it.',
+  '{place}: the glass is dry. Whoever drank here left before the rain.',
+  '{place}: a torn ticket stub, rain-soaked and blank on both sides.',
+  '{place}: clean. Gloved hands, or a careful one.',
+  '{place}: nothing but ash and a faint smell of gardenia.',
+  '{place}: the dust is disturbed, then smoothed again. Somebody thought about it.',
+  '{place}: a hairline scratch in the finish. Recent, but it tells you nothing.',
+  '{place}: the ashtray has been emptied in a hurry.',
+  '{place}: a matchbook from the Starlight. Half the city carries one.',
+  '{place}: cold metal and no prints. The rain got here first.',
+  '{place}: a folded bill with no message. A bribe, or a tip.',
+  '{place}: the room keeps its secrets. This one is just furniture.'
+];
+
+/* ---------- object count + loose evidence ---------- */
+
+const OBJECT_COUNTS = [3, 4, 5, 6, 7, 8];
+const objectCountHistory = new Map(); // scene name -> { used:Set<number>, last:number }
+
+function chooseObjectCount(sceneName) {
+  const prev = objectCountHistory.get(sceneName) || { used: new Set(), last: null };
+  let options = OBJECT_COUNTS.filter((n) => !prev.used.has(n));
+  if (!options.length) {
+    // A full cycle has been played. Start over, still avoiding the count
+    // that was on screen immediately before.
+    prev.used.clear();
+    options = OBJECT_COUNTS.filter((n) => n !== prev.last);
+  }
+  const count = pick(options);
+  prev.used.add(count);
+  prev.last = count;
+  objectCountHistory.set(sceneName, prev);
+  return count;
+}
+
+const EXTRA_SLOTS = [
+  { anchor: 'desk', dx: -56, dy: -14, s: 0.7 },
+  { anchor: 'desk', dx: 56, dy: 10, s: 0.7 },
+  { anchor: 'window', dx: 18, dy: 52, s: 0.66 },
+  { anchor: 'coat', dx: 44, dy: 46, s: 0.68 },
+  { anchor: 'safe', dx: -52, dy: 26, s: 0.68 }
+];
+
+const sceneExtraCache = new Map();
+
+const hashSeed = (seed) => {
+  let h = 2166136261;
+  for (let i = 0; i < seed.length; i++) {
+    h ^= seed.charCodeAt(i);
+    h = Math.imul(h, 16777619);
+  }
+  return h >>> 0;
+};
+
+function shuffledWithSeed(arr, seed) {
+  let h = hashSeed(seed);
+  const a = arr.slice();
+  for (let i = a.length - 1; i > 0; i--) {
+    h = (Math.imul(h, 1664525) + 1013904223) >>> 0;
+    const j = h % (i + 1);
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+const coreStation = (stations, key) => stations[key] || { x: 200, y: 280 };
+
+/* Each location gets five possible loose objects spread across the desk,
+   the sill, the coat and the safe. They are added to the scene's station
+   table once, so close-ups and camera moves can find them by key. */
+function ensureSceneExtras(loc) {
+  if (sceneExtraCache.has(loc.scene)) return sceneExtraCache.get(loc.scene);
+  const scene = SCENES[loc.scene] || {};
+  const stations = scene.stations || (scene.stations = {});
+  const types = shuffledWithSeed(EXTRA_ITEM_POOL, loc.scene).slice(0, EXTRA_SLOTS.length);
+  const extras = [];
+  const clamp = (v, lo, hi) => Math.min(hi, Math.max(lo, v));
+  EXTRA_SLOTS.forEach((slot, i) => {
+    const anchor = coreStation(stations, slot.anchor);
+    // Keep loose evidence and its label inside the room. If the preferred
+    // side of the anchor would run off the edge, flip it to the other side.
+    let x = anchor.x + slot.dx;
+    if (x < 32 || x > 368) x = anchor.x - Math.sign(slot.dx || 1) * Math.abs(slot.dx);
+    const st = {
+      t: types[i],
+      x: clamp(x, 32, 368),
+      y: clamp(anchor.y + slot.dy, 38, 460),
+      s: slot.s,
+      r: i % 2 ? -2.5 : 2
+    };
+    stations[types[i]] = st;
+    extras.push({ key: types[i], ...st });
+  });
+  sceneExtraCache.set(loc.scene, extras);
+  return extras;
+}
+
+function sceneObjectPool(loc) {
+  ensureSceneExtras(loc);
+  const stations = SCENES[loc.scene]?.stations || {};
+  return Object.entries(stations).map(([key, st]) => ({
+    key,
+    t: st.t,
+    x: st.x,
+    y: st.y,
+    s: st.s,
+    r: st.r
+  }));
+}
+
+/* ---------- clue assembly ---------- */
+
+function buildClues(location, objects, ctx) {
+  const { victim, weapon, killer, redSuspect, alibiSuspect } = ctx;
+  const count = objects.length;
+  const specials = count >= 4
+    ? ['gun', 'red', 'weapon', 'alibi']
+    : ['gun', ...take(['red', 'weapon', 'alibi'], count - 1)];
+  const noteFill = Array.from({ length: Math.max(0, count - specials.length) }, () => 'note');
+  const types = shuffle(specials.concat(noteFill));
+  const order = shuffle(objects.map((_, i) => i));
+  const notes = shuffle(NOTE_LINES.slice());
+  let noteAt = 0;
+  const clues = {};
+
+  order.forEach((objIndex, slot) => {
+    const obj = objects[objIndex];
+    const meta = stationOf(location, obj.key);
+    const kind = meta.kind || 'surface';
+    const place = meta.place;
+    const type = types[slot];
+    if (type === 'gun') {
+      const closer = pick(GUN_CLOSERS).replaceAll('{killer}', killer.name);
+      clues[obj.key] = {
+        object: obj.key,
+        type,
+        text: `${GUN_OPENERS.replaceAll('{place}', cap(place)).replace('{trace}', killer.trace)} ${closer}`
+      };
+    } else if (type === 'red') {
+      clues[obj.key] = {
+        object: obj.key,
+        type,
+        text: `${cap(place)}: ${redSuspect.trace}. It carries ${redSuspect.name}'s signature—maybe too neatly.`
+      };
+    } else if (type === 'weapon') {
+      clues[obj.key] = {
+        object: obj.key,
+        type,
+        text: (WEAPON_LINES[kind] || WEAPON_LINES.surface)
+          .replaceAll('{place}', place)
+          .replace('{weapon}', weapon)
+      };
+    } else if (type === 'alibi') {
+      clues[obj.key] = {
+        object: obj.key,
+        type,
+        text: (ALIBI_LINES[kind] || ALIBI_LINES.surface)
+          .replaceAll('{place}', place)
+          .replaceAll('{object}', meta.name)
+          .replaceAll('{name}', alibiSuspect.name)
+      };
+    } else {
+      clues[obj.key] = {
+        object: obj.key,
+        type: 'note',
+        text: (notes[noteAt++ % notes.length] || NOTE_LINES[0]).replaceAll('{place}', cap(place))
+      };
+    }
+  });
+  return clues;
+}
 
 function makeCase() {
   const options = previousLocation ? LOCATIONS.filter((l) => l.name !== previousLocation) : LOCATIONS;
   const location = pick(options);
   previousLocation = location.name;
-  const placeFor = (key) => stationOf(location, key).place;
+  ensureSceneExtras(location);
   const victim = pick(VICTIMS);
   const weapon = pick(WEAPONS);
   const chosen = take(SUSPECT_POOL, 3);
@@ -261,44 +426,10 @@ function makeCase() {
   const alibiSuspectIndex = rnd(3);
   const alibiSuspect = suspects[alibiSuspectIndex];
 
-  const shuffledObjects = shuffle(OBJECT_ORDER);
-  const types = ['gun', 'red', 'weapon', 'alibi'];
-  const clues = {};
-
-  const gunObject = shuffledObjects[0];
-  const gunCloser = pick(GUN_CLOSERS).replaceAll('{killer}', killer.name);
-  clues[gunObject] = {
-    object: gunObject,
-    type: 'gun',
-    text: GUN_OPENERS[gunObject]
-      .replaceAll('{place}', cap(placeFor(gunObject)))
-      .replace('{trace}', killer.trace) + ' ' + gunCloser
-  };
-
-  const redObject = shuffledObjects[1];
-  clues[redObject] = {
-    object: redObject,
-    type: 'red',
-    text: `${cap(placeFor(redObject))}: ${redSuspect.trace}. It carries ${redSuspect.name}'s signature—maybe too neatly.`
-  };
-
-  const weaponObject = shuffledObjects[2];
-  clues[weaponObject] = {
-    object: weaponObject,
-    type: 'weapon',
-    text: WEAPON_LINES[weaponObject]
-      .replaceAll('{place}', placeFor(weaponObject))
-      .replace('{weapon}', weapon)
-  };
-
-  const alibiObject = shuffledObjects[3];
-  clues[alibiObject] = {
-    object: alibiObject,
-    type: 'alibi',
-    text: ALIBI_LINES[alibiObject]
-      .replaceAll('{place}', placeFor(alibiObject))
-      .replaceAll('{name}', alibiSuspect.name)
-  };
+  const pool = sceneObjectPool(location);
+  const count = chooseObjectCount(location.scene);
+  const objects = take(pool, count).map((o, index) => ({ ...o, index }));
+  const clues = buildClues(location, objects, { victim, weapon, killer, redSuspect, alibiSuspect });
 
   const tip = pick(TIPS)
     .replaceAll('{address}', location.address)
@@ -314,6 +445,7 @@ function makeCase() {
     redSuspectIndex,
     alibiSuspectIndex,
     redSuspect,
+    objects,
     clues,
     tip,
     openedAt: Date.now()
@@ -394,20 +526,93 @@ function fitSceneTitle() {
 function renderCase() {
   const c = state.caseData;
   setCaseChrome();
-  $('#sceneCanvas').innerHTML = renderScene(c.location);
-  $$('.hotspot').forEach((btn) => {
-    const key = btn.dataset.object;
+  $('#sceneCanvas').innerHTML = renderScene(c.location, c.objects);
+  const art = $('#sceneArt');
+  art.querySelectorAll('.hotspot').forEach((n) => n.remove());
+  c.objects.forEach((o) => {
+    const key = o.key;
     const pt = getStationPoint(c.location, key);
     const meta = stationOf(c.location, key);
+    const btn = document.createElement('button');
+    btn.className = 'hotspot';
+    btn.type = 'button';
+    btn.dataset.object = key;
+    btn.dataset.side = pt.y > 56 ? 'top' : 'bottom';
     btn.style.left = `${pt.x}%`;
     btn.style.top = `${pt.y}%`;
-    btn.dataset.side = pt.y > 56 ? 'top' : 'bottom';
-    btn.querySelector('.tag').textContent = meta.label;
     btn.setAttribute('aria-label', `Inspect ${meta.name}`);
+    btn.innerHTML = '<span class="ring"></span><span class="dot"></span><span class="tag"></span>';
+    btn.querySelector('.tag').textContent = meta.label;
+    btn.addEventListener('click', () => openObject(key));
+    art.appendChild(btn);
   });
-  $('#clueProgress').textContent = '0 OF 4 CLUES LOGGED';
+  $('#clueProgress').textContent = `0 OF ${c.objects.length} DETAILS LOGGED`;
   renderSceneState();
   renderBoard();
+}
+
+/* Place each detail label where it does not cover another label or leave
+   the room. Tries below, above, left and right, then picks the cheapest
+   spot, so a busy eight-detail scene stays readable on a 320px screen. */
+function layoutHotspotTags() {
+  const art = $('#sceneArt');
+  if (!art) return;
+  const btns = $$('#sceneArt .hotspot');
+  if (!btns.length) return;
+  const bounds = art.getBoundingClientRect();
+  if (!bounds.width || !bounds.height) return;
+  art.classList.add('is-laying-out');
+  const dots = btns.map((b) => b.getBoundingClientRect());
+  // Only the visible marker matters, not the full 46px tap target. Tags
+  // commonly sit just inside a neighbouring button without covering it.
+  const dotCores = dots.map((d) => ({
+    left: d.left + d.width / 2 - 15,
+    right: d.left + d.width / 2 + 15,
+    top: d.top + d.height / 2 - 15,
+    bottom: d.top + d.height / 2 + 15
+  }));
+  const placed = [];
+  const overlapArea = (a, b) => {
+    const w = Math.min(a.right, b.right) - Math.max(a.left, b.left);
+    const h = Math.min(a.bottom, b.bottom) - Math.max(a.top, b.top);
+    return w > 0 && h > 0 ? w * h : 0;
+  };
+  const candidates = [
+    ['bottom', '', ''],
+    ['top', '', ''],
+    ['left', 'left', ''],
+    ['right', 'right', ''],
+    ['left', 'left', 'up'],
+    ['right', 'right', 'up'],
+    ['left', 'left', 'down'],
+    ['right', 'right', 'down']
+  ];
+  btns.forEach((btn, i) => {
+    let best = null;
+    for (const [side, align, vshift] of candidates) {
+      btn.dataset.side = side;
+      if (align) btn.dataset.align = align;
+      else delete btn.dataset.align;
+      if (vshift) btn.dataset.vshift = vshift;
+      else delete btn.dataset.vshift;
+      const tag = btn.querySelector('.tag').getBoundingClientRect();
+      let score = 0;
+      if (tag.left < bounds.left + 2) score += (bounds.left + 2 - tag.left) * 60;
+      if (tag.right > bounds.right - 2) score += (tag.right - bounds.right + 2) * 60;
+      if (tag.top < bounds.top + 2) score += (bounds.top + 2 - tag.top) * 60;
+      if (tag.bottom > bounds.bottom - 2) score += (tag.bottom - bounds.bottom + 2) * 60;
+      placed.forEach((r) => { score += overlapArea(tag, r) * 4; });
+      dots.forEach((d, j) => { if (j !== i) score += overlapArea(tag, dotCores[j]) * 8; });
+      if (!best || score < best.score) best = { score, side, align, vshift };
+    }
+    btn.dataset.side = best.side;
+    if (best.align) btn.dataset.align = best.align;
+    else delete btn.dataset.align;
+    if (best.vshift) btn.dataset.vshift = best.vshift;
+    else delete btn.dataset.vshift;
+    placed.push(btn.querySelector('.tag').getBoundingClientRect());
+  });
+  art.classList.remove('is-laying-out');
 }
 
 function renderSceneState() {
@@ -420,26 +625,26 @@ function renderSceneState() {
     btn.querySelector('.tag').textContent = found ? `${meta.label} ✓` : meta.label;
     btn.setAttribute('aria-label', `${found ? 'Review' : 'Inspect'} ${meta.name}`);
   });
-  $('#clueProgress').textContent = `${state.found.size} OF 4 CLUES LOGGED`;
+  $('#clueProgress').textContent = `${state.found.size} OF ${c.objects.length} DETAILS LOGGED`;
 }
 
 function renderZoom() {
   const c = state.caseData;
-  const key = state.currentObject || 'desk';
-  const obj = OBJECTS[key];
+  const key = state.currentObject || c.objects[0].key;
+  const idx = Math.max(0, c.objects.findIndex((o) => o.key === key));
   const meta = stationOf(c.location, key);
   const clue = c.clues[key];
 
   // Fill the copy first: a longer clue grows the sheet and shortens the
   // camera bay, so the crop must be measured against the final layout.
   $('#zoomArt').dataset.object = key;
-  $('#zoomExhibit').textContent = `EXHIBIT ${obj.exhibit} · ${meta.label}`;
-  $('#zoomPlate').textContent = `PLATE ${obj.plate}`;
-  $('#zoomClueNo').textContent = `CLUE ${OBJECT_ORDER.indexOf(key) + 1} / 04`;
+  $('#zoomExhibit').textContent = `EXHIBIT ${exhibitLetter(idx)} · ${meta.label}`;
+  $('#zoomPlate').textContent = `PLATE ${pad2(idx + 1)}`;
+  $('#zoomClueNo').textContent = `DETAIL ${pad2(idx + 1)} / ${pad2(c.objects.length)}`;
   $('#zoomObject').textContent = meta.label;
   $('#clueText').textContent = clue.text;
   $('#clueSheet').classList.toggle('is-gun', clue.type === 'gun');
-  $('#zoomFound').textContent = `${state.found.size} / 4`;
+  $('#zoomFound').textContent = `${state.found.size} / ${c.objects.length}`;
   $('#zoomArt').setAttribute('aria-label', `Close-up of ${meta.name}`);
 
   const bay = $('#zoomCanvas').getBoundingClientRect();
@@ -465,26 +670,27 @@ function renderZoom() {
 function renderBoard() {
   const c = state.caseData;
   if (!c) return;
-  $('#boardClueCount').textContent = `${state.found.size} / 4`;
-  const tilts = [-0.45, 0.3, -0.18, 0.5];
-  const clueHTML = OBJECT_ORDER.map((key, i) => {
-    const obj = OBJECTS[key];
-    const meta = stationOf(c.location, key);
-    const clue = c.clues[key];
-    const found = state.found.has(key);
+  const total = c.objects.length;
+  $('#screen-board').dataset.clues = String(total);
+  $('#boardClueCount').textContent = `${state.found.size} / ${total}`;
+  const tilts = [-0.45, 0.3, -0.18, 0.5, -0.3, 0.22, -0.12, 0.38];
+  const clueHTML = c.objects.map((o, i) => {
+    const meta = stationOf(c.location, o.key);
+    const clue = c.clues[o.key];
+    const found = state.found.has(o.key);
     if (!found) {
-      return `<div class="clue-row locked" style="--i:${i};--tilt:${tilts[i]}deg">
-        <span class="num">0${i + 1}</span>
+      return `<div class="clue-row locked" style="--i:${i};--tilt:${tilts[i % tilts.length]}deg">
+        <span class="num">${pad2(i + 1)}</span>
         <div class="clue-body">
           <div class="clue-meta-mini"><b>${meta.label}</b><span>SEALED</span></div>
           <div class="clue-txt">NOT YET LOGGED</div>
         </div>
       </div>`;
     }
-    return `<div class="clue-row ${clue.type === 'gun' ? 'is-gun' : ''}" style="--i:${i};--tilt:${tilts[i]}deg">
-      <span class="num">0${i + 1}</span>
+    return `<div class="clue-row ${clue.type === 'gun' ? 'is-gun' : ''}" style="--i:${i};--tilt:${tilts[i % tilts.length]}deg">
+      <span class="num">${pad2(i + 1)}</span>
       <div class="clue-body">
-        <div class="clue-meta-mini"><b>${meta.label}</b><span>CLUE 0${i + 1}</span><span class="gun-flag">SMOKING GUN</span></div>
+        <div class="clue-meta-mini"><b>${meta.label}</b><span>DETAIL ${pad2(i + 1)}</span><span class="gun-flag">SMOKING GUN</span></div>
         <div class="clue-txt">${esc(clue.text)}</div>
       </div>
     </div>`;
@@ -516,15 +722,16 @@ function drawBoardStrings() {
   if (!base.width || !base.height) return;
   svg.setAttribute('viewBox', `0 0 ${base.width} ${base.height}`);
   const gunKey = gunObjectKey();
-  const redKey = Object.values(state.caseData.clues).find((c) => c.type === 'red').object;
-  const alibiKey = Object.values(state.caseData.clues).find((c) => c.type === 'alibi').object;
+  const clueKeyOfType = (type) => Object.values(state.caseData.clues).find((c) => c.type === type)?.object;
+  const redKey = clueKeyOfType('red');
+  const alibiKey = clueKeyOfType('alibi');
   const links = [];
-  if (state.found.has(gunKey)) links.push({ key: gunKey, suspect: state.caseData.killerIndex, kind: 'gun' });
-  if (state.found.has(redKey)) links.push({ key: redKey, suspect: state.caseData.redSuspectIndex, kind: 'red' });
-  if (state.found.has(alibiKey)) links.push({ key: alibiKey, suspect: state.caseData.alibiSuspectIndex, kind: 'alibi' });
+  if (gunKey && state.found.has(gunKey)) links.push({ key: gunKey, suspect: state.caseData.killerIndex, kind: 'gun' });
+  if (redKey && state.found.has(redKey)) links.push({ key: redKey, suspect: state.caseData.redSuspectIndex, kind: 'red' });
+  if (alibiKey && state.found.has(alibiKey)) links.push({ key: alibiKey, suspect: state.caseData.alibiSuspectIndex, kind: 'alibi' });
   let html = '';
   links.forEach(({ key, suspect, kind }) => {
-    const clueRow = clueRows[OBJECT_ORDER.indexOf(key)];
+    const clueRow = clueRows[state.caseData.objects.findIndex((o) => o.key === key)];
     const suspectRow = suspectRows[suspect];
     if (!clueRow || !suspectRow) return;
     const a = clueRow.getBoundingClientRect();
@@ -694,6 +901,7 @@ function showScreen(name, opts = {}) {
   if (name === 'scene') {
     renderSceneState();
     if (!opts.skipRoomIn) replayRoomIn();
+    requestAnimationFrame(() => requestAnimationFrame(layoutHotspotTags));
   }
   if (name === 'board') { renderBoard(); requestAnimationFrame(drawBoardStrings); }
   if (name === 'accuse') renderAccuse();
@@ -1159,7 +1367,11 @@ document.addEventListener('visibilitychange', () => {
 });
 window.addEventListener('resize', () => {
   fitSceneTitle();
+  if (state.screen === 'scene') layoutHotspotTags();
   if (state.screen === 'board') drawBoardStrings();
+});
+if (document.fonts?.ready) document.fonts.ready.then(() => {
+  if (state.screen === 'scene') layoutHotspotTags();
 });
 /* ================= SOUND (OPTIONAL, USER ENABLED) ================= */
 const Sfx = {
