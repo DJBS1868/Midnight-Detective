@@ -39,7 +39,8 @@ objects on the same board are ever the same.
    object; **tap the finding to take it** and log it on the board. Exactly one clue in the
    room is the smoking gun.
 3. **Read the board.** Cross-check the evidence, motives, and alibis.
-4. **Accuse once.** The right name with the smoking gun closes the case. The right name
+4. **Accuse once.** Flip through the lineup with the side arrows, read each booking file, then
+   point the finger. The right name with the smoking gun closes the case. The right name
    without it, or the wrong name, and the killer walks.
 
 Every tap pushes the camera into the room and inspects the object that is actually there; leaving
