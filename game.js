@@ -213,19 +213,19 @@ const GUN_CLOSERS = [
 ];
 
 const WEAPON_LINES = {
-  surface: 'The {weapon} lies {place}, wiped clean. The killer knew where it was kept.',
-  opening: 'The {weapon} rests {place}, wiped clean. Whoever came that way came prepared.',
-  garment: 'The {weapon} is rolled up {place}, wiped clean. This was planned, not passion.',
-  container: 'The {weapon} is stashed {place}, wiped clean. The killer knew the combination.',
-  trinket: 'The {weapon} lies {place}, wiped clean. Set down, not dropped.'
+  surface: 'The {weapon} was wiped clean. A trace {place} and fresh dust say it was moved tonight. The killer knew where it was kept.',
+  opening: 'The {weapon} was wiped clean. A trace {place} says it came through this way. Whoever did it came prepared.',
+  garment: 'The {weapon} was wiped clean. A trace {place} says it was carried close. This was planned, not passion.',
+  container: 'The {weapon} was wiped clean. A trace {place} says it was stashed here. The killer knew where it was kept.',
+  trinket: 'The {weapon} was wiped clean. A trace {place} says it was set down here. No panic in that.'
 };
 
 const ALIBI_LINES = {
   surface: 'A betting slip found {place} puts {name} here at 1:35. That is not the story {name} told.',
-  opening: 'A cab receipt {place} is timed 1:35 and made out to {name}. The alibi does not hold.',
-  garment: "A pawn ticket {place} is stamped 1:35 and carries {name}'s initials. The alibi does not hold.",
-  container: 'A betting slip {place} is stamped 1:35—the exact minute {name} claims to have been elsewhere.',
-  trinket: 'A betting slip found near {object} is stamped 1:35—the minute {name} claims to be elsewhere.'
+  opening: 'A cab receipt caught {place} is timed 1:35 and made out to {name}. The alibi does not hold.',
+  garment: "A pawn ticket caught {place} is stamped 1:35 and carries {name}'s initials. The alibi does not hold.",
+  container: 'A betting slip found {place} is stamped 1:35—the exact minute {name} claims to have been elsewhere.',
+  trinket: "A betting slip tucked at {object} is stamped 1:35; a corner caught {place} carries {name}'s print. {name} claims to have been elsewhere."
 };
 
 const NOTE_LINES = [
@@ -242,6 +242,176 @@ const NOTE_LINES = [
   '{place}: a folded bill with no message. A bribe, or a tip.',
   '{place}: the room keeps its secrets. This one is just furniture.'
 ];
+
+/* ---------- close-up search ---------- */
+
+/* False leads and household debris. Every object gets one real clue and
+   three or four of these, drawn fresh for each case. They never change
+   the solution; they only make the room feel lived in. */
+const SEARCH_FLAVOR = {
+  surface: [
+    'A dead match and a ring of dust. Nobody troubled to stage this.',
+    'Clean. Gloved hands, or a careful one.',
+    'A grocery list in an unfamiliar hand. Eggs, cigarettes, nothing else.',
+    'A bent paperclip, two buttons, and a tram ticket punched at midnight.',
+    'The finish is scratched fresh. Something heavy was moved in a hurry.',
+    'A cold cigar stub, hours old and the wrong brand for this room.',
+    'A smear of face powder. The wrong shade for the victim.',
+    'An old pawn ticket for a wedding ring. Sentimental, not useful.',
+    'Dust, lint, and one black thread. The city is made of them.',
+    'A racing form folded to yesterday\'s losers. Nobody won here tonight.',
+    'A ring of dried liquor. Whoever drank here did not finish it.',
+    'A telephone number pencilled on a scrap, no name attached. Dead end.'
+  ],
+  opening: [
+    'The catch is oiled. Somebody wanted this to open quietly.',
+    'A thread caught on the edge, black wool. Half the city owns a black coat.',
+    'Rain grit, already dry. The weather has been shut out a while.',
+    'A child\'s marble, wedged where it fell years ago.',
+    'A smudge of grease, wiped on the outside only.',
+    'A strip of paint peeled back. Old, not forced.',
+    'A matchbook wedged in the gap. Blank inside.',
+    'Cold air off the glass. Nothing but the weather.',
+    'A hook of cheap brass, bent out of shape. It could have been the wind.',
+    'A flyer for a missing dog, curled and damp. The city loses everything.'
+  ],
+  garment: [
+    'The lining is torn and mended with black thread. Old damage.',
+    'A bus transfer, stamped two days ago.',
+    'A button missing. The thread is still clean.',
+    'Cigarette ash in the fold, cold and grey.',
+    'A laundry mark, half rubbed out. No name left.',
+    'The cloth smells of cheap pomade and rain.',
+    'A pin, the kind a tailor leaves behind.',
+    'A peppermint and lint. Nothing with a name on it.',
+    'A loose thread, snagged at shoulder height.',
+    'The cloth is damp through one patch and dry everywhere else.',
+    'A dented cigarette case. Empty, and not the victim\'s brand.'
+  ],
+  container: [
+    'A roll of singles, counted twice and short by five. Petty cash, not a payoff.',
+    'A clean patch in the grime. Something was taken out recently.',
+    'Fresh tool marks around the fitting. Somebody knew the mechanism.',
+    'Old receipts, a rubber band, and a key that fits nothing in this room.',
+    'The mechanism turns easily. Whoever owns this place trusts the wrong people.',
+    'A hotel sewing kit and a spare button. Nothing with a name on it.',
+    'The metal is oiled. It does not squeak.',
+    'A blank envelope, sealed and empty.',
+    'A bottle cap, a pencil stub, and a face-down photograph. The photograph is gone.',
+    'Scuff marks below, where something heavy was dragged out.',
+    'A petty-cash book with the last page torn out. The carbon is blank.'
+  ],
+  trinket: [
+    'A fingerprint, too smudged to lift.',
+    'Nothing but dust and a thin scratch.',
+    'Wiped clean. Even the maker\'s mark is gone.',
+    'A dark, short hair caught on it. Useless without a match.',
+    'It smells faintly of tobacco and rain.',
+    'The edge is chipped. Older than tonight.',
+    'A film of powder. The wrong shade for the victim.',
+    'Nothing but city grime.',
+    'A dust ring around it. It was moved recently.',
+    'A price sticker, cheap and not from here.'
+  ]
+};
+
+/* Natural hiding-place phrases for every search spot. The clue prose is
+   built from the spot the clue actually hides in, so a line never says
+   "in the drawer" while the player found it under the hatband. */
+const SPOT_PLACE_PHRASES = {
+  TABLETOP: 'on the tabletop', DRAWER: 'in the drawer', UNDERSIDE: 'under {object}',
+  'LETTER TRAY': 'in the letter tray', 'BAR TOP': 'on the bar top', RAIL: 'under the rail',
+  'SPILL TRAY': 'in the spill tray', 'UNDER THE BAR': 'under the bar', CHART: 'under the chart',
+  RULER: 'under the ruler', BOOTH: 'in the booth', NAPKINS: 'under the napkins',
+  MIRROR: 'behind the mirror', 'POWDER TRAY': 'in the powder tray', BENCH: 'on the bench',
+  VISE: 'under the vise', 'TOOL DRAWER': 'in the tool drawer', LAMP: 'under the lamp',
+  'CONSOLE TOP': 'on the console top', DIAL: 'behind the dial', COUNTER: 'on the counter',
+  TILL: 'in the till', SHELF: 'on the shelf', FELT: 'under the felt',
+  'CHIP TRAY': 'in the chip tray', 'ALTAR CLOTH': 'under the altar cloth',
+  CANDLE: 'under the candle', POTS: 'among the pots', EDGE: 'along the edge',
+  TABLE: 'under the table', 'BOOK REST': 'under the book rest', 'CRATE TOP': 'on the crate top',
+  SLATS: 'between the slats', STENCIL: 'under the stencil', HINGE: 'by the hinge',
+  LEG: 'under the leg', BASIN: 'in the basin', PITCHER: 'under the pitcher',
+  REELS: 'behind the reels', SILL: 'on the windowsill', PANE: 'on the pane',
+  GLASS: 'on the glass', CURTAIN: 'behind the curtain', LATCH: 'on the latch',
+  'NEON TUBE': 'behind the neon tube', CORD: 'along the cord',
+  'FIRE ESCAPE': 'on the fire escape', 'DOOR HANDLE': 'on the door handle',
+  STEP: 'on the step', TRANSOM: 'in the transom', 'KICK PLATE': 'under the kick plate',
+  RIM: 'along the rim', BARS: 'between the bars', ARCH: 'under the arch',
+  LEAD: 'along the lead', SHADE: 'behind the shade', FRAME: 'on the frame',
+  DISPLAY: 'in the display', HANDLE: 'under the handle', PEEPHOLE: 'through the peephole',
+  THRESHOLD: 'under the threshold', KNOB: 'behind the knob', LOCK: 'behind the lock',
+  POCKET: 'in the pocket', LINING: 'in the lining', COLLAR: 'under the collar',
+  SLEEVE: 'in the sleeve', CUFF: 'in the cuff', HEM: 'in the hem', TAG: 'under the tag',
+  HOOD: 'in the hood', STRINGS: 'under the apron strings', EMBROIDERY: 'under the embroidery',
+  'BREAST POCKET': 'in the breast pocket', BADGE: 'under the badge', DOOR: 'behind the door',
+  LID: 'under the lid', TRAY: 'in the tray', BASE: 'beneath {object}', VENT: 'behind the vent',
+  SLOT: 'in the slot', COVER: 'under the cover', LABEL: 'under the label',
+  LEDGER: 'in the ledger', HANDSET: 'under the handset', BOWL: 'in the bowl',
+  LIP: 'at the rim of the glass', FACE: 'on the watch face', BACK: 'on the back',
+  CHAIN: 'on the watch chain', PAGES: 'between the pages', SPINE: 'along the spine',
+  RING: 'on the keyring', FOB: 'under the key fob',
+  TEETH: 'among the keys', CAP: 'under the cap', TUBE: 'inside the tube',
+  PRIMER: 'against the primer', STRIKER: 'on the striker', FOLD: 'in the fold', MARGIN: 'on the margin',
+  INSIDE: 'inside {object}', BAND: 'under the hatband', CROWN: 'inside the crown',
+  BRIM: 'under the brim', LENS: 'on the lens', STRAP: 'under the strap',
+  CANOPY: 'in the umbrella folds', FERRULE: 'at the umbrella tip', FRINGE: 'in the fringe',
+  FINGERS: 'between the glove fingers', PALM: 'in the palm', CLASP: 'by the clasp',
+  BENEATH: 'beneath {object}', TOP: 'on top of {object}'
+};
+
+function spotPhrase(label, meta) {
+  const phrase = SPOT_PLACE_PHRASES[label] || `near ${meta.name}`;
+  return phrase.replaceAll('{object}', meta.name);
+}
+
+function searchSpotSet(loc, key) {
+  const spec = SCENES[loc.scene] || {};
+  const st = spec.stations?.[key];
+  const meta = stationOf(loc, key);
+  const type = st?.t || key;
+  const kind = meta.kind || 'trinket';
+  const points = SEARCH_SPOT_POINTS[kind] || SEARCH_SPOT_POINTS.surface;
+  const labels = SEARCH_SPOT_LABELS[type] || SEARCH_SPOT_FALLBACK[kind] || SEARCH_SPOT_FALLBACK.surface;
+  const count = Math.min(labels.length, points.length);
+  return { kind, labels: labels.slice(0, count), points: points.slice(0, count) };
+}
+
+/* One plan per object per case: the clue hides in a random spot and
+   every other spot gets its own random piece of debris. Because the
+   plan lives on the case, stepping out to the board and back never
+   reshuffles a room the player has already searched. */
+function buildSearchPlan(loc, key) {
+  const { kind, labels, points } = searchSpotSet(loc, key);
+  const meta = stationOf(loc, key);
+  const pool = SEARCH_FLAVOR[kind] || SEARCH_FLAVOR.surface;
+  const clueSpot = rnd(labels.length);
+  const flavors = take(pool, labels.length - 1);
+  let flavorAt = 0;
+  const spots = labels.map((label, i) => ({
+    label,
+    u: points[i].u,
+    v: points[i].v,
+    side: points[i].side,
+    text: i === clueSpot
+      ? null
+      : `${cap(spotPhrase(label, meta))}: ${flavors[flavorAt++]}`
+  }));
+  return { clueSpot, spots };
+}
+
+function getSearchPlan(key) {
+  const c = state.caseData;
+  if (!c) return null;
+  if (!c.searches) c.searches = {};
+  if (!c.searches[key]) c.searches[key] = buildSearchPlan(c.location, key);
+  return c.searches[key];
+}
+
+function searchedSpots(key) {
+  if (!state.searched.has(key)) state.searched.set(key, new Set());
+  return state.searched.get(key);
+}
 
 /* ---------- object count + loose evidence ---------- */
 
@@ -341,7 +511,7 @@ function sceneObjectPool(loc) {
 
 /* ---------- clue assembly ---------- */
 
-function buildClues(location, objects, ctx) {
+function buildClues(location, objects, ctx, searches) {
   const { victim, weapon, killer, redSuspect, alibiSuspect } = ctx;
   const count = objects.length;
   const specials = count >= 4
@@ -358,7 +528,9 @@ function buildClues(location, objects, ctx) {
     const obj = objects[objIndex];
     const meta = stationOf(location, obj.key);
     const kind = meta.kind || 'surface';
-    const place = meta.place;
+    const plan = searches?.[obj.key];
+    const hidden = plan?.spots?.[plan.clueSpot];
+    const place = hidden ? spotPhrase(hidden.label, meta) : meta.place;
     const type = types[slot];
     if (type === 'gun') {
       const closer = pick(GUN_CLOSERS).replaceAll('{killer}', killer.name);
@@ -429,7 +601,9 @@ function makeCase() {
   const pool = sceneObjectPool(location);
   const count = chooseObjectCount(location.scene);
   const objects = take(pool, count).map((o, index) => ({ ...o, index }));
-  const clues = buildClues(location, objects, { victim, weapon, killer, redSuspect, alibiSuspect });
+  const searches = {};
+  objects.forEach((o) => { searches[o.key] = buildSearchPlan(location, o.key); });
+  const clues = buildClues(location, objects, { victim, weapon, killer, redSuspect, alibiSuspect }, searches);
 
   const tip = pick(TIPS)
     .replaceAll('{address}', location.address)
@@ -446,6 +620,7 @@ function makeCase() {
     alibiSuspectIndex,
     redSuspect,
     objects,
+    searches,
     clues,
     tip,
     openedAt: Date.now()
@@ -455,6 +630,7 @@ function makeCase() {
 const state = {
   caseData: null,
   found: new Set(),
+  searched: new Map(),
   currentObject: null,
   selected: null,
   failure: null,
@@ -634,16 +810,29 @@ function renderZoom() {
   const idx = Math.max(0, c.objects.findIndex((o) => o.key === key));
   const meta = stationOf(c.location, key);
   const clue = c.clues[key];
+  const plan = getSearchPlan(key);
+  const searched = searchedSpots(key);
+  const found = state.found.has(key);
 
-  // Fill the copy first: a longer clue grows the sheet and shortens the
+  // Fill the copy first: the sheet grows with the text and shortens the
   // camera bay, so the crop must be measured against the final layout.
   $('#zoomArt').dataset.object = key;
   $('#zoomExhibit').textContent = `EXHIBIT ${exhibitLetter(idx)} · ${meta.label}`;
   $('#zoomPlate').textContent = `PLATE ${pad2(idx + 1)}`;
   $('#zoomClueNo').textContent = `DETAIL ${pad2(idx + 1)} / ${pad2(c.objects.length)}`;
   $('#zoomObject').textContent = meta.label;
-  $('#clueText').textContent = clue.text;
-  $('#clueSheet').classList.toggle('is-gun', clue.type === 'gun');
+  $('#clueText').textContent = found
+    ? clue.text
+    : `Work ${meta.name}. ${plan.spots.length} marked spots — tap one to search.`;
+  $('#clueSheet').classList.toggle('is-gun', found && clue.type === 'gun');
+  $('#clueSheet').classList.toggle('is-searching', !found);
+  const status = $('#zoomStatus');
+  status.classList.toggle('ok', found);
+  status.textContent = found
+    ? '✓ LOGGED TO EVIDENCE BOARD'
+    : (searched.size
+      ? `${searched.size}/${plan.spots.length} SPOTS · CLUE STILL HIDDEN`
+      : `TAP A GLINT · ${plan.spots.length} SPOTS TO SEARCH`);
   $('#zoomFound').textContent = `${state.found.size} / ${c.objects.length}`;
   $('#zoomArt').setAttribute('aria-label', `Close-up of ${meta.name}`);
 
@@ -665,6 +854,163 @@ function renderZoom() {
     bayHeight: bay.height
   };
   $('#zoomMag').textContent = `MAGNIFIED · ${mag >= 10 ? Math.round(mag) : mag.toFixed(1)}X`;
+  renderSearchSpots(key, plan, closeup.frame);
+}
+
+/* Overlay the search points on the macro view. The close-up SVG uses a
+   viewBox crop with xMidYMid slice, so the same crop math the camera
+   uses also places the buttons exactly over the object. */
+function placeSearchSpots(plan, frame) {
+  const layer = $('#zoomSpots');
+  if (!layer) return;
+  const layerBox = layer.getBoundingClientRect();
+  const bayBox = $('#zoomCanvas').getBoundingClientRect();
+  if (!layerBox.width || !layerBox.height || !bayBox.width || !bayBox.height) return;
+  const scale = Math.max(bayBox.width / frame.w, bayBox.height / frame.h);
+  const offsetX = bayBox.left - layerBox.left + (bayBox.width - frame.w * scale) / 2;
+  const offsetY = bayBox.top - layerBox.top + (bayBox.height - frame.h * scale) / 2;
+  $$('.search-spot', layer).forEach((btn, i) => {
+    const spot = plan.spots[i];
+    if (!spot) return;
+    const px = frame.box.x + spot.u * frame.box.w;
+    const py = frame.box.y + spot.v * frame.box.h;
+    btn.style.left = `${clamp(offsetX + (px - frame.x) * scale, 23, layerBox.width - 23)}px`;
+    btn.style.top = `${clamp(offsetY + (py - frame.y) * scale, 23, layerBox.height - 23)}px`;
+  });
+  requestAnimationFrame(() => requestAnimationFrame(layoutSearchSpots));
+}
+
+function renderSearchSpots(key, plan, frame) {
+  const layer = $('#zoomSpots');
+  if (!layer) return;
+  layer.innerHTML = '';
+  const searched = searchedSpots(key);
+  const found = state.found.has(key);
+  const meta = stationOf(state.caseData.location, key);
+  plan.spots.forEach((spot, i) => {
+    const done = searched.has(i);
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'search-spot';
+    btn.dataset.spot = String(i);
+    btn.dataset.side = spot.side || 'bottom';
+    if (done) btn.dataset.searched = 'true';
+    if (found && i === plan.clueSpot) btn.classList.add('is-clue');
+    btn.innerHTML = `<span class="glint"></span><span class="spot-tag">${spot.label}</span>`;
+    btn.setAttribute(
+      'aria-label',
+      `${done ? 'Review' : 'Search'} ${spot.label.toLowerCase()} on ${meta.name}`
+    );
+    layer.appendChild(btn);
+  });
+  placeSearchSpots(plan, frame);
+}
+
+/* Choose a side for every spot label. The pips stay where the object
+   geometry puts them; only the little labels move, so eight-detail
+   scenes and tiny 320px bays both stay readable. */
+function layoutSearchSpots() {
+  const layer = $('#zoomSpots');
+  if (!layer || state.screen !== 'zoom') return;
+  const btns = $$('.search-spot', layer);
+  if (!btns.length) return;
+  const bounds = layer.getBoundingClientRect();
+  if (!bounds.width || !bounds.height) return;
+  layer.classList.add('is-laying-out');
+  const pips = btns.map((b) => b.getBoundingClientRect());
+  const placed = [];
+  const overlap = (a, b) => {
+    const w = Math.min(a.right, b.right) - Math.max(a.left, b.left);
+    const h = Math.min(a.bottom, b.bottom) - Math.max(a.top, b.top);
+    return w > 0 && h > 0 ? w * h : 0;
+  };
+  const sides = ['bottom', 'top', 'right', 'left'];
+  btns.forEach((btn, i) => {
+    const preferred = btn.dataset.side;
+    const order = [preferred, ...sides.filter((s) => s !== preferred)];
+    let best = null;
+    for (const side of order) {
+      btn.dataset.side = side;
+      const tag = btn.querySelector('.spot-tag').getBoundingClientRect();
+      let score = sides.indexOf(side) * 2;
+      if (tag.left < bounds.left + 2) score += (bounds.left + 2 - tag.left) * 80;
+      if (tag.right > bounds.right - 2) score += (tag.right - bounds.right + 2) * 80;
+      if (tag.top < bounds.top + 2) score += (bounds.top + 2 - tag.top) * 80;
+      if (tag.bottom > bounds.bottom - 2) score += (tag.bottom - bounds.bottom + 2) * 80;
+      placed.forEach((r) => { score += overlap(tag, r) * 7; });
+      pips.forEach((d, j) => { if (j !== i) score += overlap(tag, d) * 2; });
+      if (!best || score < best.score) best = { score, side };
+    }
+    btn.dataset.side = best.side;
+    placed.push(btn.querySelector('.spot-tag').getBoundingClientRect());
+  });
+  layer.classList.remove('is-laying-out');
+}
+
+function showSpotResult(index) {
+  const key = state.currentObject;
+  const plan = getSearchPlan(key);
+  const spot = plan?.spots[index];
+  if (!spot) return;
+  const clue = state.caseData.clues[key];
+  const isClue = index === plan.clueSpot;
+  const found = state.found.has(key);
+  const searched = searchedSpots(key);
+  const sheet = $('#clueSheet');
+  sheet.classList.toggle('is-searching', !found);
+  sheet.classList.toggle('is-gun', found && clue.type === 'gun');
+  // Once the clue is logged, keep it on the sheet. Re-checking a drawer
+  // should not replace the evidence with a line about dead matches.
+  $('#clueText').textContent = found ? clue.text : spot.text;
+  const left = plan.spots.length - searched.size;
+  const status = $('#zoomStatus');
+  status.classList.toggle('ok', found || isClue);
+  status.textContent = found
+    ? '✓ LOGGED TO EVIDENCE BOARD'
+    : `SEARCHING ${spot.label} · ${left} ${left === 1 ? 'SPOT' : 'SPOTS'} LEFT`;
+  $('#zoomFound').textContent = `${state.found.size} / ${state.caseData.objects.length}`;
+  // The result text can add or lose a line, which resizes the camera bay.
+  // Re-place the pips against the new bay on the next frame.
+  const activeKey = key;
+  requestAnimationFrame(() => {
+    if (state.screen !== 'zoom' || state.currentObject !== activeKey) return;
+    if (state.zoomMeta?.frame) placeSearchSpots(plan, state.zoomMeta.frame);
+  });
+}
+
+function searchSpot(index) {
+  if (state.screen !== 'zoom' || state.currentObject == null) return;
+  const key = state.currentObject;
+  const plan = getSearchPlan(key);
+  const spot = plan?.spots[index];
+  if (!spot) return;
+  const searched = searchedSpots(key);
+  const firstLook = !searched.has(index);
+  searched.add(index);
+  const btn = $(`#zoomSpots .search-spot[data-spot="${index}"]`);
+  if (btn) btn.dataset.searched = 'true';
+  const isClue = index === plan.clueSpot;
+  if (isClue) {
+    btn?.classList.add('is-clue');
+    if (!state.found.has(key)) {
+      state.found.add(key);
+      renderSceneState();
+      Sfx.clue();
+      announce(`Clue logged: ${state.caseData.clues[key].text}`);
+    } else {
+      Sfx.tick();
+    }
+  } else {
+    Sfx.tick();
+    if (firstLook) {
+      announce(
+        state.found.has(key)
+          ? `${spot.label}: nothing new. The logged clue stands.`
+          : `${spot.label}: ${spot.text}`
+      );
+    }
+  }
+  showSpotResult(index);
 }
 
 function renderBoard() {
@@ -1176,8 +1522,6 @@ function beginZoomOut() {
 function openObject(key) {
   if (state.busy || (zoomTransit && zoomTransit.mode === 'out')) return;
   state.currentObject = key;
-  const isNew = !state.found.has(key);
-  state.found.add(key);
   const snapshot = {
     room: $('#sceneCanvas').innerHTML,
     box: $('#sceneCanvas').getBoundingClientRect()
@@ -1190,10 +1534,12 @@ function openObject(key) {
   zoomScreen.classList.add('is-transit');
   showScreen('zoom');
   beginZoomIn(key, snapshot);
-  if (isNew) {
-    Sfx.clue();
-    announce(`Clue logged: ${state.caseData.clues[key].text}`);
-  }
+  const meta = stationOf(state.caseData.location, key);
+  announce(
+    state.found.has(key)
+      ? `Reviewing ${meta.name}. Its clue is already logged.`
+      : `Close-up of ${meta.name}. Search the marked spots for a clue.`
+  );
 }
 
 function goScene() {
@@ -1299,6 +1645,7 @@ function startCase() {
   closeConfirm(false);
   state.caseData = makeCase();
   state.found = new Set();
+  state.searched = new Map();
   state.currentObject = null;
   state.selected = null;
   state.failure = null;
@@ -1316,6 +1663,10 @@ $$('.hotspot').forEach((btn) => {
 });
 $$('[data-open-board]').forEach((btn) => {
   btn.addEventListener('click', goBoard);
+});
+$('#zoomSpots').addEventListener('click', (e) => {
+  const btn = e.target.closest('.search-spot');
+  if (btn) searchSpot(Number(btn.dataset.spot));
 });
 $('#btnGoScene').addEventListener('click', () => { goScene(); Sfx.tick(); });
 $('#phoneZone').addEventListener('click', () => {
@@ -1368,10 +1719,12 @@ document.addEventListener('visibilitychange', () => {
 window.addEventListener('resize', () => {
   fitSceneTitle();
   if (state.screen === 'scene') layoutHotspotTags();
+  if (state.screen === 'zoom') renderZoom();
   if (state.screen === 'board') drawBoardStrings();
 });
 if (document.fonts?.ready) document.fonts.ready.then(() => {
   if (state.screen === 'scene') layoutHotspotTags();
+  if (state.screen === 'zoom') layoutSearchSpots();
 });
 /* ================= SOUND (OPTIONAL, USER ENABLED) ================= */
 const Sfx = {
@@ -1579,6 +1932,8 @@ window.__midnight = {
   showEnd,
   answerPhone,
   advanceCall,
+  searchSpot,
+  getSearchPlan,
   accuseIndex: (i) => { selectSuspect(i); doAccuse(); },
   Sfx
 };

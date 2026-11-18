@@ -593,6 +593,7 @@ p,h1,h2,h3{margin:0}
 .screen-zoom.is-leaving{pointer-events:none}
 .screen-zoom.is-leaving .zoom-hud,
 .screen-zoom.is-leaving .zoom-caption,
+.screen-zoom.is-leaving .zoom-spots,
 .screen-zoom.is-leaving .reticle,
 .screen-zoom.is-leaving .clue-sheet,
 .screen-zoom.is-leaving .footer-actions{opacity:0;transition:opacity .16s ease .06s}
@@ -622,6 +623,53 @@ p,h1,h2,h3{margin:0}
 }
 .zoom-canvas{position:absolute;inset:0}
 .zoom-canvas svg{display:block;width:100%;height:100%}
+/* Search points sit above the close-up art. Each pip is a diamond of
+   light; the label can move to either side to stay inside the bay. */
+.zoom-spots{position:absolute;inset:0;z-index:5;pointer-events:none}
+.search-spot{
+  position:absolute;width:46px;height:46px;margin:-23px 0 0 -23px;padding:0;border:0;
+  border-radius:50%;background:none;color:inherit;pointer-events:auto;
+}
+.search-spot .glint{
+  position:absolute;left:50%;top:50%;width:11px;height:11px;margin:-5.5px;
+  transform:rotate(45deg);border:1px solid rgba(248,226,178,.95);
+  background:linear-gradient(135deg,rgba(247,223,168,.92),rgba(190,145,72,.32));
+  box-shadow:0 0 12px rgba(232,196,124,.8),0 0 26px rgba(201,161,94,.32);
+}
+.search-spot .glint::before{
+  content:"";position:absolute;inset:-9px;border:1px solid rgba(226,194,134,.38);
+  border-radius:50%;transform:rotate(-45deg);animation:spotPulse 2.8s ease-out infinite;
+}
+@keyframes spotPulse{
+  0%,100%{transform:rotate(-45deg) scale(1);opacity:.85}
+  50%{transform:rotate(-45deg) scale(1.4);opacity:.25}
+}
+.search-spot .spot-tag{
+  position:absolute;left:50%;top:calc(100% - 2px);transform:translateX(-50%);
+  padding:2.5px 5px;background:rgba(8,6,5,.88);border:1px solid rgba(201,161,94,.34);
+  color:var(--gold);font-size:6.4px;letter-spacing:.14em;line-height:1;white-space:nowrap;
+  text-transform:uppercase;text-shadow:0 1px 2px rgba(0,0,0,.85);pointer-events:none;
+}
+.search-spot[data-side="top"] .spot-tag{top:auto;bottom:calc(100% - 2px)}
+.search-spot[data-side="left"] .spot-tag{left:auto;right:calc(50% + 7px);top:50%;transform:translateY(-50%)}
+.search-spot[data-side="right"] .spot-tag{left:calc(50% + 7px);right:auto;top:50%;transform:translateY(-50%)}
+.zoom-spots.is-laying-out .spot-tag{transition:none}
+.search-spot[data-searched="true"] .glint{
+  opacity:.3;border-style:dashed;box-shadow:none;background:rgba(226,194,134,.16);
+}
+.search-spot[data-searched="true"] .glint::before{animation:none;opacity:.18}
+.search-spot[data-searched="true"] .spot-tag{opacity:.55}
+.search-spot.is-clue .glint{
+  opacity:1;border-style:solid;background:linear-gradient(135deg,#f6d998,#b07a2f);
+  box-shadow:0 0 16px rgba(246,217,152,.95),0 0 34px rgba(201,161,94,.48);
+}
+.search-spot.is-clue .spot-tag{
+  color:#f6e6c2;border-color:rgba(243,222,180,.65);background:rgba(30,18,8,.94);opacity:1;
+}
+.search-spot:active .glint{transform:rotate(45deg) scale(.78)}
+.search-spot:focus-visible{outline:2px solid rgba(243,222,180,.9);outline-offset:2px}
+.clue-sheet.is-searching .clue-text{color:#3b2f1f;font-style:italic}
+#zoomStatus.ok{color:#3d5b2c;font-weight:600}
 .closeup-svg{filter:saturate(.95) contrast(1.02) brightness(1.1)}
 .zoom-art::after{
   content:"";position:absolute;inset:0;pointer-events:none;
@@ -1100,7 +1148,7 @@ p,h1,h2,h3{margin:0}
   .board-actions .btn{font-size:8px;letter-spacing:.09em}
 }
 @media (prefers-reduced-motion:reduce){
-  *,*::before,*::after{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important;scroll-behavior:auto!important}
+  *,*::before,*::after{animation-duration:.001ms!important;animation-delay:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important;transition-delay:.001ms!important;scroll-behavior:auto!important}
   .phone-zone{animation:none!important}
   .ring-arcs span,.rain,.grain{animation:none!important}
 }

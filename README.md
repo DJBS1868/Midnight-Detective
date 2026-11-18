@@ -33,14 +33,18 @@ objects on the same board are ever the same.
 ### How to play
 
 1. **Answer the call.** Sergeant Miller gives you the address at 2:00 A.M.
-2. **Work the scene.** Tap each marked detail to log a clue. Exactly one is the smoking gun.
+2. **Work the scene.** Tap each marked detail to inspect it. Every object hides **three or
+   four search spots** — a drawer, a pocket, a windowsill, a latch. One spot holds the clue;
+   the others hold fresh debris and false leads. Exactly one clue in the room is the smoking gun.
 3. **Read the board.** Cross-check the evidence, motives, and alibis.
 4. **Accuse once.** The right name with the smoking gun closes the case. The right name
    without it, or the wrong name, and the killer walks.
 
 Every tap pushes the camera into the room and inspects the object that is actually there; leaving
 pulls the camera back out the same way. The close-up is cropped from the same scene drawing, so a
-porthole stays a porthole and a coat stays the same coat.
+porthole stays a porthole and a coat stays the same coat. Search spots are placed on the object
+itself, and both the hiding place and the debris are re-rolled for every new case, so the same
+desk can hide a note in the drawer tonight and a gun under the blotter tomorrow.
 
 Rain, ringing, and clue sounds are optional — tap **SOUND** in the top corner to enable them.
 

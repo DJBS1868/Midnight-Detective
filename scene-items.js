@@ -275,3 +275,146 @@ const STATION_KIND_MAP = {};
 Object.entries(STATION_KIND_MAP).forEach(([key, kind]) => {
   if (STATIONS[key]) STATIONS[key].kind = kind;
 });
+
+/* ============================================================
+   CLOSE-UP SEARCH SPOTS
+   Every inspectable object can be worked in the macro view.
+   Each station type has its own little vocabulary of places to
+   search; the points are normalized to the object's drawn box so
+   the same data works on all 24 scenes. One of these spots hides
+   the object's clue; the rest hold randomized false leads.
+   ============================================================ */
+
+const SEARCH_SPOT_POINTS = {
+  surface: [
+    { u: 0.50, v: 0.24, side: 'top' },
+    { u: 0.78, v: 0.62, side: 'right' },
+    { u: 0.28, v: 0.60, side: 'left' },
+    { u: 0.50, v: 0.90, side: 'bottom' }
+  ],
+  opening: [
+    { u: 0.52, v: 0.24, side: 'top' },
+    { u: 0.50, v: 0.86, side: 'bottom' },
+    { u: 0.18, v: 0.55, side: 'left' },
+    { u: 0.82, v: 0.48, side: 'right' }
+  ],
+  garment: [
+    { u: 0.50, v: 0.12, side: 'top' },
+    { u: 0.30, v: 0.48, side: 'left' },
+    { u: 0.70, v: 0.38, side: 'right' },
+    { u: 0.50, v: 0.86, side: 'bottom' }
+  ],
+  container: [
+    { u: 0.50, v: 0.42, side: 'top' },
+    { u: 0.78, v: 0.56, side: 'right' },
+    { u: 0.46, v: 0.84, side: 'bottom' },
+    { u: 0.22, v: 0.30, side: 'left' }
+  ],
+  trinket: [
+    { u: 0.50, v: 0.28, side: 'top' },
+    { u: 0.72, v: 0.68, side: 'right' },
+    { u: 0.30, v: 0.70, side: 'left' }
+  ]
+};
+
+const SEARCH_SPOT_FALLBACK = {
+  surface: ['TABLETOP', 'DRAWER', 'EDGE', 'UNDERSIDE'],
+  opening: ['LATCH', 'SILL', 'PANE', 'FRAME'],
+  garment: ['POCKET', 'LINING', 'COLLAR', 'HEM'],
+  container: ['DIAL', 'DOOR', 'SHELF', 'HINGE'],
+  trinket: ['TOP', 'EDGE', 'BENEATH']
+};
+
+const SEARCH_SPOT_LABELS = {
+  /* surfaces */
+  writingDesk: ['TABLETOP', 'DRAWER', 'UNDERSIDE', 'LETTER TRAY'],
+  barTop: ['BAR TOP', 'RAIL', 'SPILL TRAY', 'UNDER THE BAR'],
+  chartTable: ['CHART', 'DRAWER', 'RULER', 'UNDERSIDE'],
+  dinerTable: ['TABLETOP', 'BOOTH', 'NAPKINS', 'UNDERSIDE'],
+  vanityTable: ['MIRROR', 'DRAWER', 'POWDER TRAY', 'UNDERSIDE'],
+  workbench: ['BENCH', 'VISE', 'TOOL DRAWER', 'UNDERSIDE'],
+  trainTable: ['TABLETOP', 'DRAWER', 'LAMP', 'UNDERSIDE'],
+  console: ['CONSOLE TOP', 'DRAWER', 'DIAL', 'UNDERSIDE'],
+  glassCounter: ['COUNTER', 'TILL', 'SHELF', 'UNDERSIDE'],
+  cardTable: ['FELT', 'CHIP TRAY', 'DRAWER', 'UNDERSIDE'],
+  altarTable: ['ALTAR CLOTH', 'DRAWER', 'CANDLE', 'UNDERSIDE'],
+  pottingBench: ['BENCH', 'POTS', 'DRAWER', 'UNDERSIDE'],
+  metalTable: ['TABLETOP', 'DRAWER', 'EDGE', 'UNDERSIDE'],
+  readingTable: ['TABLE', 'DRAWER', 'BOOK REST', 'UNDERSIDE'],
+  crateTable: ['CRATE TOP', 'SLATS', 'STENCIL', 'UNDERSIDE'],
+  foldingTable: ['TABLETOP', 'HINGE', 'LEG', 'UNDERSIDE'],
+  washstand: ['BASIN', 'DRAWER', 'PITCHER', 'UNDERSIDE'],
+  projectorBench: ['BENCH', 'REELS', 'DRAWER', 'UNDERSIDE'],
+
+  /* openings */
+  rainWindow: ['LATCH', 'SILL', 'PANE', 'CURTAIN'],
+  neonWindow: ['NEON TUBE', 'SILL', 'GLASS', 'CORD'],
+  cityWindow: ['LATCH', 'SILL', 'PANE', 'FIRE ESCAPE'],
+  storefront: ['DOOR HANDLE', 'STEP', 'TRANSOM', 'KICK PLATE'],
+  porthole: ['RIM', 'GLASS', 'HINGE'],
+  barredWindow: ['BARS', 'LATCH', 'SILL', 'PANE'],
+  highWindow: ['LATCH', 'SILL', 'PANE'],
+  frostedWindow: ['LATCH', 'SILL', 'GLASS'],
+  stainedGlass: ['LEAD', 'LATCH', 'SILL', 'PANE'],
+  archedWindow: ['LATCH', 'SILL', 'ARCH', 'PANE'],
+  trainWindow: ['LATCH', 'SILL', 'SHADE', 'PANE'],
+  studioGlass: ['FRAME', 'GLASS', 'SILL', 'LATCH'],
+  boothWindow: ['CURTAIN', 'SILL', 'LATCH'],
+  shopWindow: ['DISPLAY', 'SILL', 'GLASS', 'LATCH'],
+  glassPanel: ['FRAME', 'GLASS', 'SILL'],
+  stageDoor: ['HANDLE', 'HINGE', 'PEEPHOLE', 'THRESHOLD'],
+  backDoor: ['KNOB', 'HINGE', 'THRESHOLD', 'TRANSOM'],
+  rollDoor: ['HANDLE', 'SLATS', 'LOCK', 'THRESHOLD'],
+
+  /* garments */
+  coatChair: ['POCKET', 'LINING', 'COLLAR', 'SLEEVE'],
+  coatHook: ['POCKET', 'LINING', 'COLLAR', 'CUFF'],
+  coatRack: ['POCKET', 'LINING', 'RAIL', 'SLEEVE'],
+  costumeRack: ['POCKET', 'LINING', 'HEM', 'TAG'],
+  oilskins: ['POCKET', 'HOOD', 'HEM', 'LINING'],
+  apron: ['POCKET', 'STRINGS', 'HEM'],
+  stole: ['HEM', 'LINING', 'EMBROIDERY'],
+  uniform: ['BREAST POCKET', 'LINING', 'CUFF', 'BADGE'],
+  vestment: ['HEM', 'LINING', 'SLEEVE', 'EMBROIDERY'],
+  smock: ['POCKET', 'LINING', 'CUFF', 'HEM'],
+  labCoat: ['POCKET', 'LINING', 'CUFF', 'HEM'],
+  coveralls: ['POCKET', 'LINING', 'CUFF', 'HEM'],
+  guard: ['BREAST POCKET', 'LINING', 'CUFF', 'BADGE'],
+
+  /* containers */
+  wallSafe: ['DIAL', 'DOOR', 'SHELF', 'HINGE'],
+  floorSafe: ['DIAL', 'LID', 'SHELF', 'BASE'],
+  strongbox: ['LOCK', 'LID', 'TRAY', 'BASE'],
+  register: ['DRAWER', 'TILL', 'TRAY', 'UNDERSIDE'],
+  till: ['DRAWER', 'TILL', 'TRAY', 'UNDERSIDE'],
+  cashBox: ['DRAWER', 'TILL', 'TRAY', 'UNDERSIDE'],
+  locker: ['DOOR', 'VENT', 'SHELF', 'LOCK'],
+  cage: ['DOOR', 'BARS', 'TRAY', 'LOCK'],
+  trunk: ['LATCH', 'LID', 'TRAY', 'HINGE'],
+  poorBox: ['SLOT', 'DOOR', 'BASE'],
+  displayCase: ['GLASS', 'LID', 'SHELF', 'BASE'],
+  cabinet: ['DOOR', 'DRAWER', 'SHELF', 'HINGE'],
+  filmCabinet: ['DOOR', 'DRAWER', 'SHELF', 'HINGE'],
+  cardCatalog: ['DRAWER', 'LABEL', 'LEDGER', 'BASE'],
+
+  /* loose evidence */
+  ashtray: ['RIM', 'BOWL', 'BENEATH'],
+  tumbler: ['LIP', 'BASE', 'BENEATH'],
+  telephone: ['HANDSET', 'DIAL', 'CORD'],
+  matchbook: ['COVER', 'STRIKER', 'INSIDE'],
+  cigaretteCase: ['CLASP', 'LID', 'LINING'],
+  pocketWatch: ['FACE', 'BACK', 'CHAIN'],
+  ledger: ['COVER', 'SPINE', 'PAGES'],
+  keyring: ['RING', 'FOB', 'TEETH'],
+  lipstick: ['CAP', 'TUBE', 'BASE'],
+  shellCasing: ['RIM', 'PRIMER', 'BENEATH'],
+  foldedNote: ['FOLD', 'MARGIN', 'INSIDE'],
+  bottle: ['LABEL', 'CAP', 'BASE'],
+  glove: ['CUFF', 'FINGERS', 'PALM'],
+  purse: ['CLASP', 'LINING', 'STRAP'],
+  hat: ['BAND', 'CROWN', 'BRIM'],
+  camera: ['LENS', 'BACK', 'STRAP'],
+  umbrella: ['HANDLE', 'CANOPY', 'FERRULE'],
+  scarf: ['FRINGE', 'FOLD', 'TAG'],
+  compact: ['LID', 'HINGE', 'MIRROR']
+};
