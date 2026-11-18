@@ -373,6 +373,22 @@ function setCaseChrome() {
   $('#boardWeapon').textContent = `a ${c.weapon}`;
   $('#accuseVictim').textContent = c.victim.name;
   $('#accuseScene').textContent = c.location.name;
+  fitSceneTitle();
+}
+
+// Long venue names ("The Cactus Flower Greenhouse") would otherwise be
+// ellipsized in the scene header. Shrink just that heading until the full
+// Miller address is readable; everything else keeps its normal scale.
+function fitSceneTitle() {
+  const el = $('#scenePlace');
+  if (!el) return;
+  el.style.fontSize = '';
+  const avail = el.clientWidth;
+  const needed = el.scrollWidth;
+  if (!avail || needed <= avail + 1) return;
+  const base = parseFloat(getComputedStyle(el).fontSize) || 18;
+  const size = Math.max(13, Math.floor(base * (avail / needed) * 0.96 * 10) / 10);
+  el.style.fontSize = `${size}px`;
 }
 
 function renderCase() {
@@ -569,21 +585,32 @@ function selectSuspect(index) {
   Sfx.tick();
 }
 
+let confirmReturnFocus = null;
+
 function openConfirm() {
   if (state.selected == null) return;
   const s = state.caseData.suspects[state.selected];
+  confirmReturnFocus = document.activeElement;
   $('#confirmName').textContent = `${s.name}?`;
   $('#confirmOverlay').classList.add('open');
-  $('#btnDoAccuse').focus({ preventScroll: true });
+  // The dialog is visibility:hidden until its opening transition starts, so
+  // focus has to wait one tick or the element is not focusable yet.
+  setTimeout(() => {
+    if ($('#confirmOverlay').classList.contains('open')) $('#btnDoAccuse').focus({ preventScroll: true });
+  }, 40);
 }
-function closeConfirm() {
+function closeConfirm(restoreFocus = true) {
   $('#confirmOverlay').classList.remove('open');
+  if (restoreFocus && confirmReturnFocus && document.contains(confirmReturnFocus)) {
+    confirmReturnFocus.focus({ preventScroll: true });
+  }
+  confirmReturnFocus = null;
 }
 
 function doAccuse() {
   const c = state.caseData;
   if (state.selected == null) return;
-  closeConfirm();
+  closeConfirm(false);
   const correct = state.selected === c.killerIndex;
   const gun = hasSmokingGun();
   state.failure = null;
@@ -1061,7 +1088,7 @@ function advanceCall() {
 }
 
 function startCase() {
-  closeConfirm();
+  closeConfirm(false);
   state.caseData = makeCase();
   state.found = new Set();
   state.currentObject = null;
@@ -1102,6 +1129,16 @@ $('#btnMakeAccusation').addEventListener('click', openConfirm);
 $('#btnCancelAccuse').addEventListener('click', closeConfirm);
 $('#btnDoAccuse').addEventListener('click', doAccuse);
 $('#confirmOverlay').addEventListener('click', (e) => { if (e.target === e.currentTarget) closeConfirm(); });
+$('#confirmOverlay').addEventListener('keydown', (e) => {
+  if (e.key !== 'Tab') return;
+  const items = [$('#btnDoAccuse'), $('#btnCancelAccuse')];
+  const at = items.indexOf(document.activeElement);
+  e.preventDefault();
+  const next = e.shiftKey
+    ? items[at <= 0 ? items.length - 1 : at - 1]
+    : items[at === items.length - 1 || at < 0 ? 0 : at + 1];
+  next.focus();
+});
 $('#btnNewCase').addEventListener('click', startCase);
 $('#soundToggle').addEventListener('click', () => Sfx.toggle());
 
@@ -1113,7 +1150,17 @@ document.addEventListener('keydown', (e) => {
   else if (state.screen === 'board') goScene();
 });
 
-window.addEventListener('resize', () => { if (state.screen === 'board') drawBoardStrings(); });
+document.addEventListener('visibilitychange', () => {
+  if (document.hidden) {
+    Sfx.stopRing();
+  } else if (state.screen === 'office' && !state.call.answered) {
+    Sfx.startRing();
+  }
+});
+window.addEventListener('resize', () => {
+  fitSceneTitle();
+  if (state.screen === 'board') drawBoardStrings();
+});
 /* ================= SOUND (OPTIONAL, USER ENABLED) ================= */
 const Sfx = {
   ctx: null, master: null, enabled: false, rainNode: null, rainGain: null, ringTimer: null,

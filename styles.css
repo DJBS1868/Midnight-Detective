@@ -31,6 +31,7 @@ body{
   font-synthesis:none;
   overscroll-behavior:none;
   touch-action:manipulation;
+  -webkit-user-select:none;user-select:none;
 }
 button{font:inherit;color:inherit;border:0;background:none;cursor:pointer;touch-action:manipulation}
 button:focus-visible{outline:1px solid var(--gold-bright);outline-offset:3px}
@@ -81,7 +82,7 @@ p,h1,h2,h3{margin:0}
 .screen.is-instant{transition:none!important;pointer-events:none}
 .hud{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-shrink:0;position:relative;z-index:4}
 .hud-left{min-width:0}
-.hud h2{font-family:var(--serif);font-weight:900;font-size:clamp(19px,2.9vh,24px);line-height:1;letter-spacing:-.015em;margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.hud h2{font-family:var(--serif);font-weight:900;font-size:clamp(19px,2.9vh,24px);line-height:1;letter-spacing:-.015em;margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding-bottom:2px;margin-bottom:-2px}
 .hud-sub{display:block;margin-top:4px;font-size:8px;line-height:1.2;letter-spacing:.16em;color:var(--paper-faint);text-transform:uppercase;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:230px}
 .hud-sub b{color:var(--paper-dim);font-weight:500}
 .kicker{font-family:var(--ui);font-size:9px;font-weight:500;letter-spacing:.26em;text-transform:uppercase;color:var(--gold);line-height:1.4}
@@ -142,7 +143,7 @@ p,h1,h2,h3{margin:0}
 @keyframes rainFall{from{background-position:0 0,0 0}to{background-position:-32px 140px,22px 200px}}
 .flash{position:absolute;inset:0;background:#f5ead4;opacity:0;pointer-events:none;z-index:75;mix-blend-mode:screen}
 .flash.on{animation:cameraFlash .42s ease-out}
-@keyframes cameraFlash{0%{opacity:0}12%{opacity:.5}100%{opacity:0}}
+@keyframes cameraFlash{0%{opacity:0}12%{opacity:calc(.5 * var(--flash-strength,1))}100%{opacity:0}}
 /* ================= STAGE 1 : OFFICE ================= */
 .screen-office{
   background:
@@ -501,7 +502,7 @@ p,h1,h2,h3{margin:0}
   font-family:var(--type);font-size:clamp(7.5px,1vh,8.8px);line-height:1.45;
   color:var(--paper-faint);letter-spacing:.005em;
 }
-.scene-wrap{flex:1;min-height:0;display:flex;align-items:center;justify-content:center;position:relative;padding:2px 0 1px}
+.scene-wrap{flex:1;min-height:0;display:flex;align-items:center;justify-content:center;position:relative;padding:2px 0 1px;overflow:hidden}
 .scene-art{
   --floor:#221a13;--floor-line:#33281d;--wall:#17110d;--wall-hi:#34281d;
   --rug:#2a1b18;--rug-line:#56372f;--wood:#3d2a1b;--wood-hi:#6b4a2c;
@@ -1010,7 +1011,7 @@ p,h1,h2,h3{margin:0}
   .call-idle{padding:7px 9px;margin-top:8px}
   .screen-office.is-answered .office-head h1{font-size:28px}
   .scene-progress .tap-hint{display:none}
-  .scene-art{width:min(100%,430px,calc((100cqh - 150px) * .8))}
+  .scene-art{width:min(100%,430px,calc((100cqh - 198px) * .8))}
   .clue-txt{-webkit-line-clamp:3;font-size:7.7px}
   .clue-row{padding:3px 20px 3px 6px;min-height:38px}
   .clue-row.locked{min-height:33px}
