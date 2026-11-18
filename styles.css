@@ -593,6 +593,8 @@ p,h1,h2,h3{margin:0}
 .screen-zoom.is-leaving{pointer-events:none}
 .screen-zoom.is-leaving .zoom-hud,
 .screen-zoom.is-leaving .zoom-caption,
+.screen-zoom.is-leaving .zoom-spots,
+.screen-zoom.is-leaving .zoom-finds,
 .screen-zoom.is-leaving .reticle,
 .screen-zoom.is-leaving .clue-sheet,
 .screen-zoom.is-leaving .footer-actions{opacity:0;transition:opacity .16s ease .06s}
@@ -622,6 +624,149 @@ p,h1,h2,h3{margin:0}
 }
 .zoom-canvas{position:absolute;inset:0}
 .zoom-canvas svg{display:block;width:100%;height:100%}
+/* Search points sit above the close-up art. Each pip is a diamond of
+   light; the label can move to either side to stay inside the bay. */
+.zoom-spots{position:absolute;inset:0;z-index:5;pointer-events:none}
+.search-spot{
+  position:absolute;width:46px;height:46px;margin:-23px 0 0 -23px;padding:0;border:0;
+  border-radius:50%;background:none;color:inherit;pointer-events:auto;
+}
+.search-spot .glint{
+  position:absolute;left:50%;top:50%;width:11px;height:11px;margin:-5.5px;
+  transform:rotate(45deg);border:1px solid rgba(248,226,178,.95);
+  background:linear-gradient(135deg,rgba(247,223,168,.92),rgba(190,145,72,.32));
+  box-shadow:0 0 12px rgba(232,196,124,.8),0 0 26px rgba(201,161,94,.32);
+}
+.search-spot .glint::before{
+  content:"";position:absolute;inset:-9px;border:1px solid rgba(226,194,134,.38);
+  border-radius:50%;transform:rotate(-45deg);animation:spotPulse 2.8s ease-out infinite;
+}
+@keyframes spotPulse{
+  0%,100%{transform:rotate(-45deg) scale(1);opacity:.85}
+  50%{transform:rotate(-45deg) scale(1.4);opacity:.25}
+}
+.search-spot .spot-tag{
+  position:absolute;left:50%;top:calc(100% - 2px);transform:translateX(-50%);
+  padding:2.5px 5px;background:rgba(8,6,5,.88);border:1px solid rgba(201,161,94,.34);
+  color:var(--gold);font-size:6.4px;letter-spacing:.14em;line-height:1;white-space:nowrap;
+  text-transform:uppercase;text-shadow:0 1px 2px rgba(0,0,0,.85);pointer-events:none;
+}
+.search-spot[data-side="top"] .spot-tag{top:auto;bottom:calc(100% - 2px)}
+.search-spot[data-side="left"] .spot-tag{left:auto;right:calc(50% + 7px);top:50%;transform:translateY(-50%)}
+.search-spot[data-side="right"] .spot-tag{left:calc(50% + 7px);right:auto;top:50%;transform:translateY(-50%)}
+.zoom-spots.is-laying-out .spot-tag{transition:none}
+.search-spot[data-searched="true"] .glint{
+  opacity:.3;border-style:dashed;box-shadow:none;background:rgba(226,194,134,.16);
+}
+.search-spot[data-searched="true"] .glint::before{animation:none;opacity:.18}
+.search-spot[data-searched="true"] .spot-tag{opacity:.55}
+.search-spot.is-clue .glint{
+  opacity:1;border-style:solid;background:linear-gradient(135deg,#f6d998,#b07a2f);
+  box-shadow:0 0 16px rgba(246,217,152,.95),0 0 34px rgba(201,161,94,.48);
+}
+.search-spot.is-clue .spot-tag{
+  color:#f6e6c2;border-color:rgba(243,222,180,.65);background:rgba(30,18,8,.94);opacity:1;
+}
+.search-spot:active .glint{transform:rotate(45deg) scale(.78)}
+.search-spot:focus-visible{outline:2px solid rgba(243,222,180,.9);outline-offset:2px}
+/* A searched spot can give up a finding. The pip dims, and a physical
+   token rises out of the object. The clue is not logged until the
+   player takes that token. */
+.search-spot.has-find .glint{opacity:.18;border-style:dashed;box-shadow:none;background:rgba(226,194,134,.12)}
+.search-spot.has-find .spot-tag{opacity:0}
+.zoom-finds{position:absolute;inset:0;z-index:6;pointer-events:none}
+.clue-find{
+  position:absolute;width:54px;height:54px;margin:-27px 0 0 -27px;padding:0;border:0;
+  background:none;color:inherit;pointer-events:auto;display:grid;place-items:center;
+  animation:findIn .48s cubic-bezier(.2,.85,.2,1) both;
+}
+.clue-find .find-halo{
+  position:absolute;inset:-4px;border-radius:50%;
+  background:radial-gradient(circle,rgba(243,214,150,.3),rgba(201,161,94,.1) 52%,transparent 68%);
+  animation:findHalo 2.4s ease-in-out infinite;
+}
+.clue-find .find-card{
+  position:relative;width:36px;height:36px;display:grid;place-items:center;
+  background:
+    radial-gradient(ellipse at 35% 20%,rgba(255,247,225,.45),transparent 58%),
+    linear-gradient(155deg,#e9dcc2,#c9b58f);
+  border:1px solid #f0d9a9;transform:rotate(-3deg);
+  box-shadow:0 0 16px rgba(243,214,150,.55),0 6px 16px rgba(0,0,0,.6);
+}
+.clue-find .find-card::after{content:"";position:absolute;inset:3px;border:1px solid rgba(93,65,32,.34)}
+.clue-find .find-card svg{width:20px;height:20px;display:block;color:#3b2a17;filter:drop-shadow(0 1px 0 rgba(255,248,230,.5))}
+.clue-find .find-tag{
+  position:absolute;left:50%;top:calc(100% + 1px);transform:translateX(-50%);
+  padding:2.5px 5px;background:rgba(8,6,5,.92);border:1px solid rgba(243,222,180,.55);
+  color:#f6e6c2;font-size:6.4px;letter-spacing:.15em;line-height:1;white-space:nowrap;
+  text-transform:uppercase;pointer-events:none;text-shadow:0 1px 2px rgba(0,0,0,.9);
+}
+.clue-find[data-tag="top"] .find-tag{top:auto;bottom:calc(100% + 1px)}
+.clue-find:active .find-card{transform:rotate(-3deg) scale(.9)}
+.clue-find:focus-visible{outline:2px solid rgba(243,222,180,.9);outline-offset:2px}
+.clue-find.is-taken{animation:findTaken .28s ease-in forwards}
+@keyframes findIn{
+  from{opacity:0;transform:translateY(-7px) scale(.5) rotate(9deg)}
+  to{opacity:1;transform:translateY(0) scale(1) rotate(0)}
+}
+@keyframes findTaken{
+  to{opacity:0;transform:translateY(-16px) scale(1.35)}
+}
+@keyframes findHalo{
+  0%,100%{opacity:.55;transform:scale(.92)}
+  50%{opacity:1;transform:scale(1.12)}
+}
+.probe-ripple{
+  position:absolute;width:64px;height:64px;margin:-32px 0 0 -32px;border-radius:50%;
+  border:1px solid rgba(243,222,180,.75);pointer-events:none;
+  animation:probeRipple .62s cubic-bezier(.2,.7,.3,1) forwards;
+}
+.probe-ripple::after{
+  content:"";position:absolute;inset:14px;border-radius:50%;
+  border:1px solid rgba(243,222,180,.4);
+}
+@keyframes probeRipple{
+  0%{opacity:.95;transform:scale(.18)}
+  100%{opacity:0;transform:scale(1.55)}
+}
+/* The object itself reacts to the search: a small lift, turn, pull or
+   wipe. These classes are applied to the station group in the macro art. */
+.closeup-svg [data-station]{transform-box:fill-box;transform-origin:50% 58%}
+.closeup-svg [data-station].probe-open{animation:probeOpen .58s cubic-bezier(.3,.8,.3,1)}
+.closeup-svg [data-station].probe-lift{animation:probeLift .58s cubic-bezier(.3,.8,.3,1)}
+.closeup-svg [data-station].probe-turn{animation:probeTurn .58s cubic-bezier(.3,.8,.3,1)}
+.closeup-svg [data-station].probe-pull{animation:probePull .58s cubic-bezier(.3,.8,.3,1)}
+.closeup-svg [data-station].probe-wipe{animation:probeWipe .58s cubic-bezier(.3,.8,.3,1)}
+@keyframes probeOpen{
+  0%,100%{transform:none}
+  28%{transform:translateX(-4px) rotate(-1.1deg) scale(1.014)}
+  62%{transform:translateX(1px) rotate(.2deg)}
+}
+@keyframes probeLift{
+  0%,100%{transform:none}
+  30%{transform:translateY(-6px) rotate(-1.2deg) scale(1.02)}
+  66%{transform:translateY(1px) rotate(.2deg)}
+}
+@keyframes probeTurn{
+  0%,100%{transform:none}
+  32%{transform:rotate(2deg) scale(1.012)}
+  68%{transform:rotate(-.4deg)}
+}
+@keyframes probePull{
+  0%,100%{transform:none}
+  34%{transform:translateY(2px) scale(1.025)}
+  70%{transform:translateY(-1px) scale(.997)}
+}
+@keyframes probeWipe{
+  0%,100%{transform:none}
+  30%{transform:translateX(2px) scale(1.006);filter:brightness(1.12)}
+  65%{transform:translateX(-1px);filter:brightness(.98)}
+}
+.clue-sheet.is-searching .clue-text{color:#3b2f1f;font-style:italic}
+.clue-sheet.is-revealed{border-color:#c8a461;box-shadow:0 12px 32px rgba(82,52,12,.35),inset 0 0 30px rgba(176,122,47,.12)}
+.clue-sheet.is-revealed .clue-text{color:#241a0f;font-style:italic}
+#zoomStatus.ok{color:#3d5b2c;font-weight:600}
+#zoomStatus.find{color:#7a4d12;font-weight:600}
 .closeup-svg{filter:saturate(.95) contrast(1.02) brightness(1.1)}
 .zoom-art::after{
   content:"";position:absolute;inset:0;pointer-events:none;
@@ -1100,7 +1245,7 @@ p,h1,h2,h3{margin:0}
   .board-actions .btn{font-size:8px;letter-spacing:.09em}
 }
 @media (prefers-reduced-motion:reduce){
-  *,*::before,*::after{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important;scroll-behavior:auto!important}
+  *,*::before,*::after{animation-duration:.001ms!important;animation-delay:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important;transition-delay:.001ms!important;scroll-behavior:auto!important}
   .phone-zone{animation:none!important}
   .ring-arcs span,.rain,.grain{animation:none!important}
 }
